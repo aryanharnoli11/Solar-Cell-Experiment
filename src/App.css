@@ -650,16 +650,10 @@
 
 .equipment-panel {
   position: relative;
-  display: flex;
+  display: block;
   width: 676px;
   height: 256px;
-  align-items:flex-start;
-  justify-content: flex-end;
-  gap: 8px;
-  padding-top: 20.8px;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-bottom: 9.6px;
+  padding: 0;
   overflow: visible;
   isolation: auto;
   border: 1.6px solid rgba(255, 252, 244, 0.9);
@@ -702,6 +696,62 @@
   background:
     linear-gradient(110deg, rgba(255, 255, 255, 0.42), transparent 26%),
     linear-gradient(180deg, transparent 52%, rgba(83, 54, 30, 0.1));
+}
+
+/* Individual bulb image controls: position and size. */
+.equipment-panel__bulb-image {
+  position: absolute;
+  top: 71px;
+  left: 10px;
+  z-index: 2;
+  display: block;
+  width: 142px;
+  height: 100px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Individual switch image controls: position and size. */
+.equipment-panel__switch-image {
+  position: absolute;
+  top: 179px;
+  left: 57px;
+  z-index: 2;
+  display: block;
+  width: 30px;
+  height: 50px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.equipment-panel__meters {
+  position: absolute;
+  top: 20.8px;
+  left: 316px;
+  z-index: 2;
+  display: flex;
+  width: 358px;
+  height: 220px;
+  align-items: flex-start;
+  gap: 0;
+}
+
+/* Pull the ammeter closer to the voltmeter without changing either image size. */
+.equipment-panel__meters .ammeter--A1 {
+  margin-left: -18px;
+}
+
+/* Individual solar-panel image controls: position and size. */
+.equipment-panel__solar-image {
+  position: absolute;
+  top: 25px;
+  left: 105px;
+  z-index: 2;
+  display: block;
+  width: 260px;
+  height: 210px;
+  object-fit: contain;
+  pointer-events: none;
 }
 
 .power-supply {

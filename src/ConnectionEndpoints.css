@@ -360,17 +360,6 @@
   --terminal-base-left: 122.4px;
 }
 
-/* Terminal numbers are intentionally hidden while the next wiring layout is prepared. */
-.terminal-number-label {
-  display: none;
-}
-
-/* Circuit sockets are hidden until the replacement connection layout is supplied. */
-.connection-terminal--circuit {
-  opacity: 0;
-  pointer-events: none;
-}
-
 .connection-lab .jtk-endpoint--terminal-3,
 .connection-terminal--endpoint-3 {
   --jtk-endpoint-offset-x: -6.4px;
@@ -452,8 +441,8 @@
 }
 
 .connection-terminal--endpoint-9 {
-  --terminal-base-top: 148px;
-  --terminal-base-left: 36px;
+  --terminal-base-top: 64.8px;
+  --terminal-base-left: 35.2px;
 }
 
 .connection-lab .jtk-endpoint--terminal-10,
@@ -463,8 +452,8 @@
 }
 
 .connection-terminal--endpoint-10 {
-  --terminal-base-top: 184px;
-  --terminal-base-left: 36px;
+  --terminal-base-top: 282px;
+  --terminal-base-left: 35.2px;
 }
 
 .connection-lab .jtk-endpoint--terminal-11,
@@ -490,23 +479,23 @@
   --jtk-endpoint-offset-y: 0.8px;
 }
 .connection-terminal--endpoint-11 {
-  --terminal-base-top: 80px;
-  --terminal-base-left: 332px;
+  --terminal-base-top: 64.8px;
+  --terminal-base-left: 240.4px;
 }
 
 .connection-terminal--endpoint-12 {
-  --terminal-base-top: 80px;
-  --terminal-base-left: 376px;
+  --terminal-base-top: 64.8px;
+  --terminal-base-left: 430.6px;
 }
 
 .connection-terminal--endpoint-13 {
-  --terminal-base-top: 272px;
-  --terminal-base-left: 328px;
+  --terminal-base-top: 282px;
+  --terminal-base-left: 150px;
 }
 
 .connection-terminal--endpoint-14 {
-  --terminal-base-top: 272px;
-  --terminal-base-left: 376px;
+  --terminal-base-top: 282px;
+  --terminal-base-left: 601px;
 }
 /* Keep the invisible jsPlumb hit targets in the same red/black terminal palette. */
 .connection-terminal[data-polarity="plus"] {
@@ -613,32 +602,32 @@
 }
 
 .terminal-number-label--endpoint-9 {
-  top: 148px;
+  top: 66px;
   left: 8px;
 }
 
 .terminal-number-label--endpoint-10 {
-  top: 188px;
+  top: 284px;
   left: 8px;
 }
 .terminal-number-label--endpoint-11 {
-  top: 52.8px;
-  left: 334.4px;
+  top: 39px;
+  left: 242.4px;
 }
 
 .terminal-number-label--endpoint-12 {
-  top: 52.8px;
-  left: 378.4px;
+  top: 39px;
+  left: 432.6px;
 }
 
 .terminal-number-label--endpoint-13 {
-  top: 304px;
-  left: 332px;
+  top: 310px;
+  left: 152px;
 }
 
 .terminal-number-label--endpoint-14 {
-  top: 304px;
-  left: 379.2px;
+  top: 310px;
+  left: 603px;
 }
 
 .terminal-label {

@@ -1,6 +1,7 @@
 import {
   getTerminalConnectedClass,
   getTerminalHighlightClass,
+  getTerminalNumberHighlightClass,
 } from '../utils/terminalHighlight.js'
 import circuitImage from '../assets/Circuit.png'
 const terminalLabels = [
@@ -46,13 +47,22 @@ const CircuitDiagram = ({
       <img alt="Kirchhoff current law circuit diagram" className="circuit-panel__image" src={circuitImage} />
 
       {terminalLabels.map(({ id, label, polarity }) => (
-        <span
-          id={id}
-          key={id}
-className={`connection-terminal connection-terminal--circuit connection-terminal--endpoint-${label}${getTerminalConnectedClass(connectedTerminalIds, id)}${getTerminalHighlightClass(highlightedTerminalIds, id)}`}
-          data-polarity={polarity}
-          aria-label={`Circuit terminal ${label}`}
-        />
+        <div className="circuit-terminal" key={id}>
+          <span
+            id={id}
+            className={`connection-terminal connection-terminal--circuit connection-terminal--endpoint-${label}${getTerminalConnectedClass(connectedTerminalIds, id)}${getTerminalHighlightClass(highlightedTerminalIds, id)}`}
+            data-polarity={polarity}
+            aria-label={`Circuit terminal ${label}`}
+            title={`Drag to connect terminal ${label}`}
+          />
+          <span
+            className={`terminal-number-label terminal-number-label--circuit terminal-number-label--endpoint-${label}${getTerminalNumberHighlightClass(highlightedTerminalIds, id)}`}
+            data-terminal-id={id}
+            title={`Terminal ${label}. Click to disconnect.`}
+          >
+            {label}
+          </span>
+        </div>
       ))}
     </div>
   </section>

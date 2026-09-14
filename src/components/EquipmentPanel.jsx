@@ -1,5 +1,8 @@
 import Ammeter from './Ammeter.jsx'
 import Voltmeter from './Voltmeter.jsx'
+import bulbOffImage from '../assets/BulbOff.png'
+import solarPanelImage from '../assets/SolarPanel.png'
+import switchOffImage from '../assets/switchoff.png'
 
 const EquipmentPanel = ({
   connectedTerminalIds = [],
@@ -37,16 +40,38 @@ const EquipmentPanel = ({
 
   return (
     <section className="equipment-panel" id="equipment-panel">
-      <Voltmeter
-        connectedTerminalIds={connectedTerminalIds}
-        highlightedTerminalIds={highlightedTerminalIds}
-        value={voltmeterConnected ? voltmeterValue : 0}
+      <img
+        alt="Bulb switched off"
+        className="equipment-panel__bulb-image"
+        draggable="false"
+        src={bulbOffImage}
       />
-      <Ammeter
-        connectedTerminalIds={connectedTerminalIds}
-        highlightedTerminalIds={highlightedTerminalIds}
-        label="A1"
-        value={ammeterConnected ? ammeterValue : 0}
+      <img
+        alt="Switch in the off position"
+        className="equipment-panel__switch-image"
+        draggable="false"
+        src={switchOffImage}
+      />
+
+      <div className="equipment-panel__meters">
+        <Voltmeter
+          connectedTerminalIds={connectedTerminalIds}
+          highlightedTerminalIds={highlightedTerminalIds}
+          value={voltmeterConnected ? voltmeterValue : 0}
+        />
+        <Ammeter
+          connectedTerminalIds={connectedTerminalIds}
+          highlightedTerminalIds={highlightedTerminalIds}
+          label="A1"
+          value={ammeterConnected ? ammeterValue : 0}
+        />
+      </div>
+
+      <img
+        alt="Solar panel"
+        className="equipment-panel__solar-image"
+        draggable="false"
+        src={solarPanelImage}
       />
     </section>
   )
