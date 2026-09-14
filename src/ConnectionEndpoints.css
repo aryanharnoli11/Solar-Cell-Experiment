@@ -344,7 +344,7 @@
 }
 
 .connection-terminal--endpoint-1 {
-  --terminal-base-top: 185.6px;
+  --terminal-base-top: 189.6px;
   --terminal-base-left: 52.8px;
 }
 
@@ -356,8 +356,19 @@
 }
 
 .connection-terminal--endpoint-2 {
-  --terminal-base-top: 185.6px;
+  --terminal-base-top: 189.6px;
   --terminal-base-left: 122.4px;
+}
+
+/* Terminal numbers are intentionally hidden while the next wiring layout is prepared. */
+.terminal-number-label {
+  display: none;
+}
+
+/* Circuit sockets are hidden until the replacement connection layout is supplied. */
+.connection-terminal--circuit {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .connection-lab .jtk-endpoint--terminal-3,
