@@ -1,0 +1,227 @@
+{
+  "experimentName": "Basic Electrical Science Lab",
+  "defaultLocale": "en",
+  "locales": ["en"],
+  "audio": {
+    "autoplay": true,
+    "enabled": true
+  },
+  "steps": [
+{
+  "id": 1,
+  "target": "#experiment-title-board",
+  "title": {
+    "en": "Aim"
+  },
+  "description": {
+    "en": "To verify the Maximum Power Transfer Theorem."
+  },
+   "audio":"/walkthrough-audios/AIM.wav",
+  "placement": "bottom"
+},{
+  "id": 2,
+  "target": "#instruction-button",
+  "title": {
+    "en": "Instructions Button"
+  },
+  "description": {
+    "en": "The Instructions provide step-by-step guidance on how to perform the simulation."
+  },
+  "audio": "/walkthrough-audios/Instructions Button.wav",
+  "placement": "right"
+},{
+  "id": 3,
+  "target": "#ai-guide-button",
+  "title": {
+    "en": "AI Guide Button"
+  },
+  "description": {
+    "en": "The AI guide will assist you in performing the simulation accurately at each step."
+  },
+   "audio": "/walkthrough-audios/Ai Guide btn.wav",
+  "placement": "right"
+},{
+  "id": 4,
+  "target": "#auto-connect-button",
+  "title": {
+    "en": "Auto Connect Button"
+  },
+  "description": {
+    "en": "The AUTO CONNECT button makes all the connections automatically."
+  },
+   "audio": "/walkthrough-audios/Auto Connect Button.wav",
+  "placement": "right"
+},
+ {
+  "id": 5,
+  "target": "#check-button",
+  "title": {
+    "en": "Check Button"
+  },
+  "description": {
+    "en": "The CHECK button verifies all the connections to ensure that they are correct.\n\n**Note:** If a wire is connected incorrectly, click the corresponding label number to remove the connection."
+  },
+   "audio": "/walkthrough-audios/Check Button.wav",
+  "placement": "right"
+},
+ {
+  "id": 6,
+  "target": "#add-reading-button",
+  "title": {
+    "en": "Add Button"
+  },
+  "description": {
+    "en": "The ADD button adds the readings to the observation table."
+  },
+   "audio": "/walkthrough-audios/Add Button.wav",
+  "placement": "right"
+},
+{
+  "id": 7,
+  "target": "#calculate-button",
+  "title": {
+    "en": "Calculate Button"
+  },
+  "description": {
+    "en": "The CALCULATE button auto-fills the resistance and source values in the Theoretical Verification panel. For verification, you have to theoretically calculate Rth and Vth and verify them using the VERIFY button."
+  },
+  "audio": "/walkthrough-audios/calculate button.wav",
+  "placement": "right"
+},
+{
+  "id": 8,
+  "target": "#reset-button",
+  "title": {
+    "en": "Reset Button"
+  },
+  "description": {
+    "en": "The RESET button refresh the simulation to its initial state for a fresh start."
+  },
+   "audio": "/walkthrough-audios/Reset Button.wav",
+  "placement": "right"
+},{
+  "id": 9,
+  "target": "#print-button",
+  "title": {
+    "en": "Print Button"
+  },
+  "description": {
+    "en": "The PRINT button allows you to print the simulation."
+  },
+   "audio": "/walkthrough-audios/Print Button.wav",
+  "placement": "right"
+},{
+  "id": 10,
+  "target": "#resistance-controls",
+  "title": {
+    "en": "Resistance Slider"
+  },
+  "description": {
+    "en": "For varying the load resistance (RL) by moving the resistance slider.\n\n**Range RL:** 0 - 1000 Ω"
+  },
+   "audio": "/walkthrough-audios/Resistance Slider.wav",
+  "placement": "right"
+},{
+  "id": 11,
+  "target": "#voltmeter",
+  "title": {
+    "en": "DC Voltmeter"
+  },
+  "description": {
+    "en": "This voltmeter is used to measure the Thevenin equivalent voltage (VTH) across the load terminals with the load resistance disconnected. The measured VTH will be used later to verify the theorem.\n\n**Rating:** 50 V"
+  },
+   "audio": "/walkthrough-audios/DC Voltmeter.wav",
+  "placement": "bottom"
+},
+{
+  "id": 12,
+  "target": "#ammeter-a1",
+  "title": {
+    "en": "DC Ammeter"
+  },
+  "description": {
+    "en": "This ammeter is used to measure the load current (IL) flowing through the load resistance (RL).\n\n**Rating:** 0 - 20 mA"
+  },
+   "audio": "/walkthrough-audios/DC Ammeter.wav",
+  "placement": "bottom"
+},
+{
+  "id": 13,
+  "target": "#multimeter",
+  "title": {
+    "en": "Digital Multimeter"
+  },
+  "description": {
+    "en": "The digital multimeter is used in resistance (Ω) mode to measure the Thevenin equivalent resistance (RTH) across the load terminals after removing the load resistance and deactivating the independent voltage source (by replacing it with a short circuit), the equivalent resistance across the load terminals will be measured."
+  },
+   "audio": "/walkthrough-audios/Digital Multimeter.wav",
+  "placement": "bottom"
+},{
+  "id": 14,
+  "target": "#power-supply",
+  "title": {
+    "en": "Regulated DC Power Supply"
+  },
+  "description": {
+    "en": "This section provides the required DC voltage to the circuit. The display shows the active voltage supplied to the circuit, and the slider can be used to set the desired voltage value.\n\n**Rating:** 15 V DC "
+  },
+   "audio": "/walkthrough-audios/Regulated DC Power Supply.wav",
+  "placement": "left"
+},{
+  "id": 15,
+  "target": "#circuit-panel",
+  "title": {
+    "en": "Circuit Connections"
+  },
+  "description": {
+    "en": "This section displays the circuit and allows users to make the required connections by dragging and dropping wires between the connection terminals."
+  },
+   "audio": "/walkthrough-audios/Circuit Connections.wav",
+  "placement": "left"
+},{
+  "id": 16,
+  "target": "#observation-table-panel",
+  "title": {
+    "en": "Observation Table"
+  },
+  "description": {
+    "en": "This table records the measured Thevenin equivalent resistance (RTH), Thevenin equivalent voltage (VTH), Load resistance (RL), Load current (IL) and Power delivered (PL)."
+  },
+   "audio": "/walkthrough-audios/Observation Table.wav",
+  "placement": "right"
+},{
+  "id": 17,
+  "target": "#formula-button",
+  "title": {
+    "en": "Equations"
+  },
+  "description": {
+    "en": "This section displays the equations used to determine the Thevenin equivalent resistance (RTH), Thevenin equivalent voltage (VTH), Load current (IL) and maximum power (PL,max)."
+  },
+   "audio": "/walkthrough-audios/Equations.wav",
+  "placement": "top"
+},{
+  "id": 18,
+  "target": "#maximum-power-results",
+  "title": {
+    "en": "Theoretical Verification"
+  },
+  "description": {
+    "en": "This is the theoretical verification panel where the maximum power transfer theorem will be verified, and a graph will be plotted automatically between power and load resistance. Enter the required values and compare the calculated power with the measured power to verify the theorem."
+  },
+   "audio": "/walkthrough-audios/Theoretical Verification.wav",
+  "placement": "top"
+},{
+  "id": 19,
+  "target": "#generate-report-button",
+  "title": {
+    "en": "Generate Report"
+  },
+  "description": {
+    "en": "The Report button generates a summarised report of the simulation. After completing the observation table and theoretical verification, generate the report. The report will include the time taken to complete the simulation, no. of attempts, the apparatus used, recorded readings, the user-calculated result, graph and the conclusion."
+  },
+   "audio": "/walkthrough-audios/Generate Repor.wav",
+  "placement": "top"
+}
+  ]
+}

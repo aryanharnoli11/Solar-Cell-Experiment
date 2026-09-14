@@ -1,0 +1,353 @@
+import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+import { addExclusiveAudioListener, dispatchExclusiveAudioStart } from '../utils/audioCoordinator.js'
+import { LabAlertContext } from './LabAlertContext.js'
+import LabAlertCard from './LabAlertCard.jsx'
+import LabAlertSpotlight from './LabAlertSpotlight.jsx'
+import './labAlerts.css'
+
+const DEFAULT_ICONS = {
+  error: '❌',
+  info: '🎛️',
+  success: '✅',
+  warning: '⚠️',
+}
+
+const TOP_RIGHT_LIMIT = 3
+const DEDUPE_WINDOW = 900
+const ALERT_TYPES = ['success', 'warning', 'error', 'info']
+const ALERT_AUDIO_SOURCE_ID = 'lab-alert'
+
+const isConfiguredAudioSource = (audioSource) => (
+  typeof audioSource === 'string' &&
+  audioSource.trim() !== '' &&
+  audioSource.trim() !== '#'
+)
+
+const dispatchLabAlertEvent = (eventName, detail) => {
+  if (typeof window === 'undefined') return
+
+  window.dispatchEvent(new CustomEvent(eventName, { detail }))
+}
+const getPlacement = () => 'center'
+
+const initialAlertState = {
+  centerAlert: null,
+  queue: [],
+  topRightAlerts: [],
+}
+
+const pumpAlertQueue = (state) => {
+  let nextState = state
+
+  while (nextState.queue.length > 0) {
+    const nextAlert = nextState.queue[0]
+
+    if (nextAlert.placement === 'center') {
+      if (nextState.centerAlert) {
+        break
+      }
+
+      nextState = {
+        ...nextState,
+        centerAlert: nextAlert,
+        queue: nextState.queue.slice(1),
+      }
+      continue
+    }
+
+    if (nextState.topRightAlerts.length >= TOP_RIGHT_LIMIT) {
+      break
+    }
+
+    nextState = {
+      ...nextState,
+      queue: nextState.queue.slice(1),
+      topRightAlerts: [...nextState.topRightAlerts, nextAlert],
+    }
+  }
+
+  return nextState
+}
+
+const alertReducer = (state, action) => {
+  switch (action.type) {
+    case 'clear':
+      return initialAlertState
+    case 'dismiss':
+      return pumpAlertQueue({
+        ...state,
+        centerAlert: state.centerAlert?.id === action.id ? null : state.centerAlert,
+        topRightAlerts: state.topRightAlerts.filter((alert) => alert.id !== action.id),
+      })
+    case 'enqueue': {
+      const replacesCurrentCenterAlert =
+        action.alert.placement === 'center'
+        && state.centerAlert
+        && !state.centerAlert.critical
+        && !state.centerAlert.requiresConfirmation
+
+      if (replacesCurrentCenterAlert) {
+        return {
+          ...state,
+          centerAlert: action.alert,
+          queue: state.queue.filter((alert) => alert.placement !== 'center'),
+        }
+      }
+
+      return pumpAlertQueue({
+        ...state,
+        queue: [...state.queue, action.alert],
+      })
+    }
+    default:
+      return state
+  }
+}
+
+const LabAlertProvider = ({ children }) => {
+  const nextIdRef = useRef(0)
+  const activeDedupeKeysRef = useRef(new Set())
+  const recentAlertsRef = useRef(new Map())
+  const alertAudioRef = useRef(null)
+  const [alertState, dispatchAlert] = useReducer(alertReducer, initialAlertState)
+  const alertStateRef = useRef(alertState)
+
+  useEffect(() => {
+    alertStateRef.current = alertState
+  }, [alertState])
+  const stopAlertAudio = useCallback((reason = 'stopped') => {
+  const currentPlayback = alertAudioRef.current
+
+  if (!currentPlayback) return
+
+  currentPlayback.audio.pause()
+  currentPlayback.audio.currentTime = 0
+  currentPlayback.finish(reason)
+}, [])
+useEffect(() => {
+
+  const handleAlertSound = (event) => {
+
+    const audioSource = event.detail?.audio
+    const alertId = event.detail?.id
+
+    stopAlertAudio('replaced')
+
+    if (!isConfiguredAudioSource(audioSource)) return
+
+    dispatchExclusiveAudioStart(ALERT_AUDIO_SOURCE_ID)
+
+    const audio = new Audio(audioSource)
+
+    const playback = {
+      audio,
+      finish: null,
+      id: alertId,
+    }
+
+    let settled = false
+
+    const finishPlayback = (reason) => {
+
+      if (settled) return
+
+      settled = true
+
+      audio.removeEventListener('ended', handleEnded)
+      audio.removeEventListener('error', handleError)
+
+      if (alertAudioRef.current === playback) {
+        alertAudioRef.current = null
+      }
+
+      dispatchLabAlertEvent('lab-alert:sound-ended', {
+        id: alertId,
+        reason,
+      })
+    }
+
+    const handleEnded = () => finishPlayback('ended')
+
+    const handleError = () => finishPlayback('error')
+
+    playback.finish = finishPlayback
+
+    alertAudioRef.current = playback
+
+    audio.addEventListener('ended', handleEnded)
+    audio.addEventListener('error', handleError)
+
+    audio.play().catch(() => finishPlayback('error'))
+  }
+
+  const handleAlertStop = (event) => {
+
+    const alertId = event.detail?.id
+    const current = alertAudioRef.current
+
+    if (!current) return
+
+    if (alertId && current.id !== alertId) return
+
+    stopAlertAudio(event.detail?.reason ?? 'dismiss')
+  }
+
+  window.addEventListener('lab-alert:sound', handleAlertSound)
+  window.addEventListener('lab-alert:sound-stop', handleAlertStop)
+
+  const removeExclusiveAudioListener =
+    addExclusiveAudioListener(ALERT_AUDIO_SOURCE_ID, () =>
+      stopAlertAudio('interrupted')
+    )
+
+  return () => {
+
+    window.removeEventListener('lab-alert:sound', handleAlertSound)
+    window.removeEventListener('lab-alert:sound-stop', handleAlertStop)
+
+    removeExclusiveAudioListener()
+
+    stopAlertAudio()
+
+  }
+
+}, [stopAlertAudio])
+  const releaseDedupeKey = useCallback((alert) => {
+    if (alert?.dedupeKey) {
+      activeDedupeKeysRef.current.delete(alert.dedupeKey)
+    }
+  }, [])
+
+  const normalizeAlert = useCallback((alert) => {
+    const normalizedAlert = { ...alert }
+
+    delete normalizedAlert.duration
+
+    const type = ALERT_TYPES.includes(alert.type) ? alert.type : 'info'
+    const requiresConfirmation = Boolean(alert.requiresConfirmation)
+    const critical = Boolean(alert.critical)
+    const id = `lab-alert-${Date.now()}-${nextIdRef.current += 1}`
+    const placement = getPlacement({
+      critical,
+      placement: alert.placement,
+      requiresConfirmation,
+      type,
+    })
+
+    return {
+      ...normalizedAlert,
+      critical,
+      icon: alert.icon ?? DEFAULT_ICONS[type],
+      id,
+      placement,
+      requiresConfirmation,
+      title: alert.title ?? 'Lab Alert',
+      type,
+    }
+  }, [])
+
+  const showAlert = useCallback((alert) => {
+    const nextAlert = normalizeAlert(alert)
+    const dedupeKey = nextAlert.dedupeKey
+    const now = Date.now()
+
+    if (dedupeKey) {
+      const lastShownAt = recentAlertsRef.current.get(dedupeKey)
+      const dedupeWindow = nextAlert.dedupeWindow ?? DEDUPE_WINDOW
+
+      if (
+        activeDedupeKeysRef.current.has(dedupeKey)
+        || (lastShownAt && now - lastShownAt < dedupeWindow)
+      ) {
+        return null
+      }
+
+      activeDedupeKeysRef.current.add(dedupeKey)
+      recentAlertsRef.current.set(dedupeKey, now)
+    }
+
+    dispatchAlert({ alert: nextAlert, type: 'enqueue' })
+
+    return nextAlert.id
+  }, [normalizeAlert])
+
+  const showStepAlert = useCallback((preset, overrides = {}) => (
+    showAlert({ ...preset, ...overrides })
+  ), [showAlert])
+
+  const confirmAlert = useCallback((alert) => new Promise((resolve) => {
+    const alertId = showAlert({
+      ...alert,
+      onClose: () => resolve(false),
+      onConfirm: () => resolve(true),
+      placement: alert.placement ?? 'center',
+      requiresConfirmation: true,
+    })
+
+    if (!alertId) {
+      resolve(false)
+    }
+  }), [showAlert])
+
+  const dismissAlert = useCallback((id) => {
+    const currentState = alertStateRef.current
+    const removedAlert = currentState.centerAlert?.id === id
+      ? currentState.centerAlert
+      : currentState.topRightAlerts.find((alert) => alert.id === id)
+
+    releaseDedupeKey(removedAlert)
+    dispatchAlert({ id, type: 'dismiss' })
+  }, [releaseDedupeKey])
+
+  const clearAlerts = useCallback(() => {
+    const currentState = alertStateRef.current
+
+    stopAlertAudio('cleared')
+    currentState.queue.forEach(releaseDedupeKey)
+    currentState.topRightAlerts.forEach(releaseDedupeKey)
+    releaseDedupeKey(currentState.centerAlert)
+    dispatchAlert({ type: 'clear' })
+  }, [releaseDedupeKey, stopAlertAudio])
+
+  const { centerAlert, topRightAlerts } = alertState
+
+  const spotlightAlert = centerAlert ?? topRightAlerts.at(-1)
+  const hasCriticalAlert = Boolean(centerAlert?.critical)
+
+  const contextValue = useMemo(() => ({
+    clearAlerts,
+    confirmAlert,
+    dismissAlert,
+    showAlert,
+    showStepAlert,
+  }), [clearAlerts, confirmAlert, dismissAlert, showAlert, showStepAlert])
+
+
+
+  return (
+    <LabAlertContext.Provider value={contextValue}>
+      {children}
+
+      <LabAlertSpotlight target={spotlightAlert?.target} type={spotlightAlert?.type ?? 'info'} />
+
+      {hasCriticalAlert ? <div aria-hidden="true" className="lab-alert-interaction-shield" /> : null}
+
+      <div className="lab-alert-region lab-alert-region--top-right" aria-live="polite">
+        {topRightAlerts.map((alert) => (
+          <LabAlertCard alert={alert} key={alert.id} onDismiss={dismissAlert} />
+        ))}
+      </div>
+
+      {centerAlert ? (
+        <div
+          aria-live={centerAlert.type === 'error' || centerAlert.type === 'warning' ? 'assertive' : 'polite'}
+          className="lab-alert-region lab-alert-region--center"
+        >
+          <LabAlertCard alert={centerAlert} onDismiss={dismissAlert} />
+        </div>
+      ) : null}
+    </LabAlertContext.Provider>
+  )
+}
+
+export default LabAlertProvider

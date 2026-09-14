@@ -1,0 +1,239 @@
+{
+  "guideName": "AI Guide",
+  "defaultLocale": "en",
+  "locales": ["en"],
+  "steps": [
+    {
+      "id": 1,
+      "text": "Hello! I am your AI Guide. I will guide you through each step of the experiment. Please follow the instructions carefully and perform the actions as directed. Before we begin, let us familiarize ourselves with the simulation interface. To start, click on the Start Walkthrough.",
+      "audio": "/audios/AI Guide click.wav"
+    },
+    {
+      "id": 2,
+      "text": "The simulation walkthrough is now complete. You are now ready to perform the experiment.",
+      "audio": "/audios/The simulation walkthrough is now complete. You are now ready to perform the experiment.wav"
+    },
+    {
+      "id": 3,
+      "text": "Now, you may either click the Auto Connect button to make the circuit connections automatically or connect the circuit manually by following the highlighted terminals. Let's begin with the first connection.",
+      "audio": "/audios/Now, you may either click the Auto Connect button.wav"
+    },
+    {
+      "id": 4,
+      "text": "To measure the Thevenin resistance.",
+      "audio": "/audios/To measure the Thevenin resistance.wav"
+    },
+    {
+      "id": 5,
+      "text": "Connect the multimeter by click and drag the wire from terminal 5 and drop it on terminal 11.",
+      "audio": "/audios/Connect the multimeter by click and drag the wire from terminal 5 and drop it on terminal 11.wav"
+    },
+    {
+      "id": 6,
+      "text": "Similarly, connect terminal 6 to terminal 13.",
+      "audio": "/audios/Similarly, connect terminal 6 to terminal 13.wav"
+    },
+    {
+      "id": 7,
+      "text": "Now, short circuit terminals 9 to 10.",
+      "audio": "/audios/Now, short circuit terminals 9 to 10 .wav"
+    },
+    {
+      "id": 8,
+      "text": "Case 1 connections are completed. Click on the Check button to verify the connections.",
+      "audio": "/audios/Guide all complete conn for case 1.wav"
+    },
+    {
+      "id": 9,
+      "text": "This connection is wrong.",
+      "audio": "/audios/Wrong connection.wav"
+    },
+    {
+      "id": 10,
+      "text": "Some connections are wrong.",
+      "audio": "/audios/Multiple wrong connections.wav"
+    },
+    {
+      "id": 11,
+      "text": "Autoconnect completed. The digital multimeter is now displaying the Thevenin equivalent resistance value. Now, click on the add button to add the reading to the observation table.",
+      "audio": "/audios/1st Autoconnect.wav"
+    },
+    {
+      "id": 12,
+      "text": "Please set RL using the resistance slider.",
+      "audio": "/audios/Before resistance set, check & auto connect button click.wav"
+    },
+    {
+      "id": 13,
+      "text": "Please make the required connections as per the given instructions.",
+      "audio": "/audios/1st time check button click.wav"
+    },
+    {
+      "id": 14,
+      "text": "Connections Verified successfully. The digital multimeter is now displaying the Thevenin resistance value. Now, click on the add button to add the reading to the observation table.",
+      "audio": "/audios/After 1st case connections, check.wav"
+    },
+    {
+      "id": 15,
+      "text": "Reading is added to the observation table. Now remove the connections 9 to 10, 5 to 11 and 6 to 13.",
+      "audio": "/audios/After the Rth reading was added.wav"
+    },
+    {
+      "id": 16,
+      "text": "Now measure the Thevenin voltage by connecting the power supply terminals and voltmeter to the circuit.",
+      "audio": "/audios/Power supply terminals, 2nd case.wav"
+    },
+    {
+      "id": 17,
+      "text": "Connect terminal 7 to 9.",
+      "audio": "/audios/Connect terminal 7 to 9.wav"
+    },
+    {
+      "id": 18,
+      "text": "Connect terminal 8 to 10.",
+      "audio": "/audios/Connect terminal 8 to 10.wav"
+    },
+    {
+      "id": 19,
+      "text": "Connect the voltmeter 1 to 11.",
+      "audio": "/audios/Connect  voltmeter.wav"
+    },
+    {
+      "id": 20,
+      "text": "Connect terminal 2 to terminal 13.",
+      "audio": "/audios/Connect terminal 2 to terminal 13.wav"
+    },
+    {
+      "id": 21,
+      "text": "Click on the Check button to verify the connections.",
+      "audio": "/audios/Before clicking the Check button for Case 2 and Case 3 connections.wav"
+    },
+    {
+      "id": 22,
+      "text": "Connections Verified successfully. Now switch ON the power supply and set the required voltage value.",
+      "audio": "/audios/After 2nd case connections, check.wav"
+    },
+    {
+      "id": 23,
+      "text": "The reading is displayed on the voltmeter. Now, click on the add button to add the reading to the observation table.",
+      "audio": "/audios/After the voltage value is set.wav"
+    },
+    {
+      "id": 24,
+      "text": "The Thevenin voltage is added to the observation table and the load resistance slider is now unlocked at zero ohms. Turn OFF the power supply and remove the voltmeter connections 1 to 11 and 2 to 13.",
+      "audio": "/audios/After reading is added for the second case.wav"
+    },
+    {
+      "id": 25,
+      "text": "Now measure the load current.",
+      "audio": "/audios/Connect Ammeter.wav"
+    },
+    {
+      "id": 26,
+      "text": "Connect the ammeter terminals 3 to 11.",
+      "audio": "/audios/Connect the ammeter terminals 3 to 11.wav"
+    },
+    {
+      "id": 27,
+      "text": "Connect terminal 4 to 12.",
+      "audio": "/audios/Connect the terminal 4 to 12.wav"
+    },
+    {
+      "id": 28,
+      "text": "Connect terminal 13 to 14.",
+      "audio": "/audios/Connect the terminal 13 to 14.wav"
+    },
+    {
+      "id": 29,
+      "text": "Click on the Check button to verify the connections.",
+      "audio": "/audios/Before clicking the Check button for Case 2 and Case 3 connections.wav"
+  
+    },
+    
+    {
+      "id": 30,
+      "text": "The reading is displayed on the ammeter. Now, click on the Add button to add the reading to the observation table.",
+      "audio": "/audios/Power supply turned ON for the 3rd case.wav"
+    },
+    {
+      "id": 31,
+      "text": "The final reading is added to the observation table. Now, click on the Calculate button to theoretically verify the theorem.",
+      "audio": "/audios/After the 10th reading.wav"
+    },
+    {
+      "id": 32,
+      "text": "The resistance and source values are displayed in the theoretical verification panel. Enter the calculated values in the input field, and click the Verify button to verify the theorem.",
+      "audio": "/audios/After clicking the calculate button.wav"
+    },
+    {
+      "id": 33,
+      "text": "Incorrect calculations. The Maximum Power Transfer Theorem could not be verified. Please review your calculations and try again.",
+      "audio": "/audios/Verify button click, Incorrect calculations.wav"
+    },
+    {
+      "id": 34,
+      "text": "Calculations are correct. The Maximum Power Transfer Theorem has been verified successfully. Now, click on the Generate Report button.",
+      "audio": "/audios/Verify button click, Correct calculations.wav"
+    },
+    {
+      "id": 35,
+      "text": "The simulation has been reset. You can start again.",
+      "audio": "/audios/Reset.wav"
+    },
+    {
+      "id": 36,
+      "text": "Opening the print dialog.",
+      "audio": "/audios/Print.wav"
+    },
+    {
+      "id": 37,
+      "text": "Your report has been generated successfully. Click OK to view your report.",
+      "audio": "/audios/Generate Report button click.wav"
+    },
+    {
+      "id": 38,
+      "text": "Connections verified successfully. Now turn ON the power supply.",
+      "audio": "/audios/Now check again for the 3rd case.wav"
+    },
+    {
+      "id": 39,
+      "text": "Please remove all current wire connections before proceeding to the next case.",
+      "audio": "/audios/After 1st and 2nd cases are completed, click autoconnect.wav"
+    },
+    {
+      "id": 40,
+      "text": "Please enter the required value, then click the “Verify” button to verify the theorem.",
+      "audio": "/audios/Verify button click, one value is missing.wav"
+    },
+    {
+      "id": 41,
+      "text": "Please enter all the values, then click the “Verify” button to verify the theorem.",
+      "audio": "/audios/Verify button click, more than one value is missing.wav"
+    },
+    {
+      "id": 42,
+      "text": "Autoconnect completed. Now switch ON the power supply and set the required voltage value.",
+      "audio": "/audios/2nd Autoconnect.wav"
+    },
+    {
+      "id": 43,
+      "text": "Autoconnect completed. Now turn ON the power supply.",
+      "audio": "/audios/3rd Autoconnect.wav"
+    },
+    {
+      "id": 44,
+      "text": "Reading added successfully. Now, vary the load resistance (RL) by moving the resistance slider to take the next reading and then click the Add button.",
+      "audio": "/audios/1st IL reading added.wav"
+    },
+    {
+      "id": 45,
+      "text": "Reading added successfully. Repeat this process until all ten readings have been added.",
+      "audio": "/audios/2nd time RL clickvary.wav"
+    },
+    {
+      "id": 46,
+      "text": "Please perform the first two cases.",
+      "audio": "/audios/1st time RL click.wav"
+    }
+  ]
+}
