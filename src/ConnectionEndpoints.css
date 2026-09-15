@@ -339,102 +339,103 @@
 */
 .connection-lab .jtk-endpoint--terminal-1,
 .connection-terminal--endpoint-1 {
-  --jtk-endpoint-offset-x: -5.6px;
-  --jtk-endpoint-offset-y: -9.6px;
-    --terminal-size: 32px;
-
+  --jtk-endpoint-offset-x: 0px;
+  --jtk-endpoint-offset-y: 0px;
+  --terminal-size: 28px;
 }
 
 .connection-terminal--endpoint-1 {
-  --terminal-base-top: 185.6px;
-  --terminal-base-left: 48.9px;
+  --terminal-base-top: 168px;
+  --terminal-base-left: 91px;
 }
 
 
 .connection-lab .jtk-endpoint--terminal-2,
 .connection-terminal--endpoint-2 {
-  --jtk-endpoint-offset-x: -4.8px;
-  --jtk-endpoint-offset-y: -9.6px;
-    --terminal-size: 32px;
+  --jtk-endpoint-offset-x: 0px;
+  --jtk-endpoint-offset-y: 0px;
+  --terminal-size: 28px;
 }
 
 .connection-terminal--endpoint-2 {
-  --terminal-base-top: 185.6px;
-  --terminal-base-left: 122px;
+  --terminal-base-top: 168px;
+  --terminal-base-left: 143px;
 }
 
 .connection-lab .jtk-endpoint--terminal-3,
 .connection-terminal--endpoint-3 {
-  --jtk-endpoint-offset-x: -6.4px;
-  --jtk-endpoint-offset-y: -8.8px;
+  --jtk-endpoint-offset-x: -5.6px;
+  --jtk-endpoint-offset-y: -9.6px;
+  --terminal-size: 32px;
 }
 
 .connection-terminal--endpoint-3 {
-  --terminal-base-top: 180.6px;
-  --terminal-base-left: 53px;
+  --terminal-base-top: 185.6px;
+  --terminal-base-left: 48.9px;
 }
 
 .connection-lab .jtk-endpoint--terminal-4,
 .connection-terminal--endpoint-4 {
+  --jtk-endpoint-offset-x: -4.8px;
+  --jtk-endpoint-offset-y: -9.6px;
+  --terminal-size: 32px;
+}
+
+.connection-terminal--endpoint-4 {
+  --terminal-base-top: 185.6px;
+  --terminal-base-left: 122px;
+}
+
+.connection-lab .jtk-endpoint--terminal-5,
+.connection-terminal--endpoint-5 {
+  --jtk-endpoint-offset-x: -6.4px;
+  --jtk-endpoint-offset-y: -8.8px;
+}
+
+.connection-terminal--endpoint-5 {
+  --terminal-base-top: 180.6px;
+  --terminal-base-left: 53px;
+}
+
+.connection-lab .jtk-endpoint--terminal-6,
+.connection-terminal--endpoint-6 {
   --jtk-endpoint-offset-x: -24px;
   --jtk-endpoint-offset-y: -9.2px;
 }
 
-.connection-terminal--endpoint-4 {
+.connection-terminal--endpoint-6 {
   --terminal-base-top: 180.6px;
   --terminal-base-left: 143.8px;
 }
 
 /* The ammeter sockets are wider than the other equipment sockets. */
-.connection-terminal--endpoint-3,
-.connection-terminal--endpoint-4 {
+.connection-terminal--endpoint-5,
+.connection-terminal--endpoint-6 {
   --jtk-endpoint-radius: 16;
   --terminal-size: 32px;
   margin: -2px;
 }
 
-.connection-lab .jtk-endpoint--terminal-5,
-.connection-terminal--endpoint-5 {
-  --jtk-endpoint-offset-x: -2.4px;
-  --jtk-endpoint-offset-y: -4px;
-}
-
-.connection-terminal--endpoint-5 {
-  --terminal-base-top: 168px;
-  --terminal-base-left: 34.4px;
-}
-
-.connection-lab .jtk-endpoint--terminal-6,
-.connection-terminal--endpoint-6 {
-  --jtk-endpoint-offset-x: -16px;
-  --jtk-endpoint-offset-y: -4.8px;
-}
-
-.connection-terminal--endpoint-6 {
-  --terminal-base-top: 168px;
-  --terminal-base-left: 124px;
-}
-
 .connection-lab .jtk-endpoint--terminal-7,
 .connection-terminal--endpoint-7 {
-  --jtk-endpoint-offset-x: -0.8px;
-  --jtk-endpoint-offset-y: -32px;
+  --jtk-endpoint-offset-x: -9.6px;
+  --jtk-endpoint-offset-y: 0.8px;
 }
 
 .connection-terminal--endpoint-7 {
-  --terminal-base-top: 150.2px;
-  --terminal-base-left: 37.6px;
+  --terminal-base-top: 76px;
+  --terminal-base-left: 148px;
 }
 
 .connection-lab .jtk-endpoint--terminal-8,
 .connection-terminal--endpoint-8 {
-  --jtk-endpoint-offset-x: -16.8px;
-  --jtk-endpoint-offset-y: -32px;
+  --jtk-endpoint-offset-x: -9.6px;
+  --jtk-endpoint-offset-y: 0.8px;
 }
 
 .connection-terminal--endpoint-8 {
-  --terminal-base-top: 150.2px;
-  --terminal-base-left: 89.6px;
+  --terminal-base-top: 260px;
+  --terminal-base-left: 148px;
 }
 
 .connection-lab .jtk-endpoint--terminal-9,
@@ -445,7 +446,7 @@
 
 .connection-terminal--endpoint-9 {
   --terminal-base-top: 76px;
-  --terminal-base-left: 148px;
+  --terminal-base-left: 245px;
 }
 
 .connection-lab .jtk-endpoint--terminal-10,
@@ -456,7 +457,7 @@
 
 .connection-terminal--endpoint-10 {
   --terminal-base-top: 260px;
-  --terminal-base-left: 148px;
+  --terminal-base-left: 247px;
 }
 
 .connection-lab .jtk-endpoint--terminal-11,
@@ -470,33 +471,12 @@
   --jtk-endpoint-offset-y: 0.8px;
 }
 
-.connection-lab .jtk-endpoint--terminal-13,
-.connection-terminal--endpoint-13 {
-  --jtk-endpoint-offset-x: -9.6px;
-  --jtk-endpoint-offset-y: 0.8px;
-}
-
-.connection-lab .jtk-endpoint--terminal-14,
-.connection-terminal--endpoint-14 {
-  --jtk-endpoint-offset-x: -9.6px;
-  --jtk-endpoint-offset-y: 0.8px;
-}
 .connection-terminal--endpoint-11 {
-  --terminal-base-top: 76px;
-  --terminal-base-left: 245px;
-}
-
-.connection-terminal--endpoint-12 {
   --terminal-base-top: 75px;
   --terminal-base-left: 320px;
 }
 
-.connection-terminal--endpoint-13 {
-  --terminal-base-top: 260px;
-  --terminal-base-left: 247px;
-}
-
-.connection-terminal--endpoint-14 {
+.connection-terminal--endpoint-12 {
   --terminal-base-top: 80px;
   --terminal-base-left: 477px;
 }
@@ -519,7 +499,7 @@
 
 /*
   Permanent terminal colors, converted from the blue/red reference to red/black.
-  Terminal 12 is red and terminal 13 is black so their wires match their sockets.
+  Upper circuit terminals are red; lower circuit terminals are black.
 */
 :is(
   .connection-terminal--endpoint-1,
@@ -547,9 +527,7 @@
   .connection-terminal--endpoint-4,
   .connection-terminal--endpoint-6,
   .connection-terminal--endpoint-8,
-  .connection-terminal--endpoint-10,
-  .connection-terminal--endpoint-13,
-  .connection-terminal--endpoint-14
+  .connection-terminal--endpoint-10
 ) {
   --terminal-neutral: #151515;
   --terminal-neutral-rgb: 21, 21, 21;
@@ -565,72 +543,62 @@
 
 /* Adjust each terminal number label here. */
 .terminal-number-label--endpoint-1 {
-  top: 210px;
-  left:57.4px;
+  top: 196px;
+  left: 105px;
 }
 
 .terminal-number-label--endpoint-2 {
-  top: 210px;
-  left: 130.6px;
+  top: 196px;
+  left: 157px;
 }
 
 .terminal-number-label--endpoint-3 {
-  top: 210.8px;
-  left: 58.4px;
+  top: 210px;
+  left: 57.4px;
 }
 
 .terminal-number-label--endpoint-4 {
-  top: 210.8px;
+  top: 210px;
   left: 130.6px;
 }
 
 .terminal-number-label--endpoint-5 {
-  top: 192px;
-  left: 42.4px;
+  top: 210.8px;
+  left: 58.4px;
 }
 
 .terminal-number-label--endpoint-6 {
-  top: 192px;
-  left: 120px;
+  top: 210.8px;
+  left: 130.6px;
 }
 
 .terminal-number-label--endpoint-7 {
-  top: 152px;
-  left: 47.2px;
+  top: 36px;
+  left: 150px;
 }
 
 .terminal-number-label--endpoint-8 {
-  top: 152px;
-  left: 85.6px;
+  top: 300px;
+  left: 150px;
 }
 
 .terminal-number-label--endpoint-9 {
-  top: 66px;
-  left: 8px;
+  top: 36px;
+  left: 247px;
 }
 
 .terminal-number-label--endpoint-10 {
-  top: 284px;
-  left: 8px;
+  top: 300px;
+  left: 249px;
 }
 .terminal-number-label--endpoint-11 {
-  top: 39px;
-  left: 242.4px;
+  top: 36px;
+  left: 322px;
 }
 
 .terminal-number-label--endpoint-12 {
-  top: 39px;
-  left: 432.6px;
-}
-
-.terminal-number-label--endpoint-13 {
-  top: 310px;
-  left: 152px;
-}
-
-.terminal-number-label--endpoint-14 {
-  top: 310px;
-  left: 603px;
+  top: 40px;
+  left: 479px;
 }
 
 .terminal-label {

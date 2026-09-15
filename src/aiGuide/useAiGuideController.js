@@ -18,20 +18,28 @@ const AUDIO_PRIORITY = {
 
 const CONNECTION_STAGES = {
   1: [
-    { instructionId: '5', pair: ['5-endpoint', '11-endpoint'] },
-    { instructionId: '6', pair: ['6-endpoint', '13-endpoint'] },
-    { instructionId: '7', pair: ['9-endpoint', '10-endpoint'] },
+    { instructionId: '17', pair: ['1-endpoint', '7-endpoint'] },
+    { instructionId: '18', pair: ['2-endpoint', '8-endpoint'] },
+    { instructionId: '19', pair: ['3-endpoint', '9-endpoint'] },
+    { instructionId: '20', pair: ['4-endpoint', '10-endpoint'] },
+    { instructionId: '26', pair: ['5-endpoint', '11-endpoint'] },
+    { instructionId: '27', pair: ['6-endpoint', '12-endpoint'] },
   ],
   2: [
-    { instructionId: '17', pair: ['7-endpoint', '9-endpoint'] },
-    { instructionId: '18', pair: ['8-endpoint', '10-endpoint'] },
-    { instructionId: '19', pair: ['1-endpoint', '11-endpoint'] },
-    { instructionId: '20', pair: ['2-endpoint', '13-endpoint'] },
+    { instructionId: '17', pair: ['1-endpoint', '7-endpoint'] },
+    { instructionId: '18', pair: ['2-endpoint', '8-endpoint'] },
+    { instructionId: '19', pair: ['3-endpoint', '9-endpoint'] },
+    { instructionId: '20', pair: ['4-endpoint', '10-endpoint'] },
+    { instructionId: '26', pair: ['5-endpoint', '11-endpoint'] },
+    { instructionId: '27', pair: ['6-endpoint', '12-endpoint'] },
   ],
   3: [
-    { instructionId: '26', pair: ['3-endpoint', '11-endpoint'] },
-    { instructionId: '27', pair: ['4-endpoint', '12-endpoint'] },
-    { instructionId: '28', pair: ['13-endpoint', '14-endpoint'] },
+    { instructionId: '17', pair: ['1-endpoint', '7-endpoint'] },
+    { instructionId: '18', pair: ['2-endpoint', '8-endpoint'] },
+    { instructionId: '19', pair: ['3-endpoint', '9-endpoint'] },
+    { instructionId: '20', pair: ['4-endpoint', '10-endpoint'] },
+    { instructionId: '26', pair: ['5-endpoint', '11-endpoint'] },
+    { instructionId: '27', pair: ['6-endpoint', '12-endpoint'] },
   ],
 }
 
@@ -54,9 +62,9 @@ const AUTO_CONNECT_INSTRUCTION = {
 }
 
 const REQUIRED_CONNECTION_COUNTS = {
-  1: 3,
-  2: 4,
-  3: 5,
+  1: 6,
+  2: 6,
+  3: 6,
 }
 
 const createInitialState = () => ({
@@ -449,10 +457,10 @@ export const useAiGuideController = ({
     }
 
     const introInstruction = caseNumber === 1
-      ? ['3', '4', '5']
+      ? ['3', '4', '17']
       : caseNumber === 2
-        ? ['16', '17']
-        : ['25', '26']
+        ? ['16']
+        : ['25']
 
     return runInstructionSequence(introInstruction)
   }, [runInstructionSequence, updateState])

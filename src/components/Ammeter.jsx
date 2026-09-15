@@ -16,7 +16,7 @@ const ammeterImages = {
 }
 
 const terminalNumbers = {
-  A1: { positive: 3, negative: 4 },
+  A1: { positive: 5, negative: 6 },
   A2: { positive: 5, negative: 6 },
   A3: { positive: 7, negative: 8 },
 }

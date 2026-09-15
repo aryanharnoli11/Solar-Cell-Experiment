@@ -38,31 +38,31 @@ const Voltmeter = ({
       />
 
       <span
-        id="1-endpoint"
-className={`connection-terminal connection-terminal--meter connection-terminal--meter-plus connection-terminal--endpoint-1${getTerminalConnectedClass(connectedTerminalIds, '1-endpoint')}${getTerminalHighlightClass(highlightedTerminalIds, '1-endpoint')}`}
+        id="3-endpoint"
+className={`connection-terminal connection-terminal--meter connection-terminal--meter-plus connection-terminal--endpoint-3${getTerminalConnectedClass(connectedTerminalIds, '3-endpoint')}${getTerminalHighlightClass(highlightedTerminalIds, '3-endpoint')}`}
         data-polarity="plus"
-        aria-label="Voltmeter positive terminal 1"
+        aria-label="Voltmeter positive terminal 3"
       />
 
       <span
-className={`terminal-number-label terminal-number-label--meter-plus terminal-number-label--endpoint-1${getTerminalNumberHighlightClass(highlightedTerminalIds, '1-endpoint')}`}
-        data-terminal-id="1-endpoint"
+className={`terminal-number-label terminal-number-label--meter-plus terminal-number-label--endpoint-3${getTerminalNumberHighlightClass(highlightedTerminalIds, '3-endpoint')}`}
+        data-terminal-id="3-endpoint"
       >
-        1
+        3
       </span>
 
       <span
-        id="2-endpoint"
-className={`connection-terminal connection-terminal--meter connection-terminal--meter-minus connection-terminal--endpoint-2${getTerminalConnectedClass(connectedTerminalIds, '2-endpoint')}${getTerminalHighlightClass(highlightedTerminalIds, '2-endpoint')}`}
+        id="4-endpoint"
+className={`connection-terminal connection-terminal--meter connection-terminal--meter-minus connection-terminal--endpoint-4${getTerminalConnectedClass(connectedTerminalIds, '4-endpoint')}${getTerminalHighlightClass(highlightedTerminalIds, '4-endpoint')}`}
         data-polarity="minus"
-        aria-label="Voltmeter negative terminal 2"
+        aria-label="Voltmeter negative terminal 4"
       />
 
       <span
-className={`terminal-number-label terminal-number-label--meter-minus terminal-number-label--endpoint-2${getTerminalNumberHighlightClass(highlightedTerminalIds, '2-endpoint')}`}
-        data-terminal-id="2-endpoint"
+className={`terminal-number-label terminal-number-label--meter-minus terminal-number-label--endpoint-4${getTerminalNumberHighlightClass(highlightedTerminalIds, '4-endpoint')}`}
+        data-terminal-id="4-endpoint"
       >
-        2
+        4
       </span>
 
       <div

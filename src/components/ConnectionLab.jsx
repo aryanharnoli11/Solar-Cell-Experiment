@@ -6,6 +6,7 @@ import {
   autoConnectTheveninCircuit,
   deleteConnectionsForTerminal,
   lockJsPlumbCircuit,
+  REQUIRED_CONNECTION_PAIRS,
   resolveJsPlumb,
   unlockJsPlumbCircuit,
   validateTheveninConnections,
@@ -17,29 +18,15 @@ const getJsPlumbZoom = (scale) => (
   Number.isFinite(scale) && scale > 0 ? scale : 1
 )
 
-const isRetainedPowerConnection = (connection) => {
+const isRequiredConnection = (connection) => {
   const source = connection.sourceId || connection.source?.id
   const target = connection.targetId || connection.target?.id
 
-  return (
-    (source === '7-endpoint' && target === '9-endpoint')
-    || (source === '9-endpoint' && target === '7-endpoint')
-    || (source === '8-endpoint' && target === '10-endpoint')
-    || (source === '10-endpoint' && target === '8-endpoint')
-  )
+  return REQUIRED_CONNECTION_PAIRS.some(([firstId, secondId]) => (
+    (source === firstId && target === secondId)
+    || (source === secondId && target === firstId)
+  ))
 }
-
-const hasConnection = (connections, firstId, secondId) => (
-  connections.some((connection) => {
-    const sourceId = connection.sourceId || connection.source?.id
-    const targetId = connection.targetId || connection.target?.id
-
-    return (
-      (sourceId === firstId && targetId === secondId)
-      || (sourceId === secondId && targetId === firstId)
-    )
-  })
-)
 
 const ConnectionLab = ({
   autoConnectRequest,
@@ -225,17 +212,31 @@ const ConnectionLab = ({
     unlockJsPlumbCircuit(instance, containerRef.current)
     setIsLocked(false)
 
+    if (experimentCase === 2 && case1ConnectionsRemoved) {
+      onGuideEventRef.current?.({
+        caseNumber: 1,
+        type: 'CASE_CONNECTIONS_REMOVED',
+      })
+    }
+
     if (experimentCase !== 3) {
       return
     }
 
     instance
       .getAllConnections()
-      .filter(isRetainedPowerConnection)
+      .filter(isRequiredConnection)
       .forEach((connection) => {
         connection.setDetachable?.(false)
       })
-  }, [experimentCase])
+
+    if (case2ConnectionsRemoved) {
+      onGuideEventRef.current?.({
+        caseNumber: 2,
+        type: 'CASE_CONNECTIONS_REMOVED',
+      })
+    }
+  }, [case1ConnectionsRemoved, case2ConnectionsRemoved, experimentCase])
 
   useEffect(() => {
     if (checkRequest === 0 || !instanceRef.current) {
@@ -291,7 +292,7 @@ const ConnectionLab = ({
 
     if (
       experimentCase === 3
-      && ['7-endpoint', '8-endpoint', '9-endpoint', '10-endpoint']
+      && REQUIRED_CONNECTION_PAIRS.flat()
         .includes(terminalId)
     ) {
       return
@@ -310,49 +311,6 @@ const ConnectionLab = ({
     setConnectedTerminalIds([...terminals])
     instanceRef.current.repaintEverything?.()
 
-    if (
-      experimentCase === 2
-      && remainingConnections.length === 0
-      && !case1ConnectionsRemoved
-    ) {
-      setCase1ConnectionsRemoved(true)
-      setShowMultimeter(false)
-      setShowRth(false)
-      onGuideEventRef.current?.({
-        caseNumber: 1,
-        type: 'CASE_CONNECTIONS_REMOVED',
-      })
-    }
-
-    const case2Validation = validateTheveninConnections(
-      instanceRef.current,
-      2,
-    )
-    const retainedPowerConnectionsOnly = (
-      case2Validation.totalConnections === 2
-      && hasConnection(
-        remainingConnections,
-        '7-endpoint',
-        '9-endpoint',
-      )
-      && hasConnection(
-        remainingConnections,
-        '8-endpoint',
-        '10-endpoint',
-      )
-    )
-
-    if (
-      experimentCase === 3
-      && retainedPowerConnectionsOnly
-      && !case2ConnectionsRemoved
-    ) {
-      setCase2ConnectionsRemoved(true)
-      onGuideEventRef.current?.({
-        caseNumber: 2,
-        type: 'CASE_CONNECTIONS_REMOVED',
-      })
-    }
   }
 
   const meterReadings = {

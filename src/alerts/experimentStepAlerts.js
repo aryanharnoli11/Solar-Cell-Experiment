@@ -255,9 +255,8 @@ connectionsVerifiedCase3: {
   type: 'success',
 },
 readingAddedCase1: {
-  audio: ALERT_AUDIO.removeCase1,
   description:
-    'Reading is added to the observation table. Now remove the connections 9 to 10, 5 to 11 and 6 to 13.',
+    'Reading is added to the observation table. Keep all six connections in place for Case 2.',
   icon: '✅',
   stepNumber: 6,
   target: '#observation-table-panel',
@@ -266,9 +265,8 @@ readingAddedCase1: {
 },
 
 readingAddedCase2: {
-  audio: ALERT_AUDIO.removeVoltmeter,
   description:
-    'Reading added to the observation table. The power supply switched OFF automatically. Keep connections 7-9 and 8-10 unchanged, and remove only the voltmeter connections 1-11 and 2-13.',
+    'Reading added to the observation table. The power supply switched OFF automatically. Keep all six connections in place for Case 3.',
   icon: '✅',
   stepNumber: 6,
   target: '#observation-table-panel',

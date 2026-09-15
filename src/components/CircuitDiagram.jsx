@@ -4,10 +4,26 @@ import {
   getTerminalNumberHighlightClass,
 } from '../utils/terminalHighlight.js'
 import circuitImage from '../assets/Circuit.png'
+import offButtonImage from '../assets/OFFbutton.png'
 const terminalLabels = [
+  {
+    id: '7-endpoint',
+    label: '7',
+    polarity: 'plus',
+  },
+  {
+    id: '8-endpoint',
+    label: '8',
+    polarity: 'minus',
+  },
   {
     id: '9-endpoint',
     label: '9',
+    polarity: 'plus',
+  },
+  {
+    id: '11-endpoint',
+    label: '11',
     polarity: 'plus',
   },
   {
@@ -16,24 +32,9 @@ const terminalLabels = [
     polarity: 'minus',
   },
   {
-    id: '11-endpoint',
-    label: '11',
-    polarity: 'plus',
-  },
-  {
     id: '12-endpoint',
     label: '12',
     polarity: 'plus',
-  },
-  {
-    id: '13-endpoint',
-    label: '13',
-    polarity: 'minus',
-  },
-  {
-    id: '14-endpoint',
-    label: '14',
-    polarity: 'minus',
   },
 ]
 
@@ -45,6 +46,12 @@ const CircuitDiagram = ({
   <section className={`circuit-panel ${className}`} id="circuit-panel">
     <div className="circuit-panel__stage">
       <img alt="Kirchhoff current law circuit diagram" className="circuit-panel__image" src={circuitImage} />
+      <img
+        alt="Circuit OFF button"
+        className="circuit-panel__switch-image"
+        draggable="false"
+        src={offButtonImage}
+      />
 
       {terminalLabels.map(({ id, label, polarity }) => (
         <div className="circuit-terminal" key={id}>

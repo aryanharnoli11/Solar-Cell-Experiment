@@ -411,7 +411,7 @@ const App = () => {
       setMeasuredRth(readings.rth)
       setConnectionsVerified(false)
       setExperimentCase(2)
-      setCase1ConnectionsRemoved(false)
+      setCase1ConnectionsRemoved(true)
     } else if (completedCase === 2) {
       setObservations([
         {
@@ -424,7 +424,7 @@ const App = () => {
       setVoltageLocked(true)
       setConnectionsVerified(false)
       setExperimentCase(3)
-      setCase2ConnectionsRemoved(false)
+      setCase2ConnectionsRemoved(true)
     } else if (completedCase === 3) {
       const nextReadingCount = loadReadingCount + 1
       const loadPowerMilliwatts = (readings.il ** 2) * rl * 1000
@@ -470,7 +470,7 @@ const App = () => {
     setReportPrinted(false)
     setStatus(
       completedCase === 2
-        ? 'VTH recorded. The RL slider is unlocked at 0 Ω. Turn OFF the supply, remove the voltmeter connections, and prepare Case 3.'
+        ? 'VTH recorded. The RL slider is unlocked at 0 Ω. Keep all six connections in place for Case 3.'
         : completedCase === 3
           ? 'All load-power readings were added. Click CALCULATE to continue.'
           : 'Reading added to the observation table.',
@@ -702,16 +702,12 @@ const App = () => {
   }
 
   const guideHighlights = {
-    5: ['5-endpoint', '11-endpoint'],
-    6: ['6-endpoint', '13-endpoint'],
-    7: ['9-endpoint', '10-endpoint'],
-    17: ['7-endpoint', '9-endpoint'],
-    18: ['8-endpoint', '10-endpoint'],
-    19: ['1-endpoint', '11-endpoint'],
-    20: ['2-endpoint', '13-endpoint'],
-    26: ['3-endpoint', '11-endpoint'],
-    27: ['4-endpoint', '12-endpoint'],
-    28: ['13-endpoint', '14-endpoint'],
+    17: ['1-endpoint', '7-endpoint'],
+    18: ['2-endpoint', '8-endpoint'],
+    19: ['3-endpoint', '9-endpoint'],
+    20: ['4-endpoint', '10-endpoint'],
+    26: ['5-endpoint', '11-endpoint'],
+    27: ['6-endpoint', '12-endpoint'],
   }
   const highlightedTerminalIds = (
     guideHighlights[Number(activeInstructionId)] ?? []

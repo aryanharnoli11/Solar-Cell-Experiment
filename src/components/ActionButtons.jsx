@@ -238,31 +238,28 @@ const ActionButtons = ({
       <li {...getInstructionProps('case1')}>
   <strong>Case 1 (Measure <ElectricalText text="RTH" />):</strong>
   <ul>
-    <li>Short circuit terminals (9-10).</li>
-    <li>Connect the Multimeter (5-11 and 6-13).</li>
+    <li>Connect terminals 1-7, 2-8, 3-9, 4-10, 5-11 and 6-12.</li>
     <li>Click CHECK button to verify the connections.</li>
     <li>Click ADD button to record <ElectricalText text="RTH" />.</li>
-    <li>Remove connections (9-10), (5-11), (6-13) by clicking the corresponding terminal labels.</li>
+    <li>Keep all six connections in place for Case 2.</li>
   </ul>
 </li>
 
       <li {...getInstructionProps('case2')}>
   <strong>Case 2 (Measure <ElectricalText text="VTH" />):</strong>
   <ul>
-    <li>Connect the Power Supply (7-9 and 8-10).</li>
-    <li>Connect the Voltmeter (1-11 and 2-13).</li>
+    <li>Keep all six connections: 1-7, 2-8, 3-9, 4-10, 5-11 and 6-12.</li>
     <li>Click CHECK button to verify the connections.</li>
     <li>Turn ON the Power Supply and set the desired voltage.</li>
     <li>Click ADD button to record <ElectricalText text="VTH" />.</li>
-    <li>Remove the connections (1-11 and 2-13) by clicking the corresponding terminal labels.</li>
+    <li>Keep all six connections in place for Case 3.</li>
   </ul>
 </li>
 
       <li {...getInstructionProps('case3')}>
         <strong>Case 3 (Measure <ElectricalText text="IL" />):</strong>
         <ul>
-<li>Keep the existing Power Supply connections (7-9 and 8-10) unchanged.</li>
-<li>Connect the Ammeter (3-11, 4-12 and 13-14).</li>
+<li>Keep all six connections unchanged: 1-7, 2-8, 3-9, 4-10, 5-11 and 6-12.</li>
 <li>Click CHECK button to verify the connections.</li>
 <li>Turn ON the Power Supply at the same voltage setting used in Case 2.</li>
 <li>Click ADD button to record the first <ElectricalText text="IL" /> and <ElectricalText text="PL" /> values.</li>

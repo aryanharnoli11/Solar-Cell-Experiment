@@ -1,17 +1,26 @@
-export const POSITIVE_TERMINALS = ['1-endpoint', '3-endpoint', '5-endpoint', '7-endpoint']
+export const POSITIVE_TERMINALS = ['1-endpoint', '3-endpoint', '5-endpoint']
 
-export const NEGATIVE_TERMINALS = ['2-endpoint', '4-endpoint', '6-endpoint', '8-endpoint']
+export const NEGATIVE_TERMINALS = ['2-endpoint', '4-endpoint', '6-endpoint']
 
 export const CIRCUIT_POSITIVE_TERMINALS = [
+  '7-endpoint',
   '9-endpoint',
   '11-endpoint',
   '12-endpoint',
 ]
 
 export const CIRCUIT_NEGATIVE_TERMINALS = [
+  '8-endpoint',
   '10-endpoint',
-  '13-endpoint',
-  '14-endpoint',
+]
+
+export const REQUIRED_CONNECTION_PAIRS = [
+  ['1-endpoint', '7-endpoint'],
+  ['2-endpoint', '8-endpoint'],
+  ['3-endpoint', '9-endpoint'],
+  ['4-endpoint', '10-endpoint'],
+  ['5-endpoint', '11-endpoint'],
+  ['6-endpoint', '12-endpoint'],
 ]
 
 
@@ -333,34 +342,8 @@ export const validateTheveninConnections = (
     }
   }
 
-  // CASE 1
-  if (experimentCase === 1) {
-    return validatePairs([
-      ['9-endpoint', '10-endpoint'],
-      ['5-endpoint', '11-endpoint'],
-      ['6-endpoint', '13-endpoint'],
-    ])
-  }
-
-  // CASE 2
-  if (experimentCase === 2) {
-    return validatePairs([
-      ['7-endpoint', '9-endpoint'],
-      ['8-endpoint', '10-endpoint'],
-      ['1-endpoint', '11-endpoint'],
-      ['2-endpoint', '13-endpoint'],
-    ])
-  }
-
-  // CASE 3
-  if (experimentCase === 3) {
-    return validatePairs([
-      ['7-endpoint', '9-endpoint'],
-      ['8-endpoint', '10-endpoint'],
-      ['3-endpoint', '11-endpoint'],
-      ['4-endpoint', '12-endpoint'],
-      ['13-endpoint', '14-endpoint'],
-    ])
+  if ([1, 2, 3].includes(experimentCase)) {
+    return validatePairs(REQUIRED_CONNECTION_PAIRS)
   }
 
   return {
@@ -376,27 +359,9 @@ export const autoConnectTheveninCircuit = (
   instance,
   experimentCase,
 ) => {
-  const requiredPairsByCase = {
-    1: [
-      ['9-endpoint', '10-endpoint'],
-      ['5-endpoint', '11-endpoint'],
-      ['6-endpoint', '13-endpoint'],
-    ],
-    2: [
-      ['7-endpoint', '9-endpoint'],
-      ['8-endpoint', '10-endpoint'],
-      ['1-endpoint', '11-endpoint'],
-      ['2-endpoint', '13-endpoint'],
-    ],
-    3: [
-      ['7-endpoint', '9-endpoint'],
-      ['8-endpoint', '10-endpoint'],
-      ['3-endpoint', '11-endpoint'],
-      ['4-endpoint', '12-endpoint'],
-      ['13-endpoint', '14-endpoint'],
-    ],
-  }
-  const requiredPairs = requiredPairsByCase[experimentCase]
+  const requiredPairs = [1, 2, 3].includes(experimentCase)
+    ? REQUIRED_CONNECTION_PAIRS
+    : null
 
   if (!instance || !requiredPairs) {
     return {

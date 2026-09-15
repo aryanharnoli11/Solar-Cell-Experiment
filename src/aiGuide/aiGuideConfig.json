@@ -25,18 +25,18 @@
     },
     {
       "id": 5,
-      "text": "Connect the multimeter by click and drag the wire from terminal 5 and drop it on terminal 11.",
-      "audio": "/audios/Connect the multimeter by click and drag the wire from terminal 5 and drop it on terminal 11.wav"
+      "text": "Connect terminal 1 to terminal 7.",
+      "audio": "#"
     },
     {
       "id": 6,
-      "text": "Similarly, connect terminal 6 to terminal 13.",
-      "audio": "/audios/Similarly, connect terminal 6 to terminal 13.wav"
+      "text": "Connect terminal 2 to terminal 8.",
+      "audio": "#"
     },
     {
       "id": 7,
-      "text": "Now, short circuit terminals 9 to 10.",
-      "audio": "/audios/Now, short circuit terminals 9 to 10 .wav"
+      "text": "Continue with the remaining instructed connection pairs.",
+      "audio": "#"
     },
     {
       "id": 8,
@@ -75,33 +75,33 @@
     },
     {
       "id": 15,
-      "text": "Reading is added to the observation table. Now remove the connections 9 to 10, 5 to 11 and 6 to 13.",
-      "audio": "/audios/After the Rth reading was added.wav"
+      "text": "Reading is added to the observation table. Keep all six connections in place for Case 2.",
+      "audio": "#"
     },
     {
       "id": 16,
-      "text": "Now measure the Thevenin voltage by connecting the power supply terminals and voltmeter to the circuit.",
-      "audio": "/audios/Power supply terminals, 2nd case.wav"
+      "text": "Now measure the Thevenin voltage using the same six circuit connections.",
+      "audio": "#"
     },
     {
       "id": 17,
-      "text": "Connect terminal 7 to 9.",
-      "audio": "/audios/Connect terminal 7 to 9.wav"
+      "text": "Connect terminal 1 to 7.",
+      "audio": "#"
     },
     {
       "id": 18,
-      "text": "Connect terminal 8 to 10.",
-      "audio": "/audios/Connect terminal 8 to 10.wav"
+      "text": "Connect terminal 2 to 8.",
+      "audio": "#"
     },
     {
       "id": 19,
-      "text": "Connect the voltmeter 1 to 11.",
-      "audio": "/audios/Connect  voltmeter.wav"
+      "text": "Connect the voltmeter 3 to 9.",
+      "audio": "#"
     },
     {
       "id": 20,
-      "text": "Connect terminal 2 to terminal 13.",
-      "audio": "/audios/Connect terminal 2 to terminal 13.wav"
+      "text": "Connect terminal 4 to terminal 10.",
+      "audio": "#"
     },
     {
       "id": 21,
@@ -120,27 +120,27 @@
     },
     {
       "id": 24,
-      "text": "The Thevenin voltage is added to the observation table and the load resistance slider is now unlocked at zero ohms. Turn OFF the power supply and remove the voltmeter connections 1 to 11 and 2 to 13.",
-      "audio": "/audios/After reading is added for the second case.wav"
+      "text": "The Thevenin voltage is added to the observation table and the load resistance slider is now unlocked at zero ohms. Keep all six connections in place for Case 3.",
+      "audio": "#"
     },
     {
       "id": 25,
-      "text": "Now measure the load current.",
-      "audio": "/audios/Connect Ammeter.wav"
+      "text": "Now measure the load current using the same six circuit connections.",
+      "audio": "#"
     },
     {
       "id": 26,
-      "text": "Connect the ammeter terminals 3 to 11.",
-      "audio": "/audios/Connect the ammeter terminals 3 to 11.wav"
+      "text": "Connect the ammeter terminal 5 to terminal 11.",
+      "audio": "#"
     },
     {
       "id": 27,
-      "text": "Connect terminal 4 to 12.",
-      "audio": "/audios/Connect the terminal 4 to 12.wav"
+      "text": "Connect ammeter terminal 6 to terminal 12.",
+      "audio": "#"
     },
     {
       "id": 28,
-      "text": "Connect terminal 13 to 14.",
+      "text": "The Case 3 connections are complete.",
       "audio": "/audios/Connect the terminal 13 to 14.wav"
     },
     {
