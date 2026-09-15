@@ -11,6 +11,12 @@ import { useAiGuideController } from './aiGuide/useAiGuideController.js'
 import CalculationPanel from './components/CalculationPanel.jsx'
 import { useWalkthrough } from './walkthrough/useWalkthrough.js'
 import { calculateReadings } from './utils/circuitMath.js'
+import {
+  LOAD_MEASUREMENTS,
+  OPEN_CIRCUIT_VOLTAGE,
+  SHORT_CIRCUIT_CURRENT_AMPERES,
+  SHORT_CIRCUIT_CURRENT_MILLIAMPERES,
+} from './utils/solarReadings.js'
 import { generateTheveninReport } from './utils/theveninReportGenerator.js'
 import {
   FIXED_NETWORK_RESISTANCES,
@@ -21,7 +27,7 @@ import {
 const BASE_WIDTH = 1152
 const DEFAULT_CONTENT_HEIGHT = 1440
 const PANEL_VIEWPORT_GUTTER = 0
-const MIN_OBSERVATION_READINGS = LOAD_RESISTANCE_VALUES.length
+const MIN_OBSERVATION_READINGS = 1 + LOAD_MEASUREMENTS.length
 const MAX_OBSERVATIONS = LOAD_RESISTANCE_VALUES.length
 const CIRCUIT_RESISTANCE_CONFIGURATION = { rl: true }
 
@@ -62,6 +68,10 @@ const App = () => {
   const [rl, setRl] = useState(RESISTANCE_SLIDER_CONFIG.load.initial)
   const [voltage, setVoltage] = useState(1)
   const [powerOn, setPowerOn] = useState(false)
+  const [circuitSwitchOn, setCircuitSwitchOn] = useState(false)
+  const [bulbSwitchOn, setBulbSwitchOn] = useState(false)
+  const [ammeterRemovalRequired, setAmmeterRemovalRequired] = useState(false)
+  const [ammeterConnectionsRemoved, setAmmeterConnectionsRemoved] = useState(false)
   const [voltageLocked, setVoltageLocked] = useState(false)
   const [observations, setObservations] = useState([])
   const [calculationDone, setCalculationDone] = useState(false)
@@ -75,7 +85,7 @@ const App = () => {
   const [reportGenerated, setReportGenerated] = useState(false)
   const [reportPrinted, setReportPrinted] = useState(false)
   const [status, setStatus] = useState(
-    'Measure VTH to unlock the load-resistance slider.',
+    'Make the six required circuit connections manually or use Auto Connect.',
   )
   const [checkRequest, setCheckRequest] = useState(0)
   const [resetRequest, setResetRequest] = useState(0)
@@ -83,10 +93,10 @@ const App = () => {
   const [autoConnectedCase, setAutoConnectedCase] = useState(null)
   const [connectionsVerified, setConnectionsVerified] = useState(false)
   const [sessionStart, setSessionStart] = useState(() => Date.now())
-  const [showRth, setShowRth] = useState(false)
+  const [, setShowRth] = useState(false)
   const [case1ConnectionsRemoved, setCase1ConnectionsRemoved] = useState(false)
   const [case2ConnectionsRemoved, setCase2ConnectionsRemoved] = useState(false)
-  const [showMultimeter, setShowMultimeter] = useState(false)
+  const [, setShowMultimeter] = useState(false)
   const handleGuideAudioError = useCallback(() => {
     setStatus('AI Guide could not play its configured audio file.')
   }, [])
@@ -106,30 +116,46 @@ const App = () => {
 
   const resistancesConfigured = true
   const loadObservations = observations.filter((row) => (
-    typeof row.il === 'number' && Number.isFinite(row.il)
+    row?.isLoadReading === true
   ))
   const loadReadingCount = loadObservations.length
+  const shortCircuitReadingAdded = observations.some((row) => (
+    row?.isShortCircuit === true
+  ))
+  const loadReadingsComplete = loadReadingCount >= LOAD_MEASUREMENTS.length
+  const openCircuitVoltageAdded = observations.some((row) => (
+    row?.vocRecorded === true
+  ))
   const verificationSucceeded = verificationResult.includes(
     'Verified Successfully',
   )
   const expectedLoadResistance = (
-    LOAD_RESISTANCE_VALUES[loadReadingCount] ?? null
+    LOAD_MEASUREMENTS[loadReadingCount]?.resistance ?? null
   )
-  const resistanceMinPosition = Math.max(0, loadReadingCount - 1)
-  const resistanceMaxPosition = Math.min(
+  const resistanceMinPosition = Math.min(
     loadReadingCount,
     LOAD_RESISTANCE_VALUES.length - 1,
   )
+  const resistanceMaxPosition = Math.min(
+    loadReadingCount + 1,
+    LOAD_RESISTANCE_VALUES.length - 1,
+  )
   const resistanceSliderDisabled = (
-    measuredVth === null || experimentCase !== 3
+    !shortCircuitReadingAdded || loadReadingsComplete
   )
-  const powerToggleLocked = (
-    powerOn
-    && experimentCase === 3
-    && connectionsVerified
-    && loadReadingCount < MAX_OBSERVATIONS
-  )
-
+  const selectedLoadMeasurement = LOAD_MEASUREMENTS.find((reading) => (
+    reading.resistance === rl
+  ))
+  const meterVoltage = !shortCircuitReadingAdded
+    ? 0
+    : loadReadingsComplete
+      ? OPEN_CIRCUIT_VOLTAGE
+      : selectedLoadMeasurement?.voltage ?? 0
+  const meterCurrentAmperes = !shortCircuitReadingAdded
+    ? SHORT_CIRCUIT_CURRENT_AMPERES
+    : selectedLoadMeasurement
+      ? selectedLoadMeasurement.current / 1000
+      : SHORT_CIRCUIT_CURRENT_AMPERES
   const handleResistanceChange = (value) => {
     if (resistanceSliderDisabled) {
       return
@@ -149,12 +175,16 @@ const App = () => {
 
   const handleLockedResistanceInteraction = useCallback(() => {
     void notifyGuide({
-      description: 'Please perform the first two cases.',
+      description: shortCircuitReadingAdded
+        ? 'All required load-resistance readings are complete.'
+        : 'Add the short-circuit current reading first.',
       target: '#resistance-controls',
-      title: 'Complete the First Two Cases',
+      title: shortCircuitReadingAdded
+        ? 'RL Readings Complete'
+        : 'Add ISC First',
       type: 'RESISTANCE_SLIDER_BLOCKED',
     })
-  }, [notifyGuide])
+  }, [notifyGuide, shortCircuitReadingAdded])
 
   useEffect(() => {
     let resizeTimer = 0
@@ -265,7 +295,7 @@ const App = () => {
   )
   const normalizedVoltage = Number(voltage.toFixed(1))
   const hasDuplicateReading = loadObservations.some((row) => row.rl === rl)
-  const readingCount = loadReadingCount
+  const readingCount = observations.length
 
   const handleAiGuide = useCallback(() => {
     if (guideState.guideStarted) {
@@ -324,7 +354,7 @@ const App = () => {
     if (completedCase === 1) {
       setShowRth(true)
       setShowMultimeter(true)
-      setStatus('Autoconnect completed. Click ADD to record the Thevenin equivalent resistance.')
+      setStatus('Autoconnect completed. Click the circuit OFF button to switch it ON.')
     } else if (completedCase === 2) {
       setStatus('Autoconnect completed. Turn ON the power supply and set the required voltage.')
     } else {
@@ -341,6 +371,99 @@ const App = () => {
         title: 'Check Connections First',
         type: 'ADD_REJECTED',
       })
+      return
+    }
+
+    if (!circuitSwitchOn || !bulbSwitchOn || !powerOn) {
+      setStatus('Turn ON the circuit button and the bulb switch before adding the reading.')
+      void notifyGuide({
+        description: 'Turn ON the circuit button first, then turn ON the switch beneath the bulb.',
+        target: '#bulb-switch-button',
+        title: 'Switch On the Circuit',
+        type: 'ADD_REJECTED',
+      })
+      return
+    }
+
+    if (experimentCase === 1) {
+      if (!shortCircuitReadingAdded) {
+        setObservations([
+          {
+            current: SHORT_CIRCUIT_CURRENT_MILLIAMPERES,
+            id: 1,
+            il: SHORT_CIRCUIT_CURRENT_AMPERES,
+            isShortCircuit: true,
+            isc: SHORT_CIRCUIT_CURRENT_MILLIAMPERES,
+            power: 0,
+            rth: readings.rth,
+            rl: 0,
+            voltage: 0,
+            vth: null,
+          },
+        ])
+        setMeasuredIl(SHORT_CIRCUIT_CURRENT_AMPERES)
+        setStatus('ISC = 5.6 mA added. The RL slider is enabled; move it to 100 Ω.')
+        return
+      }
+
+      if (!loadReadingsComplete) {
+        if (rl !== expectedLoadResistance) {
+          setStatus(`Move the RL slider one step to ${expectedLoadResistance} Ω before adding the next reading.`)
+          return
+        }
+
+        const measurement = LOAD_MEASUREMENTS[loadReadingCount]
+        const nextReadingCount = loadReadingCount + 1
+        const nextMeasurement = LOAD_MEASUREMENTS[nextReadingCount]
+
+        setObservations((current) => [
+          ...current,
+          {
+            ...measurement,
+            id: current.length + 1,
+            il: measurement.current / 1000,
+            isLoadReading: true,
+            rl: measurement.resistance,
+          },
+        ])
+
+        if (nextReadingCount >= LOAD_MEASUREMENTS.length) {
+          setAmmeterRemovalRequired(true)
+          setStatus('All load readings are added and RL is locked. Remove ammeter connections 5-11 and 6-12.')
+        } else {
+          setStatus(`Reading added. Move the RL slider one step to ${nextMeasurement.resistance} Ω.`)
+        }
+
+        return
+      }
+
+      if (!ammeterConnectionsRemoved) {
+        setStatus('Remove both ammeter connections 5-11 and 6-12 before adding VOC.')
+        return
+      }
+
+      if (openCircuitVoltageAdded) {
+        setStatus('VOC = 4.42 V has already been added.')
+        return
+      }
+
+      setObservations((current) => current.map((row, index) => (
+        index === 0
+          ? {
+              ...row,
+              vocRecorded: true,
+              vth: OPEN_CIRCUIT_VOLTAGE,
+            }
+          : row
+      )))
+      setMeasuredVth(OPEN_CIRCUIT_VOLTAGE)
+      setAmmeterRemovalRequired(false)
+      setStatus('VOC = 4.42 V added successfully.')
+      return
+    }
+
+    if (experimentCase === 1 && shortCircuitReadingAdded) {
+      setStatus('The short-circuit reading has already been added.')
       return
     }
 
@@ -402,16 +525,18 @@ const App = () => {
       setObservations([
         {
           id: 1,
+          current: SHORT_CIRCUIT_CURRENT_MILLIAMPERES,
+          il: SHORT_CIRCUIT_CURRENT_AMPERES,
+          isShortCircuit: true,
+          isc: SHORT_CIRCUIT_CURRENT_MILLIAMPERES,
+          power: 0,
           rth: readings.rth,
-          vth: null,
-          il: null,
-          rl,
+          rl: 0,
+          voltage: 0,
+          vth: 0,
         },
       ])
-      setMeasuredRth(readings.rth)
-      setConnectionsVerified(false)
-      setExperimentCase(2)
-      setCase1ConnectionsRemoved(true)
+      setMeasuredIl(SHORT_CIRCUIT_CURRENT_AMPERES)
     } else if (completedCase === 2) {
       setObservations([
         {
@@ -471,14 +596,18 @@ const App = () => {
     setStatus(
       completedCase === 2
         ? 'VTH recorded. The RL slider is unlocked at 0 Ω. Keep all six connections in place for Case 3.'
-        : completedCase === 3
+      : completedCase === 3
           ? 'All load-power readings were added. Click CALCULATE to continue.'
-          : 'Reading added to the observation table.',
+          : 'Reading added: V = 0 V, I = 5.6 mA, P = 0, ISC = 5.6 mA.',
     )
   }
 
   const resetSimulation = useCallback(() => {
     setPowerOn(false)
+    setCircuitSwitchOn(false)
+    setBulbSwitchOn(false)
+    setAmmeterRemovalRequired(false)
+    setAmmeterConnectionsRemoved(false)
     setVoltage(1)
     setVoltageLocked(false)
     setRl(RESISTANCE_SLIDER_CONFIG.load.initial)
@@ -501,7 +630,7 @@ const App = () => {
     setCase2ConnectionsRemoved(false)
     setResetRequest((current) => current + 1)
     setSessionStart(Date.now())
-    setStatus('Simulation reset. Make the circuit connections again.')
+    setStatus('Simulation reset. Make the six required circuit connections again.')
     setShowRth(false)
     setShowMultimeter(false)
     walkthroughCompletionRef.current = completionCount
@@ -589,7 +718,7 @@ const App = () => {
       setConnectionsVerified(true)
 
       if (experimentCase === 1) {
-        setStatus('Right connections! Click ADD to measure RTH.')
+        setStatus('Right connections! Click the circuit OFF button to switch it ON.')
       } else if (experimentCase === 2) {
         setStatus(
           'Right connections! Turn ON power supply and click ADD to measure VTH.',
@@ -626,46 +755,47 @@ const App = () => {
     setCheckRequest((current) => current + 1)
   }
 
-  const handleTogglePower = () => {
-    if (experimentCase === 1) {
+  const handleCircuitSwitchChange = useCallback((nextSwitchOn) => {
+    setCircuitSwitchOn(nextSwitchOn)
+
+    if (nextSwitchOn) {
+      setConnectionsVerified(true)
+      setStatus('Circuit button is ON. Now click the switch beneath the bulb.')
       return
     }
 
-    if (powerToggleLocked) {
-      setStatus('The MCB must remain ON until all ten load readings are recorded.')
-      return
-    }
+    setBulbSwitchOn(false)
+    setPowerOn(false)
+    setStatus('Circuit button is OFF.')
+  }, [])
 
-    if (!powerOn && !connectionsVerified) {
+  const handleBulbSwitchToggle = useCallback(() => {
+    if (!circuitSwitchOn) {
+      setStatus('Switch ON the circuit button before operating the bulb switch.')
       void notifyGuide({
-        description: 'Complete all required connections before switching ON the power supply.',
-        target: '#check-button',
-        title: 'Complete Connections First',
+        description: 'Complete the connections and switch ON the circuit button first.',
+        target: '#circuit-switch-button',
+        title: 'Switch On the Circuit First',
         type: 'POWER_REJECTED',
       })
-      setStatus(
-        'Complete all required connections before switching ON the power supply.',
-      )
       return
     }
 
-    if (powerOn) {
-      setPowerOn(false)
-      setStatus('Power supply switched off.')
-      return
-    }
+    const nextSwitchOn = !bulbSwitchOn
 
-    setPowerOn(true)
+    setBulbSwitchOn(nextSwitchOn)
+    setPowerOn(nextSwitchOn)
     setStatus(
-      experimentCase === 3
-        ? `Power supply switched on at the previous setting of ${voltage} V. Add the reading.`
-        : 'Power supply switched on. Adjust voltage and add the reading.',
+      nextSwitchOn
+        ? 'Bulb and solar panel are ON. Ammeter reading: 5.6 mA. Click ADD.'
+        : 'Bulb switch is OFF.',
     )
-    void notifyGuide({
-      caseNumber: experimentCase,
-      type: 'POWER_ON',
-    })
-  }
+  }, [bulbSwitchOn, circuitSwitchOn, notifyGuide])
+
+  const handleAmmeterConnectionsRemoved = useCallback(() => {
+    setAmmeterConnectionsRemoved(true)
+    setStatus('Ammeter connections removed. Click ADD to record VOC = 4.42 V.')
+  }, [])
 
   const handleVoltageChange = useCallback((nextVoltage) => {
     if (voltageLocked) {
@@ -769,12 +899,15 @@ const App = () => {
                   disabledButtons={{
                     onAdd: (
                       !connectionsVerified
+                      || !circuitSwitchOn
+                      || !bulbSwitchOn
                       || (
-                        experimentCase === 3
+                        shortCircuitReadingAdded
                         && (
-                          expectedLoadResistance === null
-                          || rl !== expectedLoadResistance
-                          || hasDuplicateReading
+                          !loadReadingsComplete
+                            ? rl !== expectedLoadResistance
+                            : !ammeterConnectionsRemoved
+                              || openCircuitVoltageAdded
                         )
                       )
                     ),
@@ -798,9 +931,7 @@ const App = () => {
                   observations={observations}
                   onGenerateReport={handleGenerateReport}
                   onResistanceLocked={
-                    experimentCase < 3
-                      ? handleLockedResistanceInteraction
-                      : undefined
+                    handleLockedResistanceInteraction
                   }
                   reportGenerated={reportGenerated}
                   rl={rl}
@@ -811,25 +942,30 @@ const App = () => {
 
               <section className="right-panel">
                 <ConnectionLab
+                  ammeterRemovalRequired={ammeterRemovalRequired}
                   autoConnectRequest={autoConnectRequest}
+                  bulbSwitchOn={bulbSwitchOn}
                   case1ConnectionsRemoved={case1ConnectionsRemoved}
                   case2ConnectionsRemoved={case2ConnectionsRemoved}
                   checkRequest={checkRequest}
+                  circuitSwitchOn={circuitSwitchOn}
                   experimentCase={experimentCase}
                   highlightedTerminalIds={highlightedTerminalIds}
                   key={`connection-lab-${resetRequest}`}
+                  meterCurrentAmperes={meterCurrentAmperes}
+                  meterVoltage={meterVoltage}
+                  onAmmeterConnectionsRemoved={handleAmmeterConnectionsRemoved}
                   onAutoConnectCompleted={handleAutoConnectCompleted}
+                  onBulbSwitchToggle={handleBulbSwitchToggle}
                   onCheckConnections={handleCheckConnections}
+                  onCircuitSwitchChange={handleCircuitSwitchChange}
                   onGuideEvent={notifyGuide}
-                  onTogglePower={handleTogglePower}
                   observationIl={loadObservations.at(-1)?.il ?? null}
                   observationVth={observations[0]?.vth ?? null}
                   powerOn={powerOn}
-                  powerToggleLocked={powerToggleLocked}
                   r1={r1}
                   r2={r2}
                   r3={r3}
-                  readings={readings}
                   resetRequest={resetRequest}
                   resistancesConfigured={resistancesConfigured}
                   rl={rl}
@@ -839,8 +975,6 @@ const App = () => {
                   setShowMultimeter={setShowMultimeter}
                   setShowRth={setShowRth}
                   setVoltage={handleVoltageChange}
-                  showMultimeter={showMultimeter}
-                  showRth={showRth}
                   onVoltageSet={handleVoltageSet}
                   voltage={voltage}
                   voltageLocked={voltageLocked}

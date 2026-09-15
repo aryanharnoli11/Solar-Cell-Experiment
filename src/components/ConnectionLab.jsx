@@ -28,15 +28,42 @@ const isRequiredConnection = (connection) => {
   ))
 }
 
+const AMMETER_TERMINAL_IDS = [
+  '5-endpoint',
+  '6-endpoint',
+  '11-endpoint',
+  '12-endpoint',
+]
+
+const isAmmeterConnection = (connection) => {
+  const source = connection.sourceId || connection.source?.id
+  const target = connection.targetId || connection.target?.id
+
+  return (
+    (source === '5-endpoint' && target === '11-endpoint')
+    || (source === '11-endpoint' && target === '5-endpoint')
+    || (source === '6-endpoint' && target === '12-endpoint')
+    || (source === '12-endpoint' && target === '6-endpoint')
+  )
+}
+
 const ConnectionLab = ({
+  ammeterRemovalRequired,
   autoConnectRequest,
+  bulbSwitchOn,
   case1ConnectionsRemoved,
   case2ConnectionsRemoved,
   checkRequest,
+  circuitSwitchOn,
   experimentCase,
   highlightedTerminalIds = [],
+  meterCurrentAmperes,
+  meterVoltage,
+  onAmmeterConnectionsRemoved,
   onAutoConnectCompleted,
+  onBulbSwitchToggle,
   onCheckConnections,
+  onCircuitSwitchChange,
   onGuideEvent,
   observationIl,
   observationVth,
@@ -44,7 +71,6 @@ const ConnectionLab = ({
   r1,
   r2,
   r3,
-  readings,
   resetRequest,
   resistancesConfigured,
   rl,
@@ -53,7 +79,6 @@ const ConnectionLab = ({
   setCase2ConnectionsRemoved,
   setShowMultimeter,
   setShowRth,
-  showRth,
 }) => {
   const containerRef = useRef(null)
   const instanceRef = useRef(null)
@@ -239,6 +264,28 @@ const ConnectionLab = ({
   }, [case1ConnectionsRemoved, case2ConnectionsRemoved, experimentCase])
 
   useEffect(() => {
+    const instance = instanceRef.current
+
+    if (!ammeterRemovalRequired || !instance) {
+      return
+    }
+
+    unlockJsPlumbCircuit(instance, containerRef.current)
+    setIsLocked(false)
+
+    instance.getAllConnections().forEach((connection) => {
+      if (isAmmeterConnection(connection)) {
+        return
+      }
+
+      connection.setDetachable?.(false)
+      connection.endpoints?.forEach((endpoint) => {
+        endpoint.setEnabled?.(false)
+      })
+    })
+  }, [ammeterRemovalRequired])
+
+  useEffect(() => {
     if (checkRequest === 0 || !instanceRef.current) {
       return
     }
@@ -257,6 +304,28 @@ const ConnectionLab = ({
     onCheckConnectionsRef.current?.(result)
   }, [checkRequest])
 
+  const handleCircuitSwitchToggle = () => {
+    if (circuitSwitchOn) {
+      onCircuitSwitchChange?.(false)
+      return
+    }
+
+    const result = validateTheveninConnections(
+      instanceRef.current,
+      experimentCaseRef.current,
+    )
+
+    if (!result.isCorrect) {
+      onCheckConnectionsRef.current?.(result)
+      return
+    }
+
+    lockJsPlumbCircuit(instanceRef.current, containerRef.current)
+    setIsLocked(true)
+    onCheckConnectionsRef.current?.(result)
+    onCircuitSwitchChange?.(true)
+  }
+
   const handleLabelClick = (event) => {
     const label = event.target.closest('.terminal-number-label')
 
@@ -274,7 +343,13 @@ const ConnectionLab = ({
       return
     }
 
-    if (powerOn) {
+    const terminalId = label.dataset.terminalId
+    const removingRequiredAmmeterConnection = (
+      ammeterRemovalRequired
+      && AMMETER_TERMINAL_IDS.includes(terminalId)
+    )
+
+    if (powerOn && !removingRequiredAmmeterConnection) {
       onGuideEventRef.current?.({
         description: 'Switch OFF the power supply before removing circuit connections.',
         target: '#power-toggle-button',
@@ -284,9 +359,11 @@ const ConnectionLab = ({
       return
     }
 
-    const terminalId = label.dataset.terminalId
-
     if (!terminalId || !instanceRef.current) {
+      return
+    }
+
+    if (ammeterRemovalRequired && !removingRequiredAmmeterConnection) {
       return
     }
 
@@ -311,13 +388,13 @@ const ConnectionLab = ({
     setConnectedTerminalIds([...terminals])
     instanceRef.current.repaintEverything?.()
 
-  }
+    if (
+      ammeterRemovalRequired
+      && !remainingConnections.some(isAmmeterConnection)
+    ) {
+      onAmmeterConnectionsRemoved?.()
+    }
 
-  const meterReadings = {
-    il: readings.il ?? 0,
-    rth: readings.rth ?? 0,
-    showRth,
-    vth: readings.vth ?? 0,
   }
 
   useEffect(() => {
@@ -396,19 +473,23 @@ const ConnectionLab = ({
   return (
     <div className="connection-lab" onClick={handleLabelClick} ref={containerRef}>
       <EquipmentPanel
+        bulbSwitchOn={bulbSwitchOn}
         connectedTerminalIds={connectedTerminalIds}
-        experimentCase={experimentCase}
         highlightedTerminalIds={highlightedTerminalIds}
+        meterCurrentAmperes={meterCurrentAmperes}
+        meterVoltage={meterVoltage}
         observationIl={observationIl}
         observationVth={observationVth}
+        onToggleBulbSwitch={onBulbSwitchToggle}
         powerOn={powerOn}
-        readings={meterReadings}
       />
 
       <div className="circuit-workspace">
         <CircuitDiagram
+          circuitSwitchOn={circuitSwitchOn}
           connectedTerminalIds={connectedTerminalIds}
           highlightedTerminalIds={highlightedTerminalIds}
+          onToggleCircuitSwitch={handleCircuitSwitchToggle}
           r1={r1}
           r2={r2}
           r3={r3}

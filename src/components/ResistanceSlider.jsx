@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { RESISTANCE_SLIDER_CONFIG } from '../utils/resistance.js'
 
 const ResistanceSlider = ({
@@ -35,10 +34,7 @@ const ResistanceSlider = ({
     return bounded
   }
 
-  const [draftValue, setDraftValue] = useState(value)
-  const [isEditing, setIsEditing] = useState(false)
-
-  const sliderValue = isEditing ? draftValue : value
+  const sliderValue = normalizeResistance(value)
   const sliderPosition = discreteValues
     ? discreteValues.indexOf(normalizeResistance(sliderValue))
     : sliderValue
@@ -46,12 +42,24 @@ const ResistanceSlider = ({
   const sliderMax = discreteValues ? discreteValues.length - 1 : config.max
   const sliderStep = discreteValues ? 1 : config.step
 
-  const commitValue = () => {
-    const committedValue = normalizeResistance(sliderValue)
+  const getBoundedPosition = (inputPosition) => {
+    const numericPosition = Number(inputPosition)
 
-    setDraftValue(committedValue)
-    setIsEditing(false)
-    onChange(committedValue)
+    return Math.min(
+      Math.max(
+        Number.isFinite(numericPosition) ? numericPosition : sliderMin,
+        minPosition ?? sliderMin,
+      ),
+      maxPosition ?? sliderMax,
+    )
+  }
+
+  const getValueAtPosition = (inputPosition) => {
+    const boundedPosition = getBoundedPosition(inputPosition)
+
+    return discreteValues
+      ? discreteValues[boundedPosition]
+      : normalizeResistance(boundedPosition)
   }
 
   return (
@@ -79,26 +87,9 @@ const ResistanceSlider = ({
           id={`${label}-slider`}
           max={sliderMax}
           min={sliderMin}
-          onBlur={commitValue}
           onChange={(event) => {
-            setIsEditing(true)
-            const nextPosition = Number(event.target.value)
-            const boundedPosition = discreteValues
-              ? Math.min(
-                  Math.max(nextPosition, minPosition ?? sliderMin),
-                  maxPosition ?? sliderMax,
-                )
-              : nextPosition
-
-            setDraftValue(
-              discreteValues
-                ? discreteValues[boundedPosition]
-                : boundedPosition,
-            )
+            onChange(getValueAtPosition(event.target.value))
           }}
-          onKeyUp={commitValue}
-          onPointerCancel={commitValue}
-          onPointerUp={commitValue}
           step={sliderStep}
           type="range"
           value={sliderPosition}

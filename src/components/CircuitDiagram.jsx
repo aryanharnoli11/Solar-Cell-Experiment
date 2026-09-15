@@ -5,6 +5,7 @@ import {
 } from '../utils/terminalHighlight.js'
 import circuitImage from '../assets/Circuit.png'
 import offButtonImage from '../assets/OFFbutton.png'
+import onButtonImage from '../assets/ONbutton.png'
 const terminalLabels = [
   {
     id: '7-endpoint',
@@ -39,19 +40,30 @@ const terminalLabels = [
 ]
 
 const CircuitDiagram = ({
+  circuitSwitchOn = false,
   className = '',
   connectedTerminalIds = [],
   highlightedTerminalIds = [],
+  onToggleCircuitSwitch,
 }) => (
   <section className={`circuit-panel ${className}`} id="circuit-panel">
     <div className="circuit-panel__stage">
       <img alt="Kirchhoff current law circuit diagram" className="circuit-panel__image" src={circuitImage} />
-      <img
-        alt="Circuit OFF button"
-        className="circuit-panel__switch-image"
-        draggable="false"
-        src={offButtonImage}
-      />
+      <button
+        aria-label={`Turn circuit ${circuitSwitchOn ? 'off' : 'on'}`}
+        aria-pressed={circuitSwitchOn}
+        className="circuit-panel__switch-button"
+        id="circuit-switch-button"
+        onClick={onToggleCircuitSwitch}
+        type="button"
+      >
+        <img
+          alt={circuitSwitchOn ? 'Circuit ON button' : 'Circuit OFF button'}
+          className="circuit-panel__switch-image"
+          draggable="false"
+          src={circuitSwitchOn ? onButtonImage : offButtonImage}
+        />
+      </button>
 
       {terminalLabels.map(({ id, label, polarity }) => (
         <div className="circuit-terminal" key={id}>

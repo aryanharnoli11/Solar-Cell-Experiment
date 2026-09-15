@@ -228,7 +228,7 @@ const ActionButtons = ({
 
   <li {...getInstructionProps('step1')}>
     <strong>STEP 1:</strong>{' '}
-    <ElectricalText text="Measure RTH and VTH first. The RL slider remains locked until VTH is recorded." />
+    <ElectricalText text="Measure the short-circuit current using the required six connections." />
   </li>
 
   <li>
@@ -236,12 +236,16 @@ const ActionButtons = ({
     
     <ol className="action-instructions-panel__substeps" type="a">
       <li {...getInstructionProps('case1')}>
-  <strong>Case 1 (Measure <ElectricalText text="RTH" />):</strong>
+  <strong>Initial reading (Measure <ElectricalText text="ISC" />):</strong>
   <ul>
     <li>Connect terminals 1-7, 2-8, 3-9, 4-10, 5-11 and 6-12.</li>
-    <li>Click CHECK button to verify the connections.</li>
-    <li>Click ADD button to record <ElectricalText text="RTH" />.</li>
-    <li>Keep all six connections in place for Case 2.</li>
+    <li>Click the circuit OFF button; it changes to the ON button.</li>
+    <li>Click the switch beneath the bulb to turn on the switch, bulb and solar panel.</li>
+    <li>Confirm that the ammeter reads 5.6 mA.</li>
+    <li>Click ADD to record V = 0 V, I = 5.6 mA, P = 0 and ISC = 5.6 mA.</li>
+    <li>Move RL one enabled step at a time and click ADD for each of the nine load readings.</li>
+    <li>After RL locks, remove ammeter connections 5-11 and 6-12.</li>
+    <li>Click ADD again to record VOC = 4.42 V.</li>
   </ul>
 </li>
 
@@ -263,7 +267,7 @@ const ActionButtons = ({
 <li>Click CHECK button to verify the connections.</li>
 <li>Turn ON the Power Supply at the same voltage setting used in Case 2.</li>
 <li>Click ADD button to record the first <ElectricalText text="IL" /> and <ElectricalText text="PL" /> values.</li>
-<li>Move the RL slider one division at a time and click ADD button at each value: 100, 200, 300, 400, 450, 550, 700, 850 and 1000 Ω.</li>
+<li>RL slider values are: 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 and 1000 Ω.</li>
         </ul>
       </li>
     </ol>

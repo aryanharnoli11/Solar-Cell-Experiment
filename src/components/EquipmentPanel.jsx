@@ -1,8 +1,11 @@
 import Ammeter from './Ammeter.jsx'
 import Voltmeter from './Voltmeter.jsx'
 import bulbOffImage from '../assets/BulbOff.png'
+import bulbOnImage from '../assets/BulbOn.png'
+import solarOnImage from '../assets/Solar0n.png'
 import solarPanelImage from '../assets/SolarPanel.png'
 import switchOffImage from '../assets/switchoff.png'
+import switchOnImage from '../assets/switchon.png'
 import {
   getTerminalConnectedClass,
   getTerminalHighlightClass,
@@ -10,13 +13,15 @@ import {
 } from '../utils/terminalHighlight.js'
 
 const EquipmentPanel = ({
+  bulbSwitchOn = false,
   connectedTerminalIds = [],
-  experimentCase,
   highlightedTerminalIds = [],
+  meterCurrentAmperes = 0,
+  meterVoltage = 0,
   observationIl = null,
   observationVth = null,
+  onToggleBulbSwitch,
   powerOn,
-  readings,
 }) => {
   const voltmeterConnected = ['3-endpoint', '4-endpoint'].every((terminalId) => (
     connectedTerminalIds.includes(terminalId)
@@ -33,30 +38,39 @@ const EquipmentPanel = ({
     && Number.isFinite(observationVth)
   )
   const voltmeterValue = (
-    powerOn && experimentCase === 2
-      ? readings.vth
+    powerOn && bulbSwitchOn
+      ? meterVoltage
       : (hasObservationVth ? observationVth : 0)
   )
   const ammeterValue = (
-    powerOn && experimentCase === 3
-      ? readings.il
+    powerOn && bulbSwitchOn
+      ? meterCurrentAmperes
       : (hasObservationIl ? observationIl : 0)
   )
 
   return (
     <section className="equipment-panel" id="equipment-panel">
       <img
-        alt="Bulb switched off"
+        alt={bulbSwitchOn ? 'Bulb switched on' : 'Bulb switched off'}
         className="equipment-panel__bulb-image"
         draggable="false"
-        src={bulbOffImage}
+        src={bulbSwitchOn ? bulbOnImage : bulbOffImage}
       />
-      <img
-        alt="Switch in the off position"
-        className="equipment-panel__switch-image"
-        draggable="false"
-        src={switchOffImage}
-      />
+      <button
+        aria-label={`Turn bulb ${bulbSwitchOn ? 'off' : 'on'}`}
+        aria-pressed={bulbSwitchOn}
+        className="equipment-panel__switch-button"
+        id="bulb-switch-button"
+        onClick={onToggleBulbSwitch}
+        type="button"
+      >
+        <img
+          alt={bulbSwitchOn ? 'Bulb switch on' : 'Bulb switch off'}
+          className="equipment-panel__switch-image"
+          draggable="false"
+          src={bulbSwitchOn ? switchOnImage : switchOffImage}
+        />
+      </button>
       <div className="equipment-panel__meters">
         <Voltmeter
           connectedTerminalIds={connectedTerminalIds}
@@ -73,10 +87,10 @@ const EquipmentPanel = ({
 
       <div className="equipment-panel__solar">
         <img
-          alt="Solar panel"
+          alt={bulbSwitchOn ? 'Solar panel switched on' : 'Solar panel switched off'}
           className="equipment-panel__solar-image"
           draggable="false"
-          src={solarPanelImage}
+          src={bulbSwitchOn ? solarOnImage : solarPanelImage}
         />
 
         <span
