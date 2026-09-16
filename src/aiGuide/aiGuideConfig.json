@@ -20,8 +20,7 @@
     },
     {
       "id": 4,
-      "text": "To measure the Thevenin resistance.",
-      "audio": "/audios/To measure the Thevenin resistance.wav"
+      "text": "Connect the solar panel, voltmeter, and ammeter to the matching circuit terminals."
     },
     {
       "id": 5,
@@ -40,8 +39,7 @@
     },
     {
       "id": 8,
-      "text": "Case 1 connections are completed. Click on the Check button to verify the connections.",
-      "audio": "/audios/Guide all complete conn for case 1.wav"
+      "text": "All six connections are complete. Click CHECK to verify the circuit."
     },
     {
       "id": 9,
@@ -55,13 +53,11 @@
     },
     {
       "id": 11,
-      "text": "Autoconnect completed. The digital multimeter is now displaying the Thevenin equivalent resistance value. Now, click on the add button to add the reading to the observation table.",
-      "audio": "/audios/1st Autoconnect.wav"
+      "text": "Auto Connect completed all six circuit connections. Switch ON the circuit, then turn ON the bulb switch."
     },
     {
       "id": 12,
-      "text": "Please set RL using the resistance slider.",
-      "audio": "/audios/Before resistance set, check & auto connect button click.wav"
+      "text": "Record the short-circuit current before changing RL."
     },
     {
       "id": 13,
@@ -70,17 +66,16 @@
     },
     {
       "id": 14,
-      "text": "Connections Verified successfully. The digital multimeter is now displaying the Thevenin resistance value. Now, click on the add button to add the reading to the observation table.",
-      "audio": "/audios/After 1st case connections, check.wav"
+      "text": "Connections verified. Switch ON the circuit, then turn ON the bulb switch and click ADD to record ISC."
     },
     {
       "id": 15,
-      "text": "Reading is added to the observation table. Keep all six connections in place for Case 2.",
+      "text": "ISC is recorded. Move RL to 100 ohms and click ADD for the first load reading.",
       "audio": "#"
     },
     {
       "id": 16,
-      "text": "Now measure the Thevenin voltage using the same six circuit connections.",
+      "text": "Record each load reading by moving RL one enabled step and clicking ADD.",
       "audio": "#"
     },
     {
@@ -105,27 +100,27 @@
     },
     {
       "id": 21,
-      "text": "Click on the Check button to verify the connections.",
-      "audio": "/audios/Before clicking the Check button for Case 2 and Case 3 connections.wav"
+      "text": "Click CHECK to verify all six circuit connections.",
+      "audio": "#"
     },
     {
       "id": 22,
-      "text": "Connections Verified successfully. Now switch ON the power supply and set the required voltage value.",
-      "audio": "/audios/After 2nd case connections, check.wav"
+      "text": "Connections verified. Switch ON the circuit and bulb before recording measurements.",
+      "audio": "#"
     },
     {
       "id": 23,
-      "text": "The reading is displayed on the voltmeter. Now, click on the add button to add the reading to the observation table.",
-      "audio": "/audios/After the voltage value is set.wav"
+      "text": "The meter reading is ready. Click ADD to record it in the observation table.",
+      "audio": "#"
     },
     {
       "id": 24,
-      "text": "The Thevenin voltage is added to the observation table and the load resistance slider is now unlocked at zero ohms. Keep all six connections in place for Case 3.",
+      "text": "The reading was added to the observation table.",
       "audio": "#"
     },
     {
       "id": 25,
-      "text": "Now measure the load current using the same six circuit connections.",
+      "text": "Continue recording the remaining load readings.",
       "audio": "#"
     },
     {
@@ -140,25 +135,25 @@
     },
     {
       "id": 28,
-      "text": "The Case 3 connections are complete.",
-      "audio": "/audios/Connect the terminal 13 to 14.wav"
+      "text": "All load readings are complete. Remove ammeter connections 5 to 11 and 6 to 12.",
+      "audio": "#"
     },
     {
       "id": 29,
-      "text": "Click on the Check button to verify the connections.",
-      "audio": "/audios/Before clicking the Check button for Case 2 and Case 3 connections.wav"
+      "text": "Click CHECK to verify all six circuit connections.",
+      "audio": "#"
   
     },
     
     {
       "id": 30,
-      "text": "The reading is displayed on the ammeter. Now, click on the Add button to add the reading to the observation table.",
-      "audio": "/audios/Power supply turned ON for the 3rd case.wav"
+      "text": "The ammeter is disconnected. Click ADD to record the open-circuit voltage.",
+      "audio": "#"
     },
     {
       "id": 31,
-      "text": "The final reading is added to the observation table. Now, click on the Calculate button to theoretically verify the theorem.",
-      "audio": "/audios/After the 10th reading.wav"
+      "text": "The final measurement is recorded. Click CALCULATE to theoretically verify the Maximum Power Transfer Theorem.",
+      "audio": "#"
     },
     {
       "id": 32,
@@ -187,18 +182,18 @@
     },
     {
       "id": 37,
-      "text": "Your report has been generated successfully. Click OK to view your report.",
-      "audio": "/audios/Generate Report button click.wav"
+      "text": "Measurements and verification are complete. Click OK to generate and open the experiment report.",
+      "audio": "#"
     },
     {
       "id": 38,
-      "text": "Connections verified successfully. Now turn ON the power supply.",
-      "audio": "/audios/Now check again for the 3rd case.wav"
+      "text": "Connections verified successfully. Switch ON the circuit and bulb.",
+      "audio": "#"
     },
     {
       "id": 39,
-      "text": "Please remove all current wire connections before proceeding to the next case.",
-      "audio": "/audios/After 1st and 2nd cases are completed, click autoconnect.wav"
+      "text": "Complete the current measurement before changing the circuit connections.",
+      "audio": "#"
     },
     {
       "id": 40,
@@ -212,13 +207,13 @@
     },
     {
       "id": 42,
-      "text": "Autoconnect completed. Now switch ON the power supply and set the required voltage value.",
-      "audio": "/audios/2nd Autoconnect.wav"
+      "text": "Auto Connect completed all required circuit connections.",
+      "audio": "#"
     },
     {
       "id": 43,
-      "text": "Autoconnect completed. Now turn ON the power supply.",
-      "audio": "/audios/3rd Autoconnect.wav"
+      "text": "Auto Connect completed all required circuit connections.",
+      "audio": "#"
     },
     {
       "id": 44,
@@ -227,13 +222,13 @@
     },
     {
       "id": 45,
-      "text": "Reading added successfully. Repeat this process until all ten readings have been added.",
-      "audio": "/audios/2nd time RL clickvary.wav"
+      "text": "Reading added successfully. Repeat this process until all eleven observation rows have been recorded.",
+      "audio": "#"
     },
     {
       "id": 46,
-      "text": "Please perform the first two cases.",
-      "audio": "/audios/1st time RL click.wav"
+      "text": "Record ISC before changing RL. After all load readings are recorded, RL remains locked.",
+      "audio": "#"
     }
   ]
 }

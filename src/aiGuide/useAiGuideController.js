@@ -185,11 +185,15 @@ export const useAiGuideController = ({
     const normalizedInstructionId = String(instructionId)
     const instruction = instructionsById.get(normalizedInstructionId)
 
-    if (!instruction || !instruction.audio || instruction.audio === '#') {
+    if (!instruction) {
       onAudioError?.(
-        new Error(`AI Guide instruction ${normalizedInstructionId} has no audio file configured.`),
+        new Error(`AI Guide instruction ${normalizedInstructionId} is not configured.`),
       )
       return Promise.resolve('error')
+    }
+
+    if (!instruction.audio || instruction.audio === '#') {
+      return Promise.resolve('skipped')
     }
 
     if (!force && playedAudioIdsRef.current.has(playbackId)) {
@@ -457,7 +461,7 @@ export const useAiGuideController = ({
     }
 
     const introInstruction = caseNumber === 1
-      ? ['3', '4', '17']
+      ? ['3', '17']
       : caseNumber === 2
         ? ['16']
         : ['25']
@@ -673,12 +677,8 @@ export const useAiGuideController = ({
         }))
 
         showGuideAlert({
-          description: caseNumber === 1
-            ? 'Autoconnect completed. The digital multimeter is now displaying the Thevenin equivalent resistance value. Now, click on the add button to add the reading to the observation table.'
-            : caseNumber === 2
-              ? 'Autoconnect completed. Now switch ON the power supply and set the required voltage value.'
-              : 'Autoconnect completed. Now turn ON the power supply.',
-          target: caseNumber === 1 ? '#add-reading-button' : '#power-toggle-button',
+          description: 'All six solar-cell circuit connections are complete. Switch ON the circuit, then turn ON the bulb switch to display the short-circuit current.',
+          target: '#circuit-switch-button',
           title: 'Autoconnect Completed',
           type: 'success',
         }, instructionId)
@@ -722,10 +722,7 @@ export const useAiGuideController = ({
           }))
           showGuideAlert({
             description,
-            target:
-              caseNumber === 1
-                ? '#add-reading-button'
-                : '#power-toggle-button',
+            target: '#circuit-switch-button',
             title: 'Connections Verified',
             type: 'success',
           }, instructionId)
@@ -814,6 +811,54 @@ export const useAiGuideController = ({
       }
 
       case 'READING_ADDED': {
+        const stage = event.stage
+
+        if (stage === 'short-circuit') {
+          showGuideAlert({
+            description: 'ISC = 5.6 mA has been recorded. Move the RL slider to 100 Ω, then click ADD to record the first load reading.',
+            target: '#resistance-controls',
+            title: 'Short-Circuit Current Recorded',
+            type: 'success',
+          }, '15')
+
+          return runInstructionSequence([{
+            instructionId: '15',
+            priority: AUDIO_PRIORITY.SUCCESS,
+          }])
+        }
+
+        if (stage === 'load-series-complete') {
+          showGuideAlert({
+            description: 'All ten load readings are recorded and RL is locked. Remove the ammeter wires 5–11 and 6–12, then click ADD to record VOC.',
+            target: '#circuit-panel',
+            title: 'Load Readings Complete',
+            type: 'success',
+          }, '28')
+
+          return runInstructionSequence([{
+            instructionId: '28',
+            priority: AUDIO_PRIORITY.SUCCESS,
+          }])
+        }
+
+        if (stage === 'open-circuit') {
+          updateState((current) => ({
+            ...current,
+            case1Completed: true,
+          }))
+          showGuideAlert({
+            description: 'VOC = 4.42 V has been recorded. All required measurements are complete; click CALCULATE to begin theoretical verification.',
+            target: '#calculate-button',
+            title: 'Measurements Complete',
+            type: 'success',
+          }, '31')
+
+          return runInstructionSequence([{
+            instructionId: '31',
+            priority: AUDIO_PRIORITY.SUCCESS,
+          }])
+        }
+
         const caseNumber = Number(event.caseNumber)
         const completedStateKey = `case${caseNumber}Completed`
 
@@ -934,7 +979,7 @@ export const useAiGuideController = ({
         showGuideAlert({
           description: event.description,
           target: event.target ?? '#check-button',
-          title: event.title ?? 'Power Supply Unavailable',
+          title: event.title ?? 'Circuit Action Unavailable',
           type: 'warning',
         })
         return false
@@ -953,20 +998,27 @@ export const useAiGuideController = ({
       }
 
       case 'RESISTANCE_SLIDER_BLOCKED': {
-        const instructionId = '46'
-
         showGuideAlert({
-          description: instructionsById.get(instructionId)?.text,
+          description: event.description,
           target: event.target,
           title: event.title,
           type: event.alertType ?? 'warning',
-        }, instructionId)
+        })
+
+        return false
+      }
+
+      case 'AMMETER_CONNECTIONS_REMOVED': {
+        showGuideAlert({
+          description: 'Both ammeter connections are removed. Click ADD to record the open-circuit voltage VOC = 4.42 V.',
+          target: '#add-reading-button',
+          title: 'Ready to Record Open-Circuit Voltage',
+          type: 'info',
+        }, '30')
 
         return runInstructionSequence([{
-          force: true,
-          instructionId,
-          playbackId: `resistance-slider-blocked:${Date.now()}`,
-          priority: AUDIO_PRIORITY.ERROR,
+          instructionId: '30',
+          priority: AUDIO_PRIORITY.STAGE_INSTRUCTION,
         }])
       }
 
@@ -1064,7 +1116,7 @@ export const useAiGuideController = ({
           confirmLabel: 'OK',
           description: instructionsById.get('37')?.text,
           target: '#generate-report-button',
-          title: 'Report Generated',
+          title: 'Generate Experiment Report',
           type: 'success',
         })
 
@@ -1080,6 +1132,12 @@ export const useAiGuideController = ({
           ...current,
           reportGenerated: true,
         }))
+        showGuideAlert({
+          description: 'The experiment report was generated and opened in a new tab.',
+          target: '#generate-report-button',
+          title: 'Report Ready',
+          type: 'success',
+        })
         return true
       }
 
@@ -1090,6 +1148,17 @@ export const useAiGuideController = ({
           playbackId: `print:${Date.now()}`,
           priority: AUDIO_PRIORITY.SUCCESS,
         }])
+      }
+
+      case 'RESET_REQUEST': {
+        return confirmGuideAlert({
+          confirmLabel: 'Reset',
+          critical: true,
+          description: 'Resetting will clear all connections, measurements, calculations, and verification results.',
+          target: '#reset-button',
+          title: 'Reset the Experiment?',
+          type: 'warning',
+        })
       }
 
       case 'RESET': {

@@ -402,6 +402,12 @@ const App = () => {
           },
         ])
         setMeasuredIl(SHORT_CIRCUIT_CURRENT_AMPERES)
+        void notifyGuide({
+          stage: 'short-circuit',
+          type: 'READING_ADDED',
+        })
+        setReportGenerated(false)
+        setReportPrinted(false)
         setStatus('ISC = 5.6 mA added. The RL slider is enabled; move it to 100 Ω.')
         return
       }
@@ -429,11 +435,21 @@ const App = () => {
 
         if (nextReadingCount >= LOAD_MEASUREMENTS.length) {
           setAmmeterRemovalRequired(true)
+          void notifyGuide({
+            stage: 'load-series-complete',
+            type: 'READING_ADDED',
+          })
           setStatus('All load readings are added and RL is locked. Remove ammeter connections 5-11 and 6-12.')
         } else {
+          void notifyGuide({
+            readingCount: nextReadingCount,
+            type: 'LOAD_READING_ADDED',
+          })
           setStatus(`Reading added. Move the RL slider one step to ${nextMeasurement.resistance} Ω.`)
         }
 
+        setReportGenerated(false)
+        setReportPrinted(false)
         return
       }
 
@@ -458,7 +474,15 @@ const App = () => {
       )))
       setMeasuredVth(OPEN_CIRCUIT_VOLTAGE)
       setAmmeterRemovalRequired(false)
-      setStatus('VOC = 4.42 V added successfully.')
+      setConnectionsVerified(false)
+      setExperimentCase(4)
+      void notifyGuide({
+        stage: 'open-circuit',
+        type: 'READING_ADDED',
+      })
+      setReportGenerated(false)
+      setReportPrinted(false)
+      setStatus('VOC = 4.42 V added. All measurements are complete; click CALCULATE.')
       return
     }
 
@@ -637,6 +661,14 @@ const App = () => {
     void notifyGuide({ type: 'RESET' })
   }, [completionCount, notifyGuide])
 
+  const handleReset = useCallback(async () => {
+    const shouldReset = await notifyGuide({ type: 'RESET_REQUEST' })
+
+    if (shouldReset) {
+      resetSimulation()
+    }
+  }, [notifyGuide, resetSimulation])
+
   const handlePrint = async () => {
     await notifyGuide({ type: 'PRINT' })
     window.print()
@@ -794,8 +826,9 @@ const App = () => {
 
   const handleAmmeterConnectionsRemoved = useCallback(() => {
     setAmmeterConnectionsRemoved(true)
+    void notifyGuide({ type: 'AMMETER_CONNECTIONS_REMOVED' })
     setStatus('Ammeter connections removed. Click ADD to record VOC = 4.42 V.')
-  }, [])
+  }, [notifyGuide])
 
   const handleVoltageChange = useCallback((nextVoltage) => {
     if (voltageLocked) {
@@ -921,7 +954,7 @@ const App = () => {
                   onCalculate={handleCalculate}
                   onCheck={handleCheck}
                   onPrint={handlePrint}
-                  onReset={resetSimulation}
+                  onReset={handleReset}
                 />
 
                 <ControlPanel

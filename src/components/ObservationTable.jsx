@@ -40,8 +40,8 @@ const ObservationTable = ({ observations }) => {
             <tr className="observation-table__column-headings">
               <th>S.No.</th>
               <th>Voltage (V)</th>
-              <th>Current (I) mA</th>
-              <th>Power (P)</th>
+              <th>Current (mA)</th>
+              <th>Power (mW)</th>
             </tr>
           </thead>
           <tbody>

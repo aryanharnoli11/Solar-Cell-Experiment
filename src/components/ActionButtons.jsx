@@ -243,7 +243,7 @@ const ActionButtons = ({
     <li>Click the switch beneath the bulb to turn on the switch, bulb and solar panel.</li>
     <li>Confirm that the ammeter reads 5.6 mA.</li>
     <li>Click ADD to record V = 0 V, I = 5.6 mA, P = 0 and ISC = 5.6 mA.</li>
-    <li>Move RL one enabled step at a time and click ADD for each of the nine load readings.</li>
+    <li>Move RL one enabled step at a time and click ADD for each of the ten load readings.</li>
     <li>After RL locks, remove ammeter connections 5-11 and 6-12.</li>
     <li>Click ADD again to record VOC = 4.42 V.</li>
   </ul>

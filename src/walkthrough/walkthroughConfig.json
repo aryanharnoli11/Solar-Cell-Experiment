@@ -146,28 +146,6 @@
   "placement": "bottom"
 },
 {
-  "id": 13,
-  "target": "#multimeter",
-  "title": {
-    "en": "Digital Multimeter"
-  },
-  "description": {
-    "en": "The digital multimeter is used in resistance (Ω) mode to measure the Thevenin equivalent resistance (RTH) across the load terminals after removing the load resistance and deactivating the independent voltage source (by replacing it with a short circuit), the equivalent resistance across the load terminals will be measured."
-  },
-   "audio": "/walkthrough-audios/Digital Multimeter.wav",
-  "placement": "bottom"
-},{
-  "id": 14,
-  "target": "#power-supply",
-  "title": {
-    "en": "Regulated DC Power Supply"
-  },
-  "description": {
-    "en": "This section provides the required DC voltage to the circuit. The display shows the active voltage supplied to the circuit, and the slider can be used to set the desired voltage value.\n\n**Rating:** 15 V DC "
-  },
-   "audio": "/walkthrough-audios/Regulated DC Power Supply.wav",
-  "placement": "left"
-},{
   "id": 15,
   "target": "#circuit-panel",
   "title": {
