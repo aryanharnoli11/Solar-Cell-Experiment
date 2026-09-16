@@ -57,18 +57,21 @@ const EquipmentPanel = ({
         src={bulbSwitchOn ? bulbOnImage : bulbOffImage}
       />
       <button
-        aria-label={`Turn bulb ${bulbSwitchOn ? 'off' : 'on'}`}
+        aria-label={bulbSwitchOn ? 'Bulb switch is on' : 'Turn bulb on'}
         aria-pressed={bulbSwitchOn}
         className="equipment-panel__switch-button"
+        disabled={bulbSwitchOn}
         id="bulb-switch-button"
         onClick={onToggleBulbSwitch}
         type="button"
       >
         <img
           alt={bulbSwitchOn ? 'Bulb switch on' : 'Bulb switch off'}
-          className="equipment-panel__switch-image"
-          draggable="false"
-          src={bulbSwitchOn ? switchOnImage : switchOffImage}
+        className="equipment-panel__switch-image"
+        draggable="false"
+        height="50"
+        src={bulbSwitchOn ? switchOnImage : switchOffImage}
+        width="30"
         />
       </button>
       <div className="equipment-panel__meters">
@@ -88,9 +91,11 @@ const EquipmentPanel = ({
       <div className="equipment-panel__solar">
         <img
           alt={bulbSwitchOn ? 'Solar panel switched on' : 'Solar panel switched off'}
-          className="equipment-panel__solar-image"
+          className={`equipment-panel__solar-image equipment-panel__solar-image--${bulbSwitchOn ? 'on' : 'off'}`}
           draggable="false"
+          height="210"
           src={bulbSwitchOn ? solarOnImage : solarPanelImage}
+          width="174"
         />
 
         <span

@@ -1,179 +1,99 @@
-import { useEffect, useState } from 'react'
-import ElectricalText from './ElectricalText.jsx'
+import { useState } from 'react'
 import PowerLoadGraph from './PowerLoadGraph.jsx'
-import {
-  formatCompactNumber,
-  formatFixedNumber,
-} from '../utils/numberFormat.js'
+import { formatFixedNumber } from '../utils/numberFormat.js'
 
-const INPUT_TOLERANCES = {
-  rth: 0.005,
-  vth: 0.005,
+const INPUT_FIELDS = {
+  imp: { label: 'Imp', max: 100, unit: 'mA' },
+  isc: { label: 'Isc', max: 100, unit: 'mA' },
+  vmp: { label: 'Vmp', max: 100, unit: 'V' },
+  voc: { label: 'Voc', max: 100, unit: 'V' },
 }
-
-const INPUT_RANGES = {
-  rth: { min: 0, max: 1000 },
-  vth: { min: 0, max: 100 },
-}
-
-const COMPARISON_EPSILON = 1e-9
 const DISPLAY_DECIMAL_PLACES = 2
-const MAXIMUM_POWER_TOLERANCE_MILLIWATTS = 0.02
-const MILLIWATTS_PER_WATT = 1000
-
-const approximatelyEquals = (value, expected, tolerance) => (
-  Number.isFinite(expected)
-  && Math.abs(value - expected) <= tolerance + COMPARISON_EPSILON
-)
 
 const preventMouseWheelAdjustment = (event) => {
   event.currentTarget.blur()
 }
 
-const getLoadPowerMilliwatts = (observation) => {
-  const loadCurrentAmperes = Number(observation?.il)
-  const loadResistanceOhms = Number(observation?.rl)
-
-  if (
-    !Number.isFinite(loadCurrentAmperes)
-    || !Number.isFinite(loadResistanceOhms)
-  ) {
-    return null
-  }
-
-  return (loadCurrentAmperes ** 2) * loadResistanceOhms * 1000
-}
-
 const CalculationPanel = ({
   calculationDone,
-  calculatedValues,
   observations,
   onGuideEvent,
   setUserCalculatedPmax,
   setVerificationResult,
 }) => {
-  const r1 = calculatedValues?.r1 ?? ''
-  const r2 = calculatedValues?.r2 ?? ''
-  const r3 = calculatedValues?.r3 ?? ''
-  const voltageSource = calculatedValues?.voltageSource ?? ''
-  const [theveninInputs, setTheveninInputs] = useState({
-    rth: '',
-    vth: '',
+  const [solarInputs, setSolarInputs] = useState({
+    imp: '',
+    isc: '',
+    vmp: '',
+    voc: '',
   })
-  const [incorrectInputs, setIncorrectInputs] = useState({
-    rth: false,
-    vth: false,
+  const [fillFactor, setFillFactor] = useState('')
+  const [invalidInputs, setInvalidInputs] = useState({
+    imp: false,
+    isc: false,
+    vmp: false,
+    voc: false,
   })
-  const missingInputKeys = Object.entries(theveninInputs)
-    .filter(([, value]) => value.trim() === '')
-    .map(([parameter]) => parameter)
-  const enteredRthOhms = Number(theveninInputs.rth)
-  const enteredVth = Number(theveninInputs.vth)
-  const inputsAreValid = (
-    missingInputKeys.length === 0
-    && Number.isFinite(enteredVth)
-    && Number.isFinite(enteredRthOhms)
-    && enteredRthOhms !== 0
-  )
-  const calculatedMaximumPowerMilliwatts = inputsAreValid
-    ? ((enteredVth ** 2) / (4 * enteredRthOhms)) * MILLIWATTS_PER_WATT
-    : null
-  const calculatedMaximumPowerDisplay = (
-    calculatedMaximumPowerMilliwatts === null
-      ? ''
-      : formatFixedNumber(
-          calculatedMaximumPowerMilliwatts,
-          DISPLAY_DECIMAL_PLACES,
-        )
-  )
-  const maximumObservedLoadPowerMilliwatts = observations.reduce(
-    (maximumPower, observation) => {
-      const loadPowerMilliwatts = getLoadPowerMilliwatts(observation)
 
-      return loadPowerMilliwatts === null
-        ? maximumPower
-        : Math.max(maximumPower, loadPowerMilliwatts)
-    },
-    Number.NEGATIVE_INFINITY,
-  )
-  const maximumObservedLoadPowerDisplay = Number.isFinite(
-    maximumObservedLoadPowerMilliwatts,
-  )
-    ? formatFixedNumber(
-        maximumObservedLoadPowerMilliwatts,
-        DISPLAY_DECIMAL_PLACES,
-      )
-    : ''
-  const maximumPowerMatchesObservation = (
-    calculatedMaximumPowerDisplay !== ''
-    && maximumObservedLoadPowerDisplay !== ''
-    && Math.abs(
-      Number(calculatedMaximumPowerDisplay)
-      - Number(maximumObservedLoadPowerDisplay)
-    ) <= MAXIMUM_POWER_TOLERANCE_MILLIWATTS + COMPARISON_EPSILON
-  )
-
-  useEffect(() => {
-    setUserCalculatedPmax(calculatedMaximumPowerDisplay)
-  }, [calculatedMaximumPowerDisplay, setUserCalculatedPmax])
-
-  const handleTheveninInputChange = (parameter, value) => {
-    const { min, max } = INPUT_RANGES[parameter]
+  const handleInputChange = (parameter, value) => {
     const numericValue = Number(value)
+    const maximum = INPUT_FIELDS[parameter].max
 
     if (
       value !== ''
-      && (
-        !Number.isFinite(numericValue)
-        || numericValue < min
-        || numericValue > max
-      )
+      && (!Number.isFinite(numericValue) || numericValue < 0 || numericValue > maximum)
     ) {
       return
     }
 
-    setTheveninInputs((current) => ({
-      ...current,
-      [parameter]: value,
-    }))
-    setIncorrectInputs((current) => ({
-      ...current,
-      [parameter]: false,
-    }))
+    setSolarInputs((current) => ({ ...current, [parameter]: value }))
+    setInvalidInputs((current) => ({ ...current, [parameter]: false }))
+    setFillFactor('')
+    setUserCalculatedPmax('')
     setVerificationResult('')
   }
 
-  const handleTheveninInputBlur = (parameter) => {
-    setTheveninInputs((current) => {
-      const currentValue = current[parameter]
+  const renderInput = (parameter) => {
+    const field = INPUT_FIELDS[parameter]
 
-      if (currentValue.trim() === '') return current
-
-      const numericValue = Number(currentValue)
-
-      if (!Number.isFinite(numericValue)) return current
-
-      return {
-        ...current,
-        [parameter]: formatCompactNumber(
-          numericValue,
-          DISPLAY_DECIMAL_PLACES,
-        ),
-      }
-    })
+    return (
+      <label className="fill-factor-input">
+        <span className="fill-factor-input__symbol">
+          {field.label.charAt(0)}<sub>{field.label.slice(1)}</sub>
+        </span>
+        <input
+          aria-label={`${field.label} in ${field.unit}`}
+          aria-invalid={invalidInputs[parameter]}
+          className={`maximum-power-input${invalidInputs[parameter] ? ' maximum-power-input--error' : ''}`}
+          disabled={!calculationDone}
+          max={field.max}
+          min="0"
+          onChange={(event) => handleInputChange(parameter, event.target.value)}
+          onWheel={preventMouseWheelAdjustment}
+          placeholder="Enter Value"
+          step="any"
+          type="number"
+          value={solarInputs[parameter]}
+        />
+      </label>
+    )
   }
 
-  const handleVerify = () => {
+  const handleCalculate = () => {
     if (!calculationDone) return
 
-    if (missingInputKeys.length > 0) {
-      const onlyOneValueIsMissing = missingInputKeys.length === 1
+    const missingInputKeys = Object.entries(solarInputs)
+      .filter(([, value]) => value.trim() === '')
+      .map(([parameter]) => parameter)
 
+    if (missingInputKeys.length > 0) {
+      setInvalidInputs((current) => ({
+        ...current,
+        ...Object.fromEntries(missingInputKeys.map((parameter) => [parameter, true])),
+      }))
       onGuideEvent?.({
         alertType: 'warning',
-        description: onlyOneValueIsMissing
-          ? 'Please enter the required value, then click the “Verify” button to verify the theorem.'
-          : 'Please enter all the values, then click the “Verify” button to verify the theorem.',
+        description: 'Enter Vmp, Imp, Isc and Voc before calculating the fill factor.',
         missingCount: missingInputKeys.length,
         target: '#calculation-panel',
         title: 'Input Required',
@@ -182,153 +102,85 @@ const CalculationPanel = ({
       return
     }
 
-    const expectedVth = Number(calculatedValues?.vth)
-    const expectedRthOhms = Number(calculatedValues?.rth)
-    const nextIncorrectInputs = {
-      rth: (
-        !Number.isFinite(enteredRthOhms)
-        || !approximatelyEquals(
-          enteredRthOhms,
-          expectedRthOhms,
-          INPUT_TOLERANCES.rth,
-        )
-      ),
-      vth: (
-        !Number.isFinite(enteredVth)
-        || !approximatelyEquals(
-          enteredVth,
-          expectedVth,
-          INPUT_TOLERANCES.vth,
-        )
-      ),
+    const vmp = Number(solarInputs.vmp)
+    const imp = Number(solarInputs.imp)
+    const isc = Number(solarInputs.isc)
+    const voc = Number(solarInputs.voc)
+
+    if (isc === 0 || voc === 0) {
+      setInvalidInputs((current) => ({
+        ...current,
+        isc: isc === 0,
+        voc: voc === 0,
+      }))
+      onGuideEvent?.({
+        alertType: 'warning',
+        description: 'Isc and Voc must be greater than zero to calculate the fill factor.',
+        target: '#calculation-panel',
+        title: 'Check the Values',
+        type: 'CALCULATION_INPUT_REQUIRED',
+      })
+      return
     }
-    const isCorrect = (
-      !Object.values(nextIncorrectInputs).some(Boolean)
-      && maximumPowerMatchesObservation
+
+    const maximumPower = vmp * imp
+    const calculatedFillFactor = (maximumPower / (isc * voc)) * 100
+    const fillFactorDisplay = formatFixedNumber(
+      calculatedFillFactor,
+      DISPLAY_DECIMAL_PLACES,
     )
 
-    setIncorrectInputs(nextIncorrectInputs)
-    onGuideEvent?.({
-      isCorrect,
-      type: 'VERIFICATION_RESULT',
-    })
+    setFillFactor(fillFactorDisplay)
+    setUserCalculatedPmax(formatFixedNumber(maximumPower, DISPLAY_DECIMAL_PLACES))
     setVerificationResult(
-      isCorrect
-        ? `✅ Verified Successfully: Pmax (${calculatedMaximumPowerDisplay} mW) agrees with the maximum PL (${maximumObservedLoadPowerDisplay} mW) within ${MAXIMUM_POWER_TOLERANCE_MILLIWATTS.toFixed(2)} mW.`
-        : '❌ Incorrect Calculation',
+      `✅ Verified Successfully: Fill factor calculated as ${fillFactorDisplay}%.`,
     )
+    onGuideEvent?.({ isCorrect: true, type: 'VERIFICATION_RESULT' })
   }
-
-  const renderCircuitValue = (label, value, unit) => (
-    <div className="maximum-power-parameter">
-      <span className="maximum-power-parameter__label">{label}</span>
-      <output className="maximum-power-parameter__value">
-        {calculationDone && value !== ''
-          ? formatCompactNumber(value, DISPLAY_DECIMAL_PLACES)
-          : ''}
-      </output>
-      <span className="maximum-power-parameter__unit">{unit}</span>
-    </div>
-  )
 
   return (
     <section className="maximum-power-results" id="maximum-power-results">
-      <PowerLoadGraph observations={observations} />
+      <PowerLoadGraph observations={calculationDone ? observations : []} />
 
       <section className="analysis-card theoretical-calculation-panel" id="calculation-panel">
         <header className="analysis-card__heading">
-          <h2>THEORETICAL VERIFICATION</h2>
+          <h2>THEORETICAL CALCULATION</h2>
         </header>
 
         <div className="theoretical-calculation-panel__body">
-          <section className="maximum-power-values-card">
-            <div className="maximum-power-values-card__section">
-              <h3>Resistance Values</h3>
-              <div className="maximum-power-values-card__resistances">
-                {renderCircuitValue(<ElectricalText text="R1:" />, r1, 'Ω')}
-                {renderCircuitValue(<ElectricalText text="R2:" />, r2, 'Ω')}
-                {renderCircuitValue(<ElectricalText text="R3:" />, r3, 'Ω')}
-              </div>
-            </div>
-
-            <div className="maximum-power-values-card__section maximum-power-values-card__source">
-              <h3>Source Value</h3>
-              <div>
-                {renderCircuitValue('Voltage Source:', voltageSource, 'V')}
-              </div>
-            </div>
-          </section>
-
-          <section className="maximum-power-formula-card">
-            <h3>Maximum Power</h3>
+          <section className="fill-factor-card">
             <div
-              aria-label="Maximum load power equals Thevenin voltage squared divided by four times Thevenin resistance"
-              className="maximum-power-equation"
+              aria-label="Fill factor equals maximum power divided by short-circuit current multiplied by open-circuit voltage"
+              className="fill-factor-definition"
             >
-              <span className="maximum-power-equation__lead">
-                P<sub>L,max</sub> =
+              <span>Fill Factor</span>
+              <span>=</span>
+              <span className="fill-factor-fraction fill-factor-fraction--compact">
+                <span>P<sub>max</sub></span>
+                <span>I<sub>sc</sub>&nbsp;× V<sub>oc</sub></span>
               </span>
+            </div>
 
-              <div className="maximum-power-equation__fraction">
-                <label className="maximum-power-equation__term maximum-power-equation__numerator">
-                  <span
-                    aria-hidden="true"
-                    className="maximum-power-equation__voltage-symbol"
-                  >
-                    V<sup>2</sup><sub>TH</sub>
-                  </span>
-                  <input
-                    aria-label="Enter Thevenin voltage in volts"
-                    aria-invalid={incorrectInputs.vth}
-                    className={`maximum-power-input${incorrectInputs.vth ? ' maximum-power-input--error' : ''}`}
-                    disabled={!calculationDone}
-                    max={INPUT_RANGES.vth.max}
-                    min={INPUT_RANGES.vth.min}
-                    onBlur={() => handleTheveninInputBlur('vth')}
-                    onChange={(event) => handleTheveninInputChange('vth', event.target.value)}
-                    onWheel={preventMouseWheelAdjustment}
-                    placeholder="Enter Value"
-                    step="any"
-                    title="Enter VTH from 0 to 100 volts"
-                    type="number"
-                    value={theveninInputs.vth}
-                  />
-                  <span className="maximum-power-equation__unit">V</span>
-                </label>
-
-                <div className="maximum-power-equation__denominator">
-                  <span>4 ×</span>
-                  <label className="maximum-power-equation__term">
-                    <ElectricalText text="Rth" />
-                    <input
-                      aria-label="Enter Thevenin resistance in ohms"
-                      aria-invalid={incorrectInputs.rth}
-                      className={`maximum-power-input${incorrectInputs.rth ? ' maximum-power-input--error' : ''}`}
-                      disabled={!calculationDone}
-                      max={INPUT_RANGES.rth.max}
-                      min={INPUT_RANGES.rth.min}
-                      onBlur={() => handleTheveninInputBlur('rth')}
-                      onChange={(event) => handleTheveninInputChange('rth', event.target.value)}
-                      onWheel={preventMouseWheelAdjustment}
-                      placeholder="Enter Value"
-                      step="any"
-                      title="Enter RTH from 0 to 1000 ohms"
-                      type="number"
-                      value={theveninInputs.rth}
-                    />
-                    <span className="maximum-power-equation__unit">Ω</span>
-                  </label>
-                </div>
-              </div>
-
-              <span className="maximum-power-equation__equals">=</span>
-              <output
-                aria-label="Calculated maximum power in milliwatts"
-                className="maximum-power-result"
-              >
-                {calculatedMaximumPowerDisplay}
+            <div className="fill-factor-calculation">
+              <span className="fill-factor-calculation__equals">=</span>
+              <span className="fill-factor-fraction">
+                <span className="fill-factor-expression">
+                  {renderInput('vmp')}
+                  <span>×</span>
+                  {renderInput('imp')}
+                </span>
+                <span className="fill-factor-expression">
+                  {renderInput('isc')}
+                  <span>×</span>
+                  {renderInput('voc')}
+                </span>
+              </span>
+              <span className="fill-factor-calculation__times">× 100</span>
+              <span>=</span>
+              <output className="fill-factor-result" aria-label="Calculated fill factor">
+                {fillFactor || ' '}
               </output>
-              <span className="maximum-power-equation__result-unit">mW</span>
+              <span className="fill-factor-result__unit">%</span>
             </div>
           </section>
 
@@ -336,10 +188,10 @@ const CalculationPanel = ({
             <button
               className="verify-btn"
               disabled={!calculationDone}
-              onClick={handleVerify}
+              onClick={handleCalculate}
               type="button"
             >
-              Verify
+              Calculate
             </button>
           </div>
         </div>

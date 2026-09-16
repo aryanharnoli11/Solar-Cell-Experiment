@@ -152,22 +152,22 @@
     },
     {
       "id": 31,
-      "text": "The final measurement is recorded. Click CALCULATE to theoretically verify the Maximum Power Transfer Theorem.",
+      "text": "The final measurement is recorded. Click PLOT to draw the V-I characteristics of the solar cell.",
       "audio": "#"
     },
     {
       "id": 32,
-      "text": "The resistance and source values are displayed in the theoretical verification panel. Enter the calculated values in the input field, and click the Verify button to verify the theorem.",
+      "text": "The V-I characteristic curve is now plotted. Enter Vmp, Imp, Isc and Voc in the theoretical verification panel, then click Calculate to obtain the fill factor.",
       "audio": "/audios/After clicking the calculate button.wav"
     },
     {
       "id": 33,
-      "text": "Incorrect calculations. The Maximum Power Transfer Theorem could not be verified. Please review your calculations and try again.",
+      "text": "The fill factor could not be calculated. Check that all four values are entered and that Isc and Voc are greater than zero.",
       "audio": "/audios/Verify button click, Incorrect calculations.wav"
     },
     {
       "id": 34,
-      "text": "Calculations are correct. The Maximum Power Transfer Theorem has been verified successfully. Now, click on the Generate Report button.",
+      "text": "The fill factor has been calculated successfully. Now click the Generate Report button.",
       "audio": "/audios/Verify button click, Correct calculations.wav"
     },
     {

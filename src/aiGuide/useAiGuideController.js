@@ -847,8 +847,8 @@ export const useAiGuideController = ({
             case1Completed: true,
           }))
           showGuideAlert({
-            description: 'VOC = 4.42 V has been recorded. All required measurements are complete; click CALCULATE to begin theoretical verification.',
-            target: '#calculate-button',
+            description: 'VOC = 4.42 V has been recorded. All required measurements are complete; click PLOT to draw the V-I characteristics.',
+            target: '#plot-button',
             title: 'Measurements Complete',
             type: 'success',
           }, '31')
@@ -880,7 +880,7 @@ export const useAiGuideController = ({
         if (caseNumber === 3) {
           showGuideAlert({
             description: instructionsById.get(instructionId)?.text,
-            target: '#calculate-button',
+            target: '#plot-button',
             title: 'Final Reading Added',
             type: 'success',
           }, instructionId)

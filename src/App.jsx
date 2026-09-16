@@ -482,7 +482,7 @@ const App = () => {
       })
       setReportGenerated(false)
       setReportPrinted(false)
-      setStatus('VOC = 4.42 V added. All measurements are complete; click CALCULATE.')
+      setStatus('VOC = 4.42 V added. All measurements are complete; click PLOT.')
       return
     }
 
@@ -621,7 +621,7 @@ const App = () => {
       completedCase === 2
         ? 'VTH recorded. The RL slider is unlocked at 0 Ω. Keep all six connections in place for Case 3.'
       : completedCase === 3
-          ? 'All load-power readings were added. Click CALCULATE to continue.'
+          ? 'All load readings were added. Record VOC, then click PLOT.'
           : 'Reading added: V = 0 V, I = 5.6 mA, P = 0, ISC = 5.6 mA.',
     )
   }
@@ -687,9 +687,9 @@ const App = () => {
 
     if (!calculationDone) {
       void notifyGuide({
-        description: 'Please click CALCULATE before generating report.',
-        target: '#calculate-button',
-        title: 'Calculate First',
+        description: 'Please click PLOT before generating the report.',
+        target: '#plot-button',
+        title: 'Plot First',
         type: 'REPORT_BLOCKED',
       })
       return
@@ -788,6 +788,10 @@ const App = () => {
   }
 
   const handleCircuitSwitchChange = useCallback((nextSwitchOn) => {
+    if (circuitSwitchOn && !nextSwitchOn) {
+      return
+    }
+
     setCircuitSwitchOn(nextSwitchOn)
 
     if (nextSwitchOn) {
@@ -799,7 +803,7 @@ const App = () => {
     setBulbSwitchOn(false)
     setPowerOn(false)
     setStatus('Circuit button is OFF.')
-  }, [])
+  }, [circuitSwitchOn])
 
   const handleBulbSwitchToggle = useCallback(() => {
     if (!circuitSwitchOn) {
@@ -813,14 +817,14 @@ const App = () => {
       return
     }
 
-    const nextSwitchOn = !bulbSwitchOn
+    if (bulbSwitchOn) {
+      return
+    }
 
-    setBulbSwitchOn(nextSwitchOn)
-    setPowerOn(nextSwitchOn)
+    setBulbSwitchOn(true)
+    setPowerOn(true)
     setStatus(
-      nextSwitchOn
-        ? 'Bulb and solar panel are ON. Ammeter reading: 5.6 mA. Click ADD.'
-        : 'Bulb switch is OFF.',
+      'Bulb and solar panel are ON. Ammeter reading: 5.6 mA. Click ADD.',
     )
   }, [bulbSwitchOn, circuitSwitchOn, notifyGuide])
 
@@ -847,7 +851,12 @@ const App = () => {
     }
   }, [experimentCase, notifyGuide, powerOn])
 
-  const handleCalculate = () => {
+  const handlePlot = () => {
+    if (!loadReadingsComplete || !openCircuitVoltageAdded) {
+      setStatus('Record all load readings and VOC before plotting the graph.')
+      return
+    }
+
     const latestLoadObservation = loadObservations.at(-1)
 
     setCalculatedValues({
@@ -862,6 +871,7 @@ const App = () => {
     })
     setCalculationDone(true)
     void notifyGuide({ type: 'CALCULATE' })
+    setStatus('V-I characteristics plotted. Calculate the fill factor in the theoretical verification panel.')
   }
 
   const guideHighlights = {
@@ -944,14 +954,18 @@ const App = () => {
                         )
                       )
                     ),
-                    onCalculate: experimentCase !== 4,
+                    onPlot: (
+                      experimentCase !== 4
+                      || !loadReadingsComplete
+                      || !openCircuitVoltageAdded
+                    ),
                     onCheck: autoConnectedCase === experimentCase,
                     onPrint: false,
                   }}
                   onAdd={recordObservation}
                   onAiGuide={handleAiGuide}
                   onAutoConnect={handleAutoConnect}
-                  onCalculate={handleCalculate}
+                  onPlot={handlePlot}
                   onCheck={handleCheck}
                   onPrint={handlePrint}
                   onReset={handleReset}

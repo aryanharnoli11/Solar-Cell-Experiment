@@ -1,102 +1,142 @@
 import { formatCompactNumber } from '../utils/numberFormat.js'
-import { LOAD_RESISTANCE_VALUES } from '../utils/resistance.js'
 
-const CHART_WIDTH = 500
-const CHART_HEIGHT = 330
+const CHART_WIDTH = 560
+const CHART_HEIGHT = 350
 const CHART_PADDING = {
-  bottom: 54,
-  left: 58,
-  right: 20,
-  top: 25,
+  bottom: 58,
+  left: 66,
+  right: 26,
+  top: 28,
 }
-const X_AXIS_TICKS = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
-const Y_TICK_COUNT = 10
+const TICK_COUNT = 6
 
-const getLoadPowerMilliwatts = (observation) => (
-  (observation.il ** 2) * observation.rl * 1000
-)
+const getNiceMaximum = (maximumValue) => {
+  if (!Number.isFinite(maximumValue) || maximumValue <= 0) return 1
 
-const getNiceYAxisMaximum = (maximumValue) => {
-  if (!Number.isFinite(maximumValue) || maximumValue <= 0) {
-    return 5
-  }
-
-  const roughStep = maximumValue / Y_TICK_COUNT
+  const paddedMaximum = maximumValue * 1.06
+  const roughStep = paddedMaximum / TICK_COUNT
   const magnitude = 10 ** Math.floor(Math.log10(roughStep))
   const normalizedStep = roughStep / magnitude
   const niceStep = normalizedStep <= 1
     ? 1
     : normalizedStep <= 2
       ? 2
-      : normalizedStep <= 5
-        ? 5
-        : 10
+      : normalizedStep <= 2.5
+        ? 2.5
+        : normalizedStep <= 5
+          ? 5
+          : 10
 
-  return niceStep * magnitude * Y_TICK_COUNT
+  return niceStep * magnitude * TICK_COUNT
+}
+
+const buildSmoothPath = (points) => {
+  if (points.length === 0) return ''
+  if (points.length === 1) return `M ${points[0].x} ${points[0].y}`
+
+  return points.slice(1).reduce((path, point, index) => {
+    const previous = points[index]
+    const midX = (previous.x + point.x) / 2
+
+    return `${path} C ${midX} ${previous.y}, ${midX} ${point.y}, ${point.x} ${point.y}`
+  }, `M ${points[0].x} ${points[0].y}`)
 }
 
 const PowerLoadGraph = ({ observations = [] }) => {
+  const summary = observations[0]
+  const openCircuitVoltage = Number(summary?.vth)
   const plottedReadings = observations
     .filter((row) => (
-      typeof row?.rl === 'number'
-      && Number.isFinite(row.rl)
-      && typeof row?.il === 'number'
-      && Number.isFinite(row.il)
+      Number.isFinite(Number(row?.voltage))
+      && Number.isFinite(Number(row?.current))
     ))
     .map((row) => ({
-      loadPower: getLoadPowerMilliwatts(row),
-      resistance: row.rl,
+      current: Number(row.current),
+      voltage: Number(row.voltage),
     }))
-    .sort((current, next) => current.resistance - next.resistance)
-  const chartInnerWidth = (
-    CHART_WIDTH - CHART_PADDING.left - CHART_PADDING.right
+
+  if (
+    Number.isFinite(openCircuitVoltage)
+    && openCircuitVoltage > 0
+    && !plottedReadings.some((reading) => reading.voltage === openCircuitVoltage)
+  ) {
+    plottedReadings.push({ current: 0, voltage: openCircuitVoltage })
+  }
+
+  plottedReadings.sort((current, next) => current.voltage - next.voltage)
+
+  const chartInnerWidth = CHART_WIDTH - CHART_PADDING.left - CHART_PADDING.right
+  const chartInnerHeight = CHART_HEIGHT - CHART_PADDING.top - CHART_PADDING.bottom
+  const chartBottom = CHART_PADDING.top + chartInnerHeight
+  const xAxisMaximum = getNiceMaximum(
+    Math.max(0, ...plottedReadings.map((reading) => reading.voltage)),
   )
-  const chartInnerHeight = (
-    CHART_HEIGHT - CHART_PADDING.top - CHART_PADDING.bottom
+  const yAxisMaximum = getNiceMaximum(
+    Math.max(0, ...plottedReadings.map((reading) => reading.current)),
   )
-  const xAxisMaximum = LOAD_RESISTANCE_VALUES.at(-1)
-  const yAxisMaximum = getNiceYAxisMaximum(
-    Math.max(0, ...plottedReadings.map((reading) => reading.loadPower)),
+  const xTicks = Array.from(
+    { length: TICK_COUNT + 1 },
+    (_, index) => (xAxisMaximum / TICK_COUNT) * index,
   )
-  const getX = (resistance) => (
-    CHART_PADDING.left + (resistance / xAxisMaximum) * chartInnerWidth
+  const yTicks = Array.from(
+    { length: TICK_COUNT + 1 },
+    (_, index) => (yAxisMaximum / TICK_COUNT) * index,
   )
-  const getY = (loadPower) => (
+  const getX = (voltage) => (
+    CHART_PADDING.left + (voltage / xAxisMaximum) * chartInnerWidth
+  )
+  const getY = (current) => (
     CHART_PADDING.top
     + chartInnerHeight
-    - (loadPower / yAxisMaximum) * chartInnerHeight
+    - (current / yAxisMaximum) * chartInnerHeight
   )
-  const polylinePoints = plottedReadings
-    .map((reading) => `${getX(reading.resistance)},${getY(reading.loadPower)}`)
-    .join(' ')
-  const peakPower = Math.max(
-    Number.NEGATIVE_INFINITY,
-    ...plottedReadings.map((reading) => reading.loadPower),
-  )
+  const points = plottedReadings.map((reading) => ({
+    ...reading,
+    x: getX(reading.voltage),
+    y: getY(reading.current),
+  }))
+  const curvePath = buildSmoothPath(points)
+  const areaPath = points.length > 1
+    ? `${curvePath} L ${points.at(-1).x} ${chartBottom} L ${points[0].x} ${chartBottom} Z`
+    : ''
 
   return (
     <section className="analysis-card power-load-graph-panel" id="power-load-graph-panel">
       <header className="analysis-card__heading">
-        <h2>POWER VS LOAD RESISTANCE GRAPH</h2>
+        <h2>VI Characteristics of Solar Cell</h2>
       </header>
 
       <div className="power-load-graph-panel__body">
         <svg
-          aria-label="Load power in milliwatts plotted against load resistance in ohms"
+          aria-label="Solar cell current in milliamperes plotted against voltage in volts"
           className="power-load-graph"
           role="img"
           viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
         >
+          <defs>
+            <linearGradient id="vi-plot-background" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#fffdf7" />
+              <stop offset="100%" stopColor="#f5f8ef" />
+            </linearGradient>
+            <linearGradient id="vi-area-gradient" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#e4a11b" stopOpacity="0.28" />
+              <stop offset="100%" stopColor="#e4a11b" stopOpacity="0.02" />
+            </linearGradient>
+            <filter id="vi-point-shadow" height="180%" width="180%" x="-40%" y="-40%">
+              <feDropShadow dx="0" dy="2" floodColor="#493017" floodOpacity="0.28" stdDeviation="2" />
+            </filter>
+          </defs>
+
           <rect
             className="power-load-graph__plot-background"
             height={chartInnerHeight}
+            rx="8"
             width={chartInnerWidth}
             x={CHART_PADDING.left}
             y={CHART_PADDING.top}
           />
 
-          {Array.from({ length: Y_TICK_COUNT + 1 }, (_, index) => {
-            const tickValue = (yAxisMaximum / Y_TICK_COUNT) * index
+          {yTicks.map((tickValue) => {
             const y = getY(tickValue)
 
             return (
@@ -111,7 +151,7 @@ const PowerLoadGraph = ({ observations = [] }) => {
                 <text
                   className="power-load-graph__tick-label"
                   textAnchor="end"
-                  x={CHART_PADDING.left - 8}
+                  x={CHART_PADDING.left - 11}
                   y={y + 4}
                 >
                   {formatCompactNumber(tickValue, 2)}
@@ -120,107 +160,76 @@ const PowerLoadGraph = ({ observations = [] }) => {
             )
           })}
 
-          {X_AXIS_TICKS.map((tickValue) => {
+          {xTicks.map((tickValue) => {
             const x = getX(tickValue)
 
             return (
               <g key={`x-${tickValue}`}>
                 <line
-                  className="power-load-graph__grid-line"
+                  className="power-load-graph__grid-line power-load-graph__grid-line--vertical"
                   x1={x}
                   x2={x}
                   y1={CHART_PADDING.top}
-                  y2={CHART_HEIGHT - CHART_PADDING.bottom}
+                  y2={chartBottom}
                 />
                 <text
                   className="power-load-graph__tick-label"
                   textAnchor="middle"
                   x={x}
-                  y={CHART_HEIGHT - CHART_PADDING.bottom + 19}
+                  y={chartBottom + 22}
                 >
-                  {tickValue}
+                  {formatCompactNumber(tickValue, 2)}
                 </text>
               </g>
             )
           })}
 
-          <line
+          <path
             className="power-load-graph__axis"
-            x1={CHART_PADDING.left}
-            x2={CHART_PADDING.left}
-            y1={CHART_PADDING.top}
-            y2={CHART_HEIGHT - CHART_PADDING.bottom}
-          />
-          <line
-            className="power-load-graph__axis"
-            x1={CHART_PADDING.left}
-            x2={CHART_WIDTH - CHART_PADDING.right}
-            y1={CHART_HEIGHT - CHART_PADDING.bottom}
-            y2={CHART_HEIGHT - CHART_PADDING.bottom}
+            d={`M ${CHART_PADDING.left} ${CHART_PADDING.top - 5} V ${chartBottom} H ${CHART_WIDTH - CHART_PADDING.right + 5}`}
           />
 
-          {plottedReadings.length > 1 ? (
-            <polyline
-              className="power-load-graph__line"
-              points={polylinePoints}
-            />
+          {areaPath ? <path className="power-load-graph__area" d={areaPath} /> : null}
+          {points.length > 1 ? (
+            <path className="power-load-graph__line" d={curvePath} />
           ) : null}
 
-          {plottedReadings.map((reading) => {
-            const isPeak = reading.loadPower === peakPower && peakPower > 0
-
-            return (
-              <g key={reading.resistance}>
-                <circle
-                  className={`power-load-graph__point${isPeak ? ' power-load-graph__point--peak' : ''}`}
-                  cx={getX(reading.resistance)}
-                  cy={getY(reading.loadPower)}
-                  r={isPeak ? 5.5 : 4}
-                >
-                  <title>
-                    {`RL ${reading.resistance} Ω, PL ${formatCompactNumber(reading.loadPower, 2)} mW`}
-                  </title>
-                </circle>
-                {isPeak ? (
-                  <text
-                    className="power-load-graph__peak-label"
-                    textAnchor="middle"
-                    x={getX(reading.resistance)}
-                    y={getY(reading.loadPower) - 11}
-                  >
-                    {`${formatCompactNumber(reading.loadPower, 2)} mW`}
-                  </text>
-                ) : null}
-              </g>
-            )
-          })}
+          {points.map((point, index) => (
+            <circle
+              className="power-load-graph__point"
+              cx={point.x}
+              cy={point.y}
+              key={`${point.voltage}-${point.current}-${index}`}
+              r="4.5"
+            >
+              <title>
+                {`${formatCompactNumber(point.voltage, 2)} V, ${formatCompactNumber(point.current, 2)} mA`}
+              </title>
+            </circle>
+          ))}
 
           <text
             className="power-load-graph__axis-title"
             textAnchor="middle"
             x={CHART_PADDING.left + chartInnerWidth / 2}
-            y={CHART_HEIGHT - 8}
+            y={CHART_HEIGHT - 9}
           >
-            Load Resistance, R
-            <tspan baselineShift="sub" fontSize="8">L</tspan>
-            {' (Ω)'}
+            Voltage (V)
           </text>
           <text
             className="power-load-graph__axis-title"
             textAnchor="middle"
-            transform={`rotate(-90 14 ${CHART_PADDING.top + chartInnerHeight / 2})`}
-            x={14}
+            transform={`rotate(-90 17 ${CHART_PADDING.top + chartInnerHeight / 2})`}
+            x={17}
             y={CHART_PADDING.top + chartInnerHeight / 2}
           >
-            Load Power, P
-            <tspan baselineShift="sub" fontSize="8">L</tspan>
-            {' (mW)'}
+            Current (mA)
           </text>
         </svg>
 
         {plottedReadings.length === 0 ? (
           <p className="power-load-graph-panel__empty">
-            Add readings to generate the graph.
+            Complete all readings and click PLOT to generate the V–I curve.
           </p>
         ) : null}
       </div>

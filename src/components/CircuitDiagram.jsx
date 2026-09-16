@@ -50,9 +50,10 @@ const CircuitDiagram = ({
     <div className="circuit-panel__stage">
       <img alt="Kirchhoff current law circuit diagram" className="circuit-panel__image" src={circuitImage} />
       <button
-        aria-label={`Turn circuit ${circuitSwitchOn ? 'off' : 'on'}`}
+        aria-label={circuitSwitchOn ? 'Circuit switch is on' : 'Turn circuit on'}
         aria-pressed={circuitSwitchOn}
         className="circuit-panel__switch-button"
+        disabled={circuitSwitchOn}
         id="circuit-switch-button"
         onClick={onToggleCircuitSwitch}
         type="button"

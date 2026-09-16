@@ -306,7 +306,6 @@ const ConnectionLab = ({
 
   const handleCircuitSwitchToggle = () => {
     if (circuitSwitchOn) {
-      onCircuitSwitchChange?.(false)
       return
     }
 

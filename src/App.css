@@ -105,7 +105,7 @@
 
 .header-board h1 {
   margin: 0;
-  font-size: 27.2px;
+  font-size: 22.4px;
   font-weight: 900;
   line-height: 1;
   text-shadow: 0 2.4px 0 rgba(0, 0, 0, 0.45);
@@ -580,7 +580,7 @@
 .observation-table-wrap {
   position: relative;
   z-index: 1;
-  height: 260px;
+  height: 270.4px;
   margin: 6.4px 8px 8px;
   overflow: hidden;
   border: 0.8px solid rgba(96, 61, 35, 0.34);
@@ -589,7 +589,7 @@
 }
 
 .observation-table-card {
-  height: 315.2px;
+  height: 325.2px;
 }
 
 .observation-table {
@@ -718,12 +718,21 @@
   z-index: 2;
   width: 30px;
   height: 50px;
+  min-width: 30px;
+  max-width: 30px;
+  min-height: 50px;
+  max-height: 50px;
   padding: 0;
   overflow: hidden;
   border: 0;
   outline: none;
   background: transparent;
   cursor: pointer;
+}
+
+.equipment-panel__switch-button:disabled,
+.circuit-panel__switch-button:disabled {
+  cursor: default;
 }
 
 .equipment-panel__switch-image {
@@ -769,11 +778,20 @@
 }
 
 .equipment-panel__solar-image {
+  position: absolute;
+  top: 0;
+  left: 43px;
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  width: 174px;
+  height: 210px;
+  object-fit: fill;
   pointer-events: none;
+}
+
+.equipment-panel__solar-image--on {
+  top: 0.6px;
+  width: 186px;
+  height: 203.7px;
 }
 
 .power-supply {
@@ -1162,10 +1180,10 @@
 .circuit-panel__switch-button {
   position: absolute;
   top: 137px;
-  left: 42px;
+  left: 25px;
   z-index: 4;
-  width: 52px;
-  height: 80px;
+  width: 84px;
+  height: 100px;
   padding: 0;
   overflow: hidden;
   border: 0;
@@ -2782,9 +2800,9 @@ background:
 .power-load-graph-panel__body {
   position: relative;
   display: grid;
-  min-height: 350px;
+  min-height: 366px;
   place-items: center;
-  padding: 10.4px 9.6px 12.8px;
+  padding: 8px 9.6px 12.8px;
 }
 
 .power-load-graph {
@@ -2795,16 +2813,26 @@ background:
 }
 
 .power-load-graph__plot-background {
-  fill: rgba(255, 253, 248, 0.82);
-}
-
-.power-load-graph__grid-line {
-  stroke: rgba(105, 73, 48, 0.17);
+  fill: url("#vi-plot-background");
+  stroke: rgba(105, 73, 48, 0.16);
   stroke-width: 1;
 }
 
+.power-load-graph__grid-line {
+  stroke: rgba(105, 73, 48, 0.16);
+  stroke-dasharray: 3 5;
+  stroke-width: 1;
+}
+
+.power-load-graph__grid-line--vertical {
+  stroke: rgba(105, 73, 48, 0.1);
+}
+
 .power-load-graph__axis {
-  stroke: #4d2f1d;
+  fill: none;
+  stroke: #573923;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   stroke-width: 1.8;
 }
 
@@ -2824,29 +2852,22 @@ background:
 
 .power-load-graph__line {
   fill: none;
-  stroke: #086b9d;
+  stroke: #d58a0b;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 3;
+  stroke-width: 3.5;
+}
+
+.power-load-graph__area {
+  fill: url("#vi-area-gradient");
+  stroke: none;
 }
 
 .power-load-graph__point {
-  fill: #0d81b9;
-  stroke: #fffaf0;
-  stroke-width: 2;
-}
-
-.power-load-graph__point--peak {
-  fill: #c34e20;
-  stroke: #fff6df;
-  stroke-width: 2.5;
-}
-
-.power-load-graph__peak-label {
-  fill: #983815;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 10.5px;
-  font-weight: 900;
+  fill: #fffdf7;
+  filter: url("#vi-point-shadow");
+  stroke: #cb7900;
+  stroke-width: 2.4;
 }
 
 .power-load-graph-panel__empty {
@@ -2868,8 +2889,129 @@ background:
 
 .theoretical-calculation-panel__body {
   display: grid;
-  gap: 12px;
-  padding: 14.4px;
+  align-content: start;
+  gap: 13.6px;
+  padding: 17.6px;
+}
+
+.fill-factor-card {
+  display: grid;
+  min-height: 272px;
+  align-content: center;
+  gap: 28px;
+  padding: 20px 16px;
+  border: 0.8px solid rgba(125, 86, 49, 0.24);
+  border-radius: 8.8px;
+  color: #342117;
+  background: linear-gradient(180deg, #fffdf8, #f6ead8);
+  box-shadow: inset 0 0.8px 0 #fff;
+  font-family: Cambria, "Times New Roman", serif;
+  font-weight: 700;
+}
+
+.fill-factor-definition,
+.fill-factor-calculation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10.4px;
+}
+
+.fill-factor-definition {
+  font-size: 20px;
+}
+
+.fill-factor-definition > span:first-child {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15.2px;
+  font-weight: 850;
+}
+
+.fill-factor-fraction {
+  display: grid;
+  min-width: 246px;
+  grid-template-rows: 1fr 1fr;
+  text-align: center;
+}
+
+.fill-factor-fraction > span:first-child {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px 8px;
+  border-bottom: 1.6px solid #4a3021;
+}
+
+.fill-factor-fraction > span:last-child {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 8px 0;
+}
+
+.fill-factor-fraction--compact {
+  min-width: 128px;
+  font-size: 18.4px;
+}
+
+.fill-factor-fraction--compact > span:first-child,
+.fill-factor-fraction--compact > span:last-child {
+  min-height: 31.2px;
+}
+
+.fill-factor-calculation {
+  gap: 8px;
+  font-size: 17.6px;
+}
+
+.fill-factor-calculation__equals,
+.fill-factor-calculation__times {
+  white-space: nowrap;
+}
+
+.fill-factor-expression {
+  gap: 7.2px;
+}
+
+.fill-factor-input {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fill-factor-input__symbol {
+  min-width: 24px;
+  font-size: 15.2px;
+  white-space: nowrap;
+}
+
+.fill-factor-input .maximum-power-input {
+  width: 72px;
+  height: 31.2px;
+}
+
+.fill-factor-result {
+  display: grid;
+  width: 70.4px;
+  height: 31.2px;
+  place-items: center;
+  border: 0.8px solid rgba(112, 77, 44, 0.3);
+  border-radius: 5.6px;
+  color: #3e2a1f;
+  background: #fffaf1;
+  box-shadow: inset 0 0.8px 1.6px rgba(70, 40, 19, 0.08);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.fill-factor-result__unit {
+  margin-left: -4px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11.2px;
+  font-weight: 800;
 }
 
 .maximum-power-values-card,

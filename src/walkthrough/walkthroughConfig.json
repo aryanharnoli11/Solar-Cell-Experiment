@@ -78,12 +78,12 @@
 },
 {
   "id": 7,
-  "target": "#calculate-button",
+  "target": "#plot-button",
   "title": {
-    "en": "Calculate Button"
+    "en": "Plot Button"
   },
   "description": {
-    "en": "The CALCULATE button auto-fills the resistance and source values in the Theoretical Verification panel. For verification, you have to theoretically calculate Rth and Vth and verify them using the VERIFY button."
+    "en": "After all load readings and VOC are recorded, the PLOT button draws the solar-cell V-I characteristics and enables the Theoretical Verification panel."
   },
   "audio": "/walkthrough-audios/calculate button.wav",
   "placement": "right"
@@ -185,7 +185,7 @@
     "en": "Theoretical Verification"
   },
   "description": {
-    "en": "This is the theoretical verification panel where the maximum power transfer theorem will be verified, and a graph will be plotted automatically between power and load resistance. Enter the required values and compare the calculated power with the measured power to verify the theorem."
+    "en": "This panel plots the V-I characteristics of the solar cell and calculates the fill factor using Vmp, Imp, Isc and Voc."
   },
    "audio": "/walkthrough-audios/Theoretical Verification.wav",
   "placement": "top"
