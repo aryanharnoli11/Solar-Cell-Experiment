@@ -50,6 +50,11 @@ const EquipmentPanel = ({
 
   return (
     <section className="equipment-panel" id="equipment-panel">
+      <div
+        aria-hidden="true"
+        className="equipment-panel__solar-bulb-target"
+        id="solar-bulb-controls"
+      />
       <img
         alt={bulbSwitchOn ? 'Bulb switched on' : 'Bulb switched off'}
         className="equipment-panel__bulb-image"

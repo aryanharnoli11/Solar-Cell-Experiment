@@ -698,6 +698,16 @@
     linear-gradient(180deg, transparent 52%, rgba(83, 54, 30, 0.1));
 }
 
+.equipment-panel__solar-bulb-target {
+  position: absolute;
+  top: 25px;
+  left: 10px;
+  z-index: 1;
+  width: 295px;
+  height: 210px;
+  pointer-events: none;
+}
+
 /* Individual bulb image controls: position and size. */
 .equipment-panel__bulb-image {
   position: absolute;

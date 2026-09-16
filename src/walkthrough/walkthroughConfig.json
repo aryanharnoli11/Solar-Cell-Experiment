@@ -14,7 +14,7 @@
     "en": "Aim"
   },
   "description": {
-    "en": "To verify the Maximum Power Transfer Theorem."
+    "en": "To study the VI characteristics and fill factor of a Solar Cell."
   },
    "audio":"/walkthrough-audios/AIM.wav",
   "placement": "bottom"
@@ -83,7 +83,7 @@
     "en": "Plot Button"
   },
   "description": {
-    "en": "After all load readings and VOC are recorded, the PLOT button draws the solar-cell V-I characteristics and enables the Theoretical Verification panel."
+    "en": "The PLOT button will display the graph of the recorded readings."
   },
   "audio": "/walkthrough-audios/calculate button.wav",
   "placement": "right"
@@ -117,75 +117,97 @@
     "en": "Resistance Slider"
   },
   "description": {
-    "en": "For varying the load resistance (RL) by moving the resistance slider.\n\n**Range RL:** 0 - 1000 Ω"
+    "en": "For varying the load resistance (RL) by moving the resistance slider. Vary RL gradually and record the corresponding voltage (V) and current (I) values in the observation table.\n\n**Range RL:** 0 - 1000 Ω"
   },
    "audio": "/walkthrough-audios/Resistance Slider.wav",
   "placement": "right"
 },{
   "id": 11,
-  "target": "#voltmeter",
+  "target": "#circuit-switch-button",
   "title": {
-    "en": "DC Voltmeter"
+    "en": "Power Switch"
   },
   "description": {
-    "en": "This voltmeter is used to measure the Thevenin equivalent voltage (VTH) across the load terminals with the load resistance disconnected. The measured VTH will be used later to verify the theorem.\n\n**Rating:** 50 V"
+    "en": "Use this switch to turn the experimental setup ON/OFF. The power switch controls the power supply to the complete experimental setup.\n\n**Input Supply:** 230 V, 50 Hz"
+  },
+   "audio": "/walkthrough-audios/Circuit Connections.wav",
+  "placement": "left"
+},{
+  "id": 12,
+  "target": "#solar-bulb-controls",
+  "title": {
+    "en": "Solar Panel"
+  },
+  "description": {
+    "en": "The bulb acts as the light source for the solar panel. Its light is directed onto the solar panel to generate electrical energy, providing the voltage and current required to study the solar cell V–I characteristics.\n\n**Rating:** 2 W, 6 V"
+  },
+   "audio": "#",
+  "placement": "right"
+},{
+  "id": 13,
+  "target": "#voltmeter",
+  "title": {
+    "en": "AC/DC Voltmeter"
+  },
+  "description": {
+    "en": "This voltmeter measures the voltage across the solar cell. For the open-circuit condition, disconnect the ammeter and measure the open-circuit voltage (VOC). The measured voltage is also used to determine the maximum-power point and fill factor.\n\n**Rating:** 0 - 10 V"
   },
    "audio": "/walkthrough-audios/DC Voltmeter.wav",
   "placement": "bottom"
 },
 {
-  "id": 12,
+  "id": 14,
   "target": "#ammeter-a1",
   "title": {
-    "en": "DC Ammeter"
+    "en": "AC/DC Ammeter"
   },
   "description": {
-    "en": "This ammeter is used to measure the load current (IL) flowing through the load resistance (RL).\n\n**Rating:** 0 - 20 mA"
+    "en": "This ammeter is used to measure the load current (IL​) flowing through the load resistance (RL​). It must always be connected in series with the load. When RL = 0, the load is short-circuited, and the ammeter measures the short-circuit current (ISC).\n\n**Rating:** 0 - 20 mA"
   },
    "audio": "/walkthrough-audios/DC Ammeter.wav",
   "placement": "bottom"
 },
 {
   "id": 15,
-  "target": "#circuit-panel",
-  "title": {
-    "en": "Circuit Connections"
-  },
-  "description": {
-    "en": "This section displays the circuit and allows users to make the required connections by dragging and dropping wires between the connection terminals."
-  },
-   "audio": "/walkthrough-audios/Circuit Connections.wav",
-  "placement": "left"
-},{
-  "id": 16,
   "target": "#observation-table-panel",
   "title": {
     "en": "Observation Table"
   },
   "description": {
-    "en": "This table records the measured Thevenin equivalent resistance (RTH), Thevenin equivalent voltage (VTH), Load resistance (RL), Load current (IL) and Power delivered (PL)."
+    "en": "This table records the measured open-circuit voltage (VOC)​, short-circuit current (ISC),  Load resistance (RL), Voltage (V), Current (mA) and Power (mW)."
   },
    "audio": "/walkthrough-audios/Observation Table.wav",
   "placement": "right"
 },{
-  "id": 17,
+  "id": 16,
   "target": "#formula-button",
   "title": {
     "en": "Equations"
   },
   "description": {
-    "en": "This section displays the equations used to determine the Thevenin equivalent resistance (RTH), Thevenin equivalent voltage (VTH), Load current (IL) and maximum power (PL,max)."
+    "en": "This section displays the formula used to determine the Fill Factor of a solar cell."
   },
    "audio": "/walkthrough-audios/Equations.wav",
   "placement": "top"
 },{
-  "id": 18,
-  "target": "#maximum-power-results",
+  "id": 17,
+  "target": "#power-load-graph-panel",
   "title": {
-    "en": "Theoretical Verification"
+    "en": "Graph"
   },
   "description": {
-    "en": "This panel plots the V-I characteristics of the solar cell and calculates the fill factor using Vmp, Imp, Isc and Voc."
+    "en": "This section will display the VI Characteristics of a solar cell."
+  },
+   "audio": "#",
+  "placement": "top"
+},{
+  "id": 18,
+  "target": "#calculation-panel",
+  "title": {
+    "en": "Fill Factor Calculation"
+  },
+  "description": {
+    "en": "This is the fill factor calculation section in which you enter the required values to calculate the fill factor of a solar cell."
   },
    "audio": "/walkthrough-audios/Theoretical Verification.wav",
   "placement": "top"
@@ -196,7 +218,7 @@
     "en": "Generate Report"
   },
   "description": {
-    "en": "The Report button generates a summarised report of the simulation. After completing the observation table and theoretical verification, generate the report. The report will include the time taken to complete the simulation, no. of attempts, the apparatus used, recorded readings, the user-calculated result, graph and the conclusion."
+    "en": " The Report button generates a summarised report of the simulation. After completing the observation table, graph and theoretical calculations, generate the report. The report will include the time taken to complete the simulation, the apparatus used, recorded readings, graph, user-calculated result, and the conclusion."
   },
    "audio": "/walkthrough-audios/Generate Repor.wav",
   "placement": "top"
