@@ -35,7 +35,7 @@ const terminalLabels = [
   {
     id: '12-endpoint',
     label: '12',
-    polarity: 'plus',
+    polarity: 'minus',
   },
 ]
 
@@ -49,6 +49,14 @@ const CircuitDiagram = ({
   <section className={`circuit-panel ${className}`} id="circuit-panel">
     <div className="circuit-panel__stage">
       <img alt="Kirchhoff current law circuit diagram" className="circuit-panel__image" src={circuitImage} />
+      <span
+        aria-hidden="true"
+        className="circuit-panel__load-node circuit-panel__load-node--upper"
+      />
+      <span
+        aria-hidden="true"
+        className="circuit-panel__load-node circuit-panel__load-node--lower"
+      />
       <button
         aria-label={circuitSwitchOn ? 'Circuit switch is on' : 'Turn circuit on'}
         aria-pressed={circuitSwitchOn}

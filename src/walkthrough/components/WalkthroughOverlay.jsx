@@ -33,7 +33,10 @@ const {
           transition={{ duration: 0.18 }}
         >
           <div aria-hidden="true" className="walkthrough-interaction-shield" />
-          <Spotlight rect={isPositioningTarget ? null : targetRect} />
+          <Spotlight
+            padding={activeStep.spotlightPadding}
+            rect={isPositioningTarget ? null : targetRect}
+          />
           <AnimatePresence mode="wait">
             {!isPositioningTarget && targetRect ? (
               <WalkthroughPopup

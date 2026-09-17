@@ -145,7 +145,8 @@
   "placement": "right"
 },{
   "id": 13,
-  "target": "#voltmeter",
+  "target": "#voltmeter > .ammeter__image",
+  "spotlightPadding": 0,
   "title": {
     "en": "AC/DC Voltmeter"
   },
@@ -157,7 +158,8 @@
 },
 {
   "id": 14,
-  "target": "#ammeter-a1",
+  "target": "#ammeter-a1 > .ammeter__image",
+  "spotlightPadding": 0,
   "title": {
     "en": "AC/DC Ammeter"
   },

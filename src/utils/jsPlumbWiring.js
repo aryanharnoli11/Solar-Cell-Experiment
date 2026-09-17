@@ -6,12 +6,12 @@ export const CIRCUIT_POSITIVE_TERMINALS = [
   '7-endpoint',
   '9-endpoint',
   '11-endpoint',
-  '12-endpoint',
 ]
 
 export const CIRCUIT_NEGATIVE_TERMINALS = [
   '8-endpoint',
   '10-endpoint',
+  '12-endpoint',
 ]
 
 export const REQUIRED_CONNECTION_PAIRS = [

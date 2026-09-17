@@ -677,7 +677,7 @@ export const useAiGuideController = ({
         }))
 
         showGuideAlert({
-          description: 'All six solar-cell circuit connections are complete. Switch ON the circuit, then turn ON the bulb switch to display the short-circuit current.',
+          description: instructionsById.get(instructionId)?.text,
           target: '#circuit-switch-button',
           title: 'Autoconnect Completed',
           type: 'success',
@@ -815,23 +815,23 @@ export const useAiGuideController = ({
 
         if (stage === 'short-circuit') {
           showGuideAlert({
-            description: 'ISC = 5.6 mA has been recorded. Move the RL slider to 100 Ω, then click ADD to record the first load reading.',
+            description: 'Reading added successfully. Now, vary the load resistance (RL) by moving the resistance slider to take the next reading and then click the Add button.',
             target: '#resistance-controls',
-            title: 'Short-Circuit Current Recorded',
+            title: '1st reading added',
             type: 'success',
-          }, '15')
+          }, '44')
 
           return runInstructionSequence([{
-            instructionId: '15',
+            instructionId: '44',
             priority: AUDIO_PRIORITY.SUCCESS,
           }])
         }
 
         if (stage === 'load-series-complete') {
           showGuideAlert({
-            description: 'All ten load readings are recorded and RL is locked. Remove the ammeter wires 5–11 and 6–12, then click ADD to record VOC.',
+            description: 'All eleven readings are added, and RL is locked. Remove the ammeter wires 5–11 and 6–12, then click the ADD button to record VOC.',
             target: '#circuit-panel',
-            title: 'Load Readings Complete',
+            title: 'All readings added',
             type: 'success',
           }, '28')
 
@@ -847,7 +847,7 @@ export const useAiGuideController = ({
             case1Completed: true,
           }))
           showGuideAlert({
-            description: 'VOC = 4.42 V has been recorded. All required measurements are complete; click PLOT to draw the V-I characteristics.',
+            description: instructionsById.get('31')?.text,
             target: '#plot-button',
             title: 'Measurements Complete',
             type: 'success',
@@ -895,10 +895,8 @@ export const useAiGuideController = ({
       case 'LOAD_READING_ADDED': {
         const readingCount = Number(event.readingCount)
         const instructionId = readingCount === 1
-          ? '44'
-          : readingCount === 2
-            ? '45'
-            : null
+          ? '45'
+          : null
 
         if (!instructionId) {
           return true
@@ -975,6 +973,20 @@ export const useAiGuideController = ({
         }])
       }
 
+      case 'POWER_SWITCH_ON': {
+        showGuideAlert({
+          description: instructionsById.get('47')?.text,
+          target: '#bulb-switch-button',
+          title: 'Power Switch On',
+          type: 'success',
+        }, '47')
+
+        return runInstructionSequence([{
+          instructionId: '47',
+          priority: AUDIO_PRIORITY.SUCCESS,
+        }])
+      }
+
       case 'POWER_REJECTED': {
         showGuideAlert({
           description: event.description,
@@ -1008,25 +1020,25 @@ export const useAiGuideController = ({
         return false
       }
 
-      case 'AMMETER_CONNECTIONS_REMOVED': {
-        showGuideAlert({
-          description: 'Both ammeter connections are removed. Click ADD to record the open-circuit voltage VOC = 4.42 V.',
-          target: '#add-reading-button',
-          title: 'Ready to Record Open-Circuit Voltage',
-          type: 'info',
-        }, '30')
+      // case 'AMMETER_CONNECTIONS_REMOVED': {
+      //   showGuideAlert({
+      //     description: 'Both ammeter connections are removed. Click ADD to record the open-circuit voltage VOC = 4.42 V.',
+      //     target: '#add-reading-button',
+      //     title: 'Ready to Record Open-Circuit Voltage',
+      //     type: 'info',
+      //   }, '30')
 
-        return runInstructionSequence([{
-          instructionId: '30',
-          priority: AUDIO_PRIORITY.STAGE_INSTRUCTION,
-        }])
-      }
+      //   return runInstructionSequence([{
+      //     instructionId: '30',
+      //     priority: AUDIO_PRIORITY.STAGE_INSTRUCTION,
+      //   }])
+      // }
 
       case 'CALCULATION_INPUT_REQUIRED': {
         const instructionId = Number(event.missingCount) === 1 ? '40' : '41'
 
         showGuideAlert({
-          description: event.description,
+          description: instructionsById.get(instructionId)?.text,
           target: event.target,
           title: event.title,
           type: event.alertType ?? 'warning',

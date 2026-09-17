@@ -53,11 +53,11 @@
     },
     {
       "id": 11,
-      "text": "Auto Connect completed all six circuit connections. Switch ON the circuit, then turn ON the bulb switch."
+      "text": "Autoconnect completed. Now, turn ON the power switch."
     },
     {
       "id": 12,
-      "text": "Record the short-circuit current before changing RL."
+      "text": "Add the short-circuit current reading first, or check the bulb switch is ON."
     },
     {
       "id": 13,
@@ -66,7 +66,7 @@
     },
     {
       "id": 14,
-      "text": "Connections verified. Switch ON the circuit, then turn ON the bulb switch and click ADD to record ISC."
+      "text": "Connections verified successfully. Now, turn ON the power switch."
     },
     {
       "id": 15,
@@ -152,12 +152,12 @@
     },
     {
       "id": 31,
-      "text": "The final measurement is recorded. Click PLOT to draw the V-I characteristics of the solar cell.",
+      "text": "The open-circuit voltage has been recorded successfully. All required measurements are now complete. Click the PLOT button to plot the V–I characteristics of the solar cell.",
       "audio": "#"
     },
     {
       "id": 32,
-      "text": "The V-I characteristic curve is now plotted. Enter Vmp, Imp, Isc and Voc in the theoretical verification panel, then click Calculate to obtain the fill factor.",
+      "text": "The V-I characteristic is now plotted. Enter Vmp, Imp, Isc and Voc in the fill factor calculation section, then click the Calculate button to calculate the fill factor.",
       "audio": "/audios/After clicking the calculate button.wav"
     },
     {
@@ -197,12 +197,12 @@
     },
     {
       "id": 40,
-      "text": "Please enter the required value, then click the “Verify” button to verify the theorem.",
+      "text": "Please enter the required value, then click the “Calculate” button.",
       "audio": "/audios/Verify button click, one value is missing.wav"
     },
     {
       "id": 41,
-      "text": "Please enter all the values, then click the “Verify” button to verify the theorem.",
+      "text": "Please enter all the values, then click the “Calculate” button.",
       "audio": "/audios/Verify button click, more than one value is missing.wav"
     },
     {
@@ -222,12 +222,17 @@
     },
     {
       "id": 45,
-      "text": "Reading added successfully. Repeat this process until all eleven observation rows have been recorded.",
+      "text": "Reading added successfully. Repeat the same process until all eleven readings have been added.",
       "audio": "#"
     },
     {
       "id": 46,
       "text": "Record ISC before changing RL. After all load readings are recorded, RL remains locked.",
+      "audio": "#"
+    },
+    {
+      "id": 47,
+      "text": "Power is ON. Now, turn ON the bulb switch.",
       "audio": "#"
     }
   ]

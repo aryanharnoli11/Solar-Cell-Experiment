@@ -507,8 +507,7 @@
   .connection-terminal--endpoint-5,
   .connection-terminal--endpoint-7,
   .connection-terminal--endpoint-9,
-  .connection-terminal--endpoint-11,
-  .connection-terminal--endpoint-12
+  .connection-terminal--endpoint-11
 ) {
   --terminal-neutral: #d72828;
   --terminal-neutral-rgb: 215, 40, 40;
@@ -527,7 +526,8 @@
   .connection-terminal--endpoint-4,
   .connection-terminal--endpoint-6,
   .connection-terminal--endpoint-8,
-  .connection-terminal--endpoint-10
+  .connection-terminal--endpoint-10,
+  .connection-terminal--endpoint-12
 ) {
   --terminal-neutral: #151515;
   --terminal-neutral-rgb: 21, 21, 21;

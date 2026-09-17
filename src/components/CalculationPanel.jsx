@@ -93,7 +93,9 @@ const CalculationPanel = ({
       }))
       onGuideEvent?.({
         alertType: 'warning',
-        description: 'Enter Vmp, Imp, Isc and Voc before calculating the fill factor.',
+        description: missingInputKeys.length === 1
+          ? 'Please enter the required value, then click the “Calculate” button.'
+          : 'Please enter all the values, then click the “Calculate” button.',
         missingCount: missingInputKeys.length,
         target: '#calculation-panel',
         title: 'Input Required',
@@ -118,7 +120,7 @@ const CalculationPanel = ({
         description: 'Isc and Voc must be greater than zero to calculate the fill factor.',
         target: '#calculation-panel',
         title: 'Check the Values',
-        type: 'CALCULATION_INPUT_REQUIRED',
+        type: 'CALCULATION_INPUT_INVALID',
       })
       return
     }

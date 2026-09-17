@@ -177,7 +177,7 @@ const App = () => {
     void notifyGuide({
       description: shortCircuitReadingAdded
         ? 'All required load-resistance readings are complete.'
-        : 'Add the short-circuit current reading first.',
+        : 'Add the short-circuit current reading first, or check the bulb switch is ON.',
       target: '#resistance-controls',
       title: shortCircuitReadingAdded
         ? 'RL Readings Complete'
@@ -354,7 +354,7 @@ const App = () => {
     if (completedCase === 1) {
       setShowRth(true)
       setShowMultimeter(true)
-      setStatus('Autoconnect completed. Click the circuit OFF button to switch it ON.')
+      setStatus('Autoconnect completed. Now, turn ON the power switch.')
     } else if (completedCase === 2) {
       setStatus('Autoconnect completed. Turn ON the power supply and set the required voltage.')
     } else {
@@ -796,14 +796,15 @@ const App = () => {
 
     if (nextSwitchOn) {
       setConnectionsVerified(true)
-      setStatus('Circuit button is ON. Now click the switch beneath the bulb.')
+      setStatus('Power is ON. Now, turn ON the bulb switch.')
+      void notifyGuide({ type: 'POWER_SWITCH_ON' })
       return
     }
 
     setBulbSwitchOn(false)
     setPowerOn(false)
     setStatus('Circuit button is OFF.')
-  }, [circuitSwitchOn])
+  }, [circuitSwitchOn, notifyGuide])
 
   const handleBulbSwitchToggle = useCallback(() => {
     if (!circuitSwitchOn) {

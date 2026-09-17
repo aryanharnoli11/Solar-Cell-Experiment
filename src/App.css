@@ -1187,6 +1187,26 @@
   object-fit: contain;
 }
 
+.circuit-panel__load-node {
+  position: absolute;
+  left: 619.5px;
+  z-index: 2;
+  width: 9px;
+  height: 9px;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.circuit-panel__load-node--upper {
+  top: 85.75px;
+  background: #168bff;
+}
+
+.circuit-panel__load-node--lower {
+  top: 266.25px;
+  background: #111;
+}
+
 .circuit-panel__switch-button {
   position: absolute;
   top: 137px;
