@@ -987,6 +987,20 @@ export const useAiGuideController = ({
         }])
       }
 
+      case 'BULB_SWITCH_ON': {
+        showGuideAlert({
+          description: instructionsById.get('48')?.text,
+          target: '#add-reading-button',
+          title: 'Bulb Switch On',
+          type: 'success',
+        }, '48')
+
+        return runInstructionSequence([{
+          instructionId: '48',
+          priority: AUDIO_PRIORITY.SUCCESS,
+        }])
+      }
+
       case 'POWER_REJECTED': {
         showGuideAlert({
           description: event.description,
@@ -998,8 +1012,7 @@ export const useAiGuideController = ({
       }
 
       case 'ADD_REJECTED':
-      case 'REPORT_BLOCKED':
-      case 'CALCULATION_INPUT_INVALID': {
+      case 'REPORT_BLOCKED': {
         showGuideAlert({
           description: event.description,
           target: event.target,
@@ -1009,15 +1022,46 @@ export const useAiGuideController = ({
         return false
       }
 
-      case 'RESISTANCE_SLIDER_BLOCKED': {
+      case 'CALCULATION_INPUT_INVALID': {
         showGuideAlert({
-          description: event.description,
+          description: instructionsById.get('33')?.text,
           target: event.target,
           title: event.title,
           type: event.alertType ?? 'warning',
-        })
+        }, '33')
 
-        return false
+        return runInstructionSequence([{
+          force: true,
+          instructionId: '33',
+          playbackId: `calculation-input-invalid:${Date.now()}`,
+          priority: AUDIO_PRIORITY.ERROR,
+        }])
+      }
+
+      case 'RESISTANCE_SLIDER_BLOCKED': {
+        const instructionId = event.instructionId
+          ? String(event.instructionId)
+          : null
+
+        showGuideAlert({
+          description: instructionId
+            ? instructionsById.get(instructionId)?.text
+            : event.description,
+          target: event.target,
+          title: event.title,
+          type: event.alertType ?? 'warning',
+        }, instructionId)
+
+        if (!instructionId) {
+          return false
+        }
+
+        return runInstructionSequence([{
+          force: true,
+          instructionId,
+          playbackId: `resistance-slider-blocked:${instructionId}:${Date.now()}`,
+          priority: AUDIO_PRIORITY.ERROR,
+        }])
       }
 
       // case 'AMMETER_CONNECTIONS_REMOVED': {

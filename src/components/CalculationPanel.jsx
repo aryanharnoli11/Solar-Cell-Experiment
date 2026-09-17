@@ -3,10 +3,10 @@ import PowerLoadGraph from './PowerLoadGraph.jsx'
 import { formatFixedNumber } from '../utils/numberFormat.js'
 
 const INPUT_FIELDS = {
-  imp: { label: 'Imp', max: 100, unit: 'mA' },
-  isc: { label: 'Isc', max: 100, unit: 'mA' },
-  vmp: { label: 'Vmp', max: 100, unit: 'V' },
-  voc: { label: 'Voc', max: 100, unit: 'V' },
+  imp: { label: 'Imp', min: 1, max: 10, unit: 'mA' },
+  isc: { label: 'Isc', min: 1, max: 10, unit: 'mA' },
+  vmp: { label: 'Vmp', min: 1, max: 10, unit: 'V' },
+  voc: { label: 'Voc', min: 1, max: 10, unit: 'V' },
 }
 const DISPLAY_DECIMAL_PLACES = 2
 
@@ -18,7 +18,7 @@ const CalculationPanel = ({
   calculationDone,
   observations,
   onGuideEvent,
-  setUserCalculatedPmax,
+  setUserCalculatedFillFactor,
   setVerificationResult,
 }) => {
   const [solarInputs, setSolarInputs] = useState({
@@ -37,11 +37,11 @@ const CalculationPanel = ({
 
   const handleInputChange = (parameter, value) => {
     const numericValue = Number(value)
-    const maximum = INPUT_FIELDS[parameter].max
+    const { min, max } = INPUT_FIELDS[parameter]
 
     if (
       value !== ''
-      && (!Number.isFinite(numericValue) || numericValue < 0 || numericValue > maximum)
+      && (!Number.isFinite(numericValue) || numericValue < min || numericValue > max)
     ) {
       return
     }
@@ -49,7 +49,7 @@ const CalculationPanel = ({
     setSolarInputs((current) => ({ ...current, [parameter]: value }))
     setInvalidInputs((current) => ({ ...current, [parameter]: false }))
     setFillFactor('')
-    setUserCalculatedPmax('')
+    setUserCalculatedFillFactor('')
     setVerificationResult('')
   }
 
@@ -67,7 +67,7 @@ const CalculationPanel = ({
           className={`maximum-power-input${invalidInputs[parameter] ? ' maximum-power-input--error' : ''}`}
           disabled={!calculationDone}
           max={field.max}
-          min="0"
+          min={field.min}
           onChange={(event) => handleInputChange(parameter, event.target.value)}
           onWheel={preventMouseWheelAdjustment}
           placeholder="Enter Value"
@@ -133,7 +133,7 @@ const CalculationPanel = ({
     )
 
     setFillFactor(fillFactorDisplay)
-    setUserCalculatedPmax(formatFixedNumber(maximumPower, DISPLAY_DECIMAL_PLACES))
+    setUserCalculatedFillFactor(fillFactorDisplay)
     setVerificationResult(
       `✅ Verified Successfully: Fill factor calculated as ${fillFactorDisplay}%.`,
     )

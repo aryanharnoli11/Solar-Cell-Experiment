@@ -76,7 +76,7 @@ const App = () => {
   const [observations, setObservations] = useState([])
   const [calculationDone, setCalculationDone] = useState(false)
   const [calculatedValues, setCalculatedValues] = useState(null)
-  const [userCalculatedPmax, setUserCalculatedPmax] = useState('')
+  const [userCalculatedFillFactor, setUserCalculatedFillFactor] = useState('')
   const [verificationResult, setVerificationResult] = useState('')
   const [experimentCase, setExperimentCase] = useState(1)
   const [measuredRth, setMeasuredRth] = useState(null)
@@ -148,7 +148,7 @@ const App = () => {
   ))
   const meterVoltage = !shortCircuitReadingAdded
     ? 0
-    : loadReadingsComplete
+    : ammeterConnectionsRemoved
       ? OPEN_CIRCUIT_VOLTAGE
       : selectedLoadMeasurement?.voltage ?? 0
   const meterCurrentAmperes = !shortCircuitReadingAdded
@@ -178,6 +178,7 @@ const App = () => {
       description: shortCircuitReadingAdded
         ? 'All required load-resistance readings are complete.'
         : 'Add the short-circuit current reading first, or check the bulb switch is ON.',
+      instructionId: shortCircuitReadingAdded ? null : '12',
       target: '#resistance-controls',
       title: shortCircuitReadingAdded
         ? 'RL Readings Complete'
@@ -639,7 +640,7 @@ const App = () => {
     setCalculationDone(false)
     setCalculatedValues(null)
     setVerificationResult('')
-    setUserCalculatedPmax('')
+    setUserCalculatedFillFactor('')
     setReportGenerated(false)
     setReportPrinted(false)
     setCheckRequest(0)
@@ -717,7 +718,7 @@ const App = () => {
       observations,
       vth: calculatedValues?.vth ?? 0,
       rth: calculatedValues?.rth ?? 0,
-      calculatedPmax: Number(userCalculatedPmax),
+      fillFactor: Number(userCalculatedFillFactor),
       sessionStart,
     })
 
@@ -824,6 +825,7 @@ const App = () => {
 
     setBulbSwitchOn(true)
     setPowerOn(true)
+    void notifyGuide({ type: 'BULB_SWITCH_ON' })
     setStatus(
       'Bulb and solar panel are ON. Ammeter reading: 5.6 mA. Click ADD.',
     )
@@ -1046,7 +1048,7 @@ const App = () => {
               key={calculationDone ? 'calculation-ready' : 'calculation-reset'}
               observations={observations}
               onGuideEvent={notifyGuide}
-              setUserCalculatedPmax={setUserCalculatedPmax}
+              setUserCalculatedFillFactor={setUserCalculatedFillFactor}
               setVerificationResult={setVerificationResult}
             />
             <footer className="site-footer">

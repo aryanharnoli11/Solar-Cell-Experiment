@@ -39,7 +39,8 @@
     },
     {
       "id": 8,
-      "text": "All six connections are complete. Click CHECK to verify the circuit."
+      "text": "All six connections are complete. Click CHECK to verify the circuit.",
+      "audio": "/audios/Guide all complete conn.wav"
     },
     {
       "id": 9,
@@ -53,11 +54,13 @@
     },
     {
       "id": 11,
-      "text": "Autoconnect completed. Now, turn ON the power switch."
+      "text": "Autoconnect completed. Now, turn ON the power switch.",
+      "audio": "/audios/1st Autoconnect.wav"
     },
     {
       "id": 12,
-      "text": "Add the short-circuit current reading first, or check the bulb switch is ON."
+      "text": "Add the short-circuit current reading first, or check the bulb switch is ON.",
+      "audio": "/audios/1st time RL click.wav"
     },
     {
       "id": 13,
@@ -66,7 +69,8 @@
     },
     {
       "id": 14,
-      "text": "Connections verified successfully. Now, turn ON the power switch."
+      "text": "Connections verified successfully. Now, turn ON the power switch.",
+      "audio": "/audios/After correct connections, check.wav"
     },
     {
       "id": 15,
@@ -81,22 +85,22 @@
     {
       "id": 17,
       "text": "Connect terminal 1 to 7.",
-      "audio": "#"
+      "audio": "/audios/Connect the solar panel by click and drag the wire from terminal 1 and drop it on terminal 7..wav"
     },
     {
       "id": 18,
       "text": "Connect terminal 2 to 8.",
-      "audio": "#"
+      "audio": "/audios/Similarly, connect terminal 2 to terminal 8.wav"
     },
     {
       "id": 19,
       "text": "Connect the voltmeter 3 to 9.",
-      "audio": "#"
+      "audio": "/audios/Connect the voltmeter terminal 3 to 9..wav"
     },
     {
       "id": 20,
       "text": "Connect terminal 4 to terminal 10.",
-      "audio": "#"
+      "audio": "/audios/Connect terminal 4 to 10.wav"
     },
     {
       "id": 21,
@@ -126,17 +130,17 @@
     {
       "id": 26,
       "text": "Connect the ammeter terminal 5 to terminal 11.",
-      "audio": "#"
+      "audio": "/audios/Connect the ammeter terminal 5 to 11.wav"
     },
     {
       "id": 27,
       "text": "Connect ammeter terminal 6 to terminal 12.",
-      "audio": "#"
+      "audio": "/audios/Connect terminal 6 to 12..wav"
     },
     {
       "id": 28,
       "text": "All load readings are complete. Remove ammeter connections 5 to 11 and 6 to 12.",
-      "audio": "#"
+      "audio": "/audios/After the 11th reading.wav"
     },
     {
       "id": 29,
@@ -153,22 +157,22 @@
     {
       "id": 31,
       "text": "The open-circuit voltage has been recorded successfully. All required measurements are now complete. Click the PLOT button to plot the V–I characteristics of the solar cell.",
-      "audio": "#"
+      "audio": "/audios/VOC added.wav"
     },
     {
       "id": 32,
       "text": "The V-I characteristic is now plotted. Enter Vmp, Imp, Isc and Voc in the fill factor calculation section, then click the Calculate button to calculate the fill factor.",
-      "audio": "/audios/After clicking the calculate button.wav"
+      "audio": "/audios/VI plotted.wav"
     },
     {
       "id": 33,
       "text": "The fill factor could not be calculated. Check that all four values are entered and that Isc and Voc are greater than zero.",
-      "audio": "/audios/Verify button click, Incorrect calculations.wav"
+      "audio": "/audios/Calculate button click, Incorrect calculations.wav"
     },
     {
       "id": 34,
       "text": "The fill factor has been calculated successfully. Now click the Generate Report button.",
-      "audio": "/audios/Verify button click, Correct calculations.wav"
+      "audio": "/audios/Calculate button click, Correct calculations.wav"
     },
     {
       "id": 35,
@@ -198,12 +202,12 @@
     {
       "id": 40,
       "text": "Please enter the required value, then click the “Calculate” button.",
-      "audio": "/audios/Verify button click, one value is missing.wav"
+      "audio": "/audios/Calculate button click, one value is missing.wav"
     },
     {
       "id": 41,
       "text": "Please enter all the values, then click the “Calculate” button.",
-      "audio": "/audios/Verify button click, more than one value is missing.wav"
+      "audio": "/audios/Calculate button click, more than one value is missing.wav"
     },
     {
       "id": 42,
@@ -218,12 +222,12 @@
     {
       "id": 44,
       "text": "Reading added successfully. Now, vary the load resistance (RL) by moving the resistance slider to take the next reading and then click the Add button.",
-      "audio": "/audios/1st IL reading added.wav"
+      "audio": "/audios/1st reading added.wav"
     },
     {
       "id": 45,
       "text": "Reading added successfully. Repeat the same process until all eleven readings have been added.",
-      "audio": "#"
+      "audio": "/audios/2nd time RL clickvary.wav"
     },
     {
       "id": 46,
@@ -233,7 +237,12 @@
     {
       "id": 47,
       "text": "Power is ON. Now, turn ON the bulb switch.",
-      "audio": "#"
+      "audio": "/audios/Power Switch ON.wav"
+    },
+    {
+      "id": 48,
+      "text": "The bulb is ON and the meter readings are displayed. Click the ADD button to record the short-circuit current.",
+      "audio": "/audios/After Bulb ON.wav"
     }
   ]
 }

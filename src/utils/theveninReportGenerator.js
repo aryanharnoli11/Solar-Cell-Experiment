@@ -9,7 +9,7 @@ const REPORT_CONTENT = {
   aim: 'To study the VI characteristics and fill factor of a Solar Cell.',
   simulationSummary: 'The guided walkthrough familiarised the user with the simulation interface. The circuit was connected, and the connections were verified successfully. Short-circuit current (ISC) was measured using an ammeter. The load resistance was then varied one value at a time using the resistance slider, and the corresponding Voltage (V), load current (IL) and power (P) readings were recorded in the observation table for each resistance value. Then, the open-circuit voltage (VOC) was measured using a voltmeter. Thereafter, the VI characteristic was plotted. Finally, the Fill Factor was calculated using the measured readings.',
   apparatus: [
-    ['Power Switch: 230 V, 50 Hz', 'AC/DC Voltmeter: 0 - 10 V', 'AC/DC Ammeter: 0 - 20 mA', , 'RL: 0  - 1000 Ω'],
+    ['Power Switch: 230 V, 50 Hz', 'AC/DC Voltmeter: 0 - 10 V', 'AC/DC Ammeter: 0 - 20 mA', 'RL: 0  - 1000 Ω'],
     ['Connecting Leads', 'Solar Panel: 2 W, 6 V', 'Light Bulb', 'Bulb Switch'],
   ],
   conclusion: 'The V–I characteristic of the solar cell was plotted, and the fill factor was calculated to analyse the solar cells performance.',
@@ -35,11 +35,132 @@ const formatLoadResistance = (value) => {
   return Number.isFinite(numericValue) ? numericValue.toFixed(0) : ''
 }
 
+const REPORT_GRAPH = {
+  bottom: 292,
+  height: 254,
+  left: 76,
+  right: 744,
+  top: 38,
+  width: 668,
+  xMaximum: 4,
+  xMinimum: 0,
+  yMaximum: 5.75,
+  yMinimum: 3.75,
+}
+
+const REPORT_GRAPH_X_TICKS = Array.from({ length: 9 }, (_, index) => index * 0.5)
+const REPORT_GRAPH_Y_TICKS = Array.from(
+  { length: 9 },
+  (_, index) => REPORT_GRAPH.yMinimum + index * 0.25,
+)
+
+const buildReportGraphPath = (points) => {
+  if (points.length === 0) return ''
+  if (points.length === 1) return `M ${points[0].x} ${points[0].y}`
+
+  return points.slice(1).reduce((path, point, index) => {
+    const previous = points[index]
+    const middleX = (previous.x + point.x) / 2
+
+    return `${path} C ${middleX} ${previous.y}, ${middleX} ${point.y}, ${point.x} ${point.y}`
+  }, `M ${points[0].x} ${points[0].y}`)
+}
+
+const createReportGraph = (observations) => {
+  const readings = observations
+    .map((row) => ({
+      current: Number.isFinite(Number(row?.current))
+        ? Number(row.current)
+        : amperesToMilliamperes(row?.il),
+      voltage: Number(row?.voltage),
+    }))
+    .filter((reading) => (
+      Number.isFinite(reading.voltage)
+      && Number.isFinite(reading.current)
+      && reading.voltage >= REPORT_GRAPH.xMinimum
+      && reading.voltage <= REPORT_GRAPH.xMaximum
+      && reading.current >= REPORT_GRAPH.yMinimum
+      && reading.current <= REPORT_GRAPH.yMaximum
+    ))
+
+  const getX = (voltage) => (
+    REPORT_GRAPH.left
+    + ((voltage - REPORT_GRAPH.xMinimum) / (REPORT_GRAPH.xMaximum - REPORT_GRAPH.xMinimum))
+      * REPORT_GRAPH.width
+  )
+  const getY = (current) => (
+    REPORT_GRAPH.top
+    + REPORT_GRAPH.height
+    - ((current - REPORT_GRAPH.yMinimum) / (REPORT_GRAPH.yMaximum - REPORT_GRAPH.yMinimum))
+      * REPORT_GRAPH.height
+  )
+  const points = readings.map((reading) => ({
+    ...reading,
+    x: getX(reading.voltage),
+    y: getY(reading.current),
+  }))
+  const curvePath = buildReportGraphPath(points)
+  const areaPath = points.length > 1
+    ? `${curvePath} L ${points.at(-1).x} ${REPORT_GRAPH.bottom} L ${points[0].x} ${REPORT_GRAPH.bottom} Z`
+    : ''
+  const horizontalGrid = REPORT_GRAPH_Y_TICKS.map((tick) => {
+    const y = getY(tick)
+
+    return `
+      <line class="report-vi-graph__grid" x1="${REPORT_GRAPH.left}" x2="${REPORT_GRAPH.right}" y1="${y}" y2="${y}" />
+      <text class="report-vi-graph__tick" text-anchor="end" x="${REPORT_GRAPH.left - 12}" y="${y + 4}">${tick.toFixed(2)}</text>
+    `
+  }).join('')
+  const verticalGrid = REPORT_GRAPH_X_TICKS.map((tick) => {
+    const x = getX(tick)
+    const label = tick === 0 ? '0' : tick.toFixed(1)
+
+    return `
+      <line class="report-vi-graph__grid report-vi-graph__grid--vertical" x1="${x}" x2="${x}" y1="${REPORT_GRAPH.top}" y2="${REPORT_GRAPH.bottom}" />
+      <text class="report-vi-graph__tick" text-anchor="middle" x="${x}" y="${REPORT_GRAPH.bottom + 24}">${label}</text>
+    `
+  }).join('')
+  const pointMarkup = points.map((point) => `
+    <circle class="report-vi-graph__point" cx="${point.x}" cy="${point.y}" r="5">
+      <title>${formatReportReading(point.voltage)} V, ${formatReportReading(point.current)} mA</title>
+    </circle>
+  `).join('')
+
+  return `
+    <div class="report-vi-graph">
+      <h3>V&ndash;I Characteristics of Solar Cell</h3>
+      <svg
+        aria-label="Solar cell current in milliamperes plotted against voltage in volts"
+        class="report-vi-graph__svg"
+        role="img"
+        viewBox="0 0 790 360"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="report-vi-area-gradient" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#e4a11b" stop-opacity="0.28" />
+            <stop offset="100%" stop-color="#e4a11b" stop-opacity="0.03" />
+          </linearGradient>
+        </defs>
+        <rect class="report-vi-graph__background" height="${REPORT_GRAPH.height}" rx="8" width="${REPORT_GRAPH.width}" x="${REPORT_GRAPH.left}" y="${REPORT_GRAPH.top}" />
+        ${horizontalGrid}
+        ${verticalGrid}
+        <path class="report-vi-graph__axis" d="M ${REPORT_GRAPH.left} ${REPORT_GRAPH.top} V ${REPORT_GRAPH.bottom} H ${REPORT_GRAPH.right}" />
+        ${areaPath ? `<path class="report-vi-graph__area" d="${areaPath}" />` : ''}
+        ${curvePath ? `<path class="report-vi-graph__line" d="${curvePath}" />` : ''}
+        ${pointMarkup}
+        <text class="report-vi-graph__axis-title" text-anchor="middle" x="${REPORT_GRAPH.left + REPORT_GRAPH.width / 2}" y="350">Voltage (V)</text>
+        <text class="report-vi-graph__axis-title" text-anchor="middle" transform="rotate(-90 20 165)" x="20" y="165">Current (mA)</text>
+      </svg>
+    </div>
+  `
+}
+
 export const generateTheveninReport = ({
   observations,
   rth,
   vth,
-  calculatedPmax,
+  fillFactor,
   sessionStart,
 }) => {
   const iitLogoSrc =
@@ -81,6 +202,7 @@ export const generateTheveninReport = ({
       `,
     )
     .join('')
+  const reportGraph = createReportGraph(observations)
 
   const css = `
 body {
@@ -270,6 +392,66 @@ p {
   max-width: 100%;
   background: #ffffff;
   box-shadow: none;
+}
+.report-vi-graph {
+  width: 100%;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #e1e9f3;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.report-vi-graph h3 {
+  margin: 0 0 6px;
+}
+.report-vi-graph__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #fffdf8;
+  border: 1px solid #d9e2ec;
+  border-radius: 10px;
+}
+.report-vi-graph__background {
+  fill: #fffdf7;
+}
+.report-vi-graph__grid {
+  stroke: rgba(117, 88, 62, 0.2);
+  stroke-dasharray: 4 6;
+  stroke-width: 1;
+}
+.report-vi-graph__grid--vertical {
+  stroke-opacity: 0.75;
+}
+.report-vi-graph__axis {
+  fill: none;
+  stroke: #563927;
+  stroke-width: 1.8;
+}
+.report-vi-graph__area {
+  fill: url(#report-vi-area-gradient);
+}
+.report-vi-graph__line {
+  fill: none;
+  stroke: #d08000;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+}
+.report-vi-graph__point {
+  fill: #ffffff;
+  stroke: #d08000;
+  stroke-width: 3;
+}
+.report-vi-graph__tick {
+  fill: #6a4b34;
+  font-size: 13px;
+  font-weight: 700;
+}
+.report-vi-graph__axis-title {
+  fill: #38271c;
+  font-size: 15px;
+  font-weight: 800;
 }
 table {
   width: 100%;
@@ -892,6 +1074,7 @@ tr:nth-child(even) {
                 </tbody>
               </table>
             </div>
+            ${reportGraph}
           </div>
 
           <div class="results-card">
@@ -899,7 +1082,7 @@ tr:nth-child(even) {
             <div class="calc-block">
               <div class="calc-row">
                 <span class="calc-label">Fill Factor:</span>
-                <span class="calc-value">${formatReportReading(calculatedPmax)} mW</span>
+                <span class="calc-value">${formatReportReading(fillFactor)}%</span>
               </div>
             </div>
           </div>

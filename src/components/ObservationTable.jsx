@@ -41,7 +41,7 @@ const ObservationTable = ({ observations }) => {
               <th>S.No.</th>
               <th>Voltage (V)</th>
               <th>Current (mA)</th>
-              <th>Power (mW)</th>
+              <th>P<sub>max</sub> (mA)</th>
             </tr>
           </thead>
           <tbody>
@@ -65,7 +65,11 @@ const ObservationTable = ({ observations }) => {
                   : null
 
               return (
-                <tr key={index}>
+                <tr
+                  className={index === 7 && hasLoadReading ? 'observation-table__maximum-row' : undefined}
+                  key={index}
+                  title={index === 7 && hasLoadReading ? 'Maximum-value reading' : undefined}
+                >
                   <td>{hasLoadReading ? row?.id : ''}</td>
                   <td>{loadVoltage !== null ? formatCompactNumber(loadVoltage, DISPLAY_DECIMAL_PLACES) : ''}</td>
                   <td>{loadCurrentMilliamperes !== null ? formatCompactNumber(loadCurrentMilliamperes, DISPLAY_DECIMAL_PLACES) : ''}</td>

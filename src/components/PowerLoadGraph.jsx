@@ -8,27 +8,12 @@ const CHART_PADDING = {
   right: 26,
   top: 28,
 }
-const TICK_COUNT = 6
-
-const getNiceMaximum = (maximumValue) => {
-  if (!Number.isFinite(maximumValue) || maximumValue <= 0) return 1
-
-  const paddedMaximum = maximumValue * 1.06
-  const roughStep = paddedMaximum / TICK_COUNT
-  const magnitude = 10 ** Math.floor(Math.log10(roughStep))
-  const normalizedStep = roughStep / magnitude
-  const niceStep = normalizedStep <= 1
-    ? 1
-    : normalizedStep <= 2
-      ? 2
-      : normalizedStep <= 2.5
-        ? 2.5
-        : normalizedStep <= 5
-          ? 5
-          : 10
-
-  return niceStep * magnitude * TICK_COUNT
-}
+const X_AXIS_MINIMUM = 0
+const X_AXIS_MAXIMUM = 4
+const Y_AXIS_MINIMUM = 3.75
+const Y_AXIS_MAXIMUM = 5.75
+const X_TICKS = Array.from({ length: 9 }, (_, index) => index * 0.5)
+const Y_TICKS = Array.from({ length: 9 }, (_, index) => Y_AXIS_MINIMUM + index * 0.25)
 
 const buildSmoothPath = (points) => {
   if (points.length === 0) return ''
@@ -43,52 +28,31 @@ const buildSmoothPath = (points) => {
 }
 
 const PowerLoadGraph = ({ observations = [] }) => {
-  const summary = observations[0]
-  const openCircuitVoltage = Number(summary?.vth)
   const plottedReadings = observations
     .filter((row) => (
       Number.isFinite(Number(row?.voltage))
       && Number.isFinite(Number(row?.current))
+      && Number(row.voltage) >= X_AXIS_MINIMUM
+      && Number(row.voltage) <= X_AXIS_MAXIMUM
+      && Number(row.current) >= Y_AXIS_MINIMUM
+      && Number(row.current) <= Y_AXIS_MAXIMUM
     ))
     .map((row) => ({
       current: Number(row.current),
       voltage: Number(row.voltage),
     }))
 
-  if (
-    Number.isFinite(openCircuitVoltage)
-    && openCircuitVoltage > 0
-    && !plottedReadings.some((reading) => reading.voltage === openCircuitVoltage)
-  ) {
-    plottedReadings.push({ current: 0, voltage: openCircuitVoltage })
-  }
-
-  plottedReadings.sort((current, next) => current.voltage - next.voltage)
-
   const chartInnerWidth = CHART_WIDTH - CHART_PADDING.left - CHART_PADDING.right
   const chartInnerHeight = CHART_HEIGHT - CHART_PADDING.top - CHART_PADDING.bottom
   const chartBottom = CHART_PADDING.top + chartInnerHeight
-  const xAxisMaximum = getNiceMaximum(
-    Math.max(0, ...plottedReadings.map((reading) => reading.voltage)),
-  )
-  const yAxisMaximum = getNiceMaximum(
-    Math.max(0, ...plottedReadings.map((reading) => reading.current)),
-  )
-  const xTicks = Array.from(
-    { length: TICK_COUNT + 1 },
-    (_, index) => (xAxisMaximum / TICK_COUNT) * index,
-  )
-  const yTicks = Array.from(
-    { length: TICK_COUNT + 1 },
-    (_, index) => (yAxisMaximum / TICK_COUNT) * index,
-  )
   const getX = (voltage) => (
-    CHART_PADDING.left + (voltage / xAxisMaximum) * chartInnerWidth
+    CHART_PADDING.left
+    + ((voltage - X_AXIS_MINIMUM) / (X_AXIS_MAXIMUM - X_AXIS_MINIMUM)) * chartInnerWidth
   )
   const getY = (current) => (
     CHART_PADDING.top
     + chartInnerHeight
-    - (current / yAxisMaximum) * chartInnerHeight
+    - ((current - Y_AXIS_MINIMUM) / (Y_AXIS_MAXIMUM - Y_AXIS_MINIMUM)) * chartInnerHeight
   )
   const points = plottedReadings.map((reading) => ({
     ...reading,
@@ -136,7 +100,7 @@ const PowerLoadGraph = ({ observations = [] }) => {
             y={CHART_PADDING.top}
           />
 
-          {yTicks.map((tickValue) => {
+          {Y_TICKS.map((tickValue) => {
             const y = getY(tickValue)
 
             return (
@@ -154,13 +118,13 @@ const PowerLoadGraph = ({ observations = [] }) => {
                   x={CHART_PADDING.left - 11}
                   y={y + 4}
                 >
-                  {formatCompactNumber(tickValue, 2)}
+                  {tickValue.toFixed(2)}
                 </text>
               </g>
             )
           })}
 
-          {xTicks.map((tickValue) => {
+          {X_TICKS.map((tickValue) => {
             const x = getX(tickValue)
 
             return (
@@ -178,7 +142,7 @@ const PowerLoadGraph = ({ observations = [] }) => {
                   x={x}
                   y={chartBottom + 22}
                 >
-                  {formatCompactNumber(tickValue, 2)}
+                  {tickValue === 0 ? '0' : tickValue.toFixed(1)}
                 </text>
               </g>
             )
