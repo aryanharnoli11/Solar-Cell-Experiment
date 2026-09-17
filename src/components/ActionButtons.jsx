@@ -75,14 +75,18 @@ const buttons = [
 ]
 
 const instructionOrder = [
-  'step1',
-  'case1',
-  'case2',
-  'case3',
-  'step3',
-  'step4',
-  'step5',
-  'step6',
+  'connections',
+  'power-switch',
+  'bulb-switch',
+  'short-circuit-reading',
+  'load-readings',
+  'remove-ammeter',
+  'open-circuit-reading',
+  'plot',
+  'calculate',
+  'report',
+  'print',
+  'reset',
 ]
 
 const ActionButtons = ({
@@ -225,80 +229,66 @@ const ActionButtons = ({
               simulation accurately at each step.
             </p>
             <ol className="action-instructions-panel__steps">
+              <li {...getInstructionProps('connections')}>
+                <strong>STEP 1:</strong>{' '}
+                Connect terminals 1-7, 2-8, 3-9, 4-10, 5-11 and 6-12.
+              </li>
 
-  <li {...getInstructionProps('step1')}>
-    <strong>STEP 1:</strong>{' '}
-    <ElectricalText text="Measure the short-circuit current using the required six connections." />
-  </li>
+              <li {...getInstructionProps('power-switch')}>
+                <strong>STEP 2:</strong>{' '}
+                Click on the Power Switch to turn it ON.
+              </li>
 
-  <li>
-    <strong>STEP 2:</strong> Perform the following cases.
-    
-    <ol className="action-instructions-panel__substeps" type="a">
-      <li {...getInstructionProps('case1')}>
-  <strong>Initial reading (Measure <ElectricalText text="ISC" />):</strong>
-  <ul>
-    <li>Connect terminals 1-7, 2-8, 3-9, 4-10, 5-11 and 6-12.</li>
-    <li>Click the circuit OFF button; it changes to the ON button.</li>
-    <li>Click the switch beneath the bulb to turn on the switch, bulb and solar panel.</li>
-    <li>Confirm that the ammeter reads 5.6 mA.</li>
-    <li>Click ADD to record V = 0 V, I = 5.6 mA, P = 0 and ISC = 5.6 mA.</li>
-    <li>Move RL one enabled step at a time and click ADD for each of the ten load readings.</li>
-    <li>After RL locks, remove ammeter connections 5-11 and 6-12.</li>
-    <li>Click ADD again to record VOC = 4.42 V.</li>
-  </ul>
-</li>
+              <li {...getInstructionProps('bulb-switch')}>
+                <strong>STEP 3:</strong>{' '}
+                Click on the bulb switch to turn ON the light source.
+              </li>
 
-      <li {...getInstructionProps('case2')}>
-  <strong>Case 2 (Measure <ElectricalText text="VTH" />):</strong>
-  <ul>
-    <li>Keep all six connections: 1-7, 2-8, 3-9, 4-10, 5-11 and 6-12.</li>
-    <li>Click CHECK button to verify the connections.</li>
-    <li>Turn ON the Power Supply and set the desired voltage.</li>
-    <li>Click ADD button to record <ElectricalText text="VTH" />.</li>
-    <li>Keep all six connections in place for Case 3.</li>
-  </ul>
-</li>
+              <li {...getInstructionProps('short-circuit-reading')}>
+                <strong>STEP 4:</strong>{' '}
+                Click the ADD button to add the short-circuit reading to the observation table.
+              </li>
 
-      <li {...getInstructionProps('case3')}>
-        <strong>Case 3 (Measure <ElectricalText text="IL" />):</strong>
-        <ul>
-<li>Keep all six connections unchanged: 1-7, 2-8, 3-9, 4-10, 5-11 and 6-12.</li>
-<li>Click CHECK button to verify the connections.</li>
-<li>Turn ON the Power Supply at the same voltage setting used in Case 2.</li>
-<li>Click ADD button to record the first <ElectricalText text="IL" /> and <ElectricalText text="PL" /> values.</li>
-<li>RL slider values are: 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 and 1000 Ω.</li>
-        </ul>
-      </li>
-    </ol>
-  </li>
+              <li {...getInstructionProps('load-readings')}>
+                <strong>STEP 5:</strong>{' '}
+                <ElectricalText text="Move RL one enabled step at a time and click the ADD button for each of the ten load readings." />
+              </li>
 
-  <li {...getInstructionProps('step3')}>
-    <strong>STEP 3:</strong>{' '}
-    <ElectricalText text="After recording all readings and VOC, click PLOT to draw the V-I characteristics." />
-  </li>
+              <li {...getInstructionProps('remove-ammeter')}>
+                <strong>STEP 6:</strong>{' '}
+                After all 11 readings are complete, remove ammeter connections 5-11 and 6-12.
+              </li>
 
-  <li {...getInstructionProps('step4')}>
-    <strong>STEP 4:</strong>{' '}
-    <ElectricalText text="Enter Vmp, Imp, Isc and Voc, then click CALCULATE to obtain the fill factor." />
-  </li>
+              <li {...getInstructionProps('open-circuit-reading')}>
+                <strong>STEP 7:</strong>{' '}
+                Click on the ADD button to add the Voc value to the observation table.
+              </li>
 
-<li {...getInstructionProps('step5')}>
-    <strong>STEP 6:</strong> Click the Generate Report button to generate the simulation report.
-  </li>
+              <li {...getInstructionProps('plot')}>
+                <strong>STEP 8:</strong>{' '}
+                Click on the PLOT button to draw the V-I characteristics.
+              </li>
 
-  <li {...getInstructionProps('step5')}>
-    <strong>STEP 7:</strong> Click PRINT button to print the experiment report.
-  </li>
+              <li {...getInstructionProps('calculate')}>
+                <strong>STEP 9:</strong>{' '}
+                Enter Vmp, Imp, Isc and Voc, then click CALCULATE to obtain the fill factor.
+              </li>
 
-  <li {...getInstructionProps('step6')}>
-    <strong>STEP 8:</strong> Click RESET button to restart the experiment.
-  </li>
-  <li>
-  <strong>Note:</strong> Verified connections are locked and cannot be removed until the current case reading is added to the observation table.
-</li>
+              <li {...getInstructionProps('report')}>
+                <strong>STEP 10:</strong>{' '}
+                Click on the Generate Report button to generate the simulation report.
+              </li>
 
-</ol>
+              <li {...getInstructionProps('print')}>
+                <strong>STEP 11:</strong>{' '}
+                Click on the PRINT button to print the experiment report.
+              </li>
+
+              <li {...getInstructionProps('reset')}>
+                <strong>STEP 12:</strong>{' '}
+                Click on the RESET button to restart the experiment.
+              </li>
+            </ol>
           </div>
         </div>
       ) : null}

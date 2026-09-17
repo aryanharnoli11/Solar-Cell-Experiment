@@ -57,6 +57,7 @@ const CircuitDiagram = ({
         aria-hidden="true"
         className="circuit-panel__load-node circuit-panel__load-node--lower"
       />
+      <span className="component-label power-label">Power</span>
       <button
         aria-label={circuitSwitchOn ? 'Circuit switch is on' : 'Turn circuit on'}
         aria-pressed={circuitSwitchOn}

@@ -16,7 +16,7 @@
   "description": {
     "en": "To study the VI characteristics and fill factor of a Solar Cell."
   },
-   "audio":"/walkthrough-audios/AIM.wav",
+   "audio":"/walkthrough-audios/Aim.wav",
   "placement": "bottom"
 },{
   "id": 2,
@@ -85,7 +85,7 @@
   "description": {
     "en": "The PLOT button will display the graph of the recorded readings."
   },
-  "audio": "/walkthrough-audios/calculate button.wav",
+  "audio": "/walkthrough-audios/Plot Button.wav",
   "placement": "right"
 },
 {
@@ -130,7 +130,7 @@
   "description": {
     "en": "Use this switch to turn the experimental setup ON/OFF. The power switch controls the power supply to the complete experimental setup.\n\n**Input Supply:** 230 V, 50 Hz"
   },
-   "audio": "/walkthrough-audios/Circuit Connections.wav",
+   "audio": "/walkthrough-audios/Power Switch.wav",
   "placement": "left"
 },{
   "id": 12,
@@ -141,7 +141,7 @@
   "description": {
     "en": "The bulb acts as the light source for the solar panel. Its light is directed onto the solar panel to generate electrical energy, providing the voltage and current required to study the solar cell V–I characteristics.\n\n**Rating:** 2 W, 6 V"
   },
-   "audio": "#",
+   "audio": "/walkthrough-audios/Solar Panel.wav",
   "placement": "right"
 },{
   "id": 13,
@@ -153,7 +153,7 @@
   "description": {
     "en": "This voltmeter measures the voltage across the solar cell. For the open-circuit condition, disconnect the ammeter and measure the open-circuit voltage (VOC). The measured voltage is also used to determine the maximum-power point and fill factor.\n\n**Rating:** 0 - 10 V"
   },
-   "audio": "/walkthrough-audios/DC Voltmeter.wav",
+   "audio": "/walkthrough-audios/ACDC Voltmeter.wav",
   "placement": "bottom"
 },
 {
@@ -166,7 +166,7 @@
   "description": {
     "en": "This ammeter is used to measure the load current (IL​) flowing through the load resistance (RL​). It must always be connected in series with the load. When RL = 0, the load is short-circuited, and the ammeter measures the short-circuit current (ISC).\n\n**Rating:** 0 - 20 mA"
   },
-   "audio": "/walkthrough-audios/DC Ammeter.wav",
+   "audio": "/walkthrough-audios/ACDC Ammeter.wav",
   "placement": "bottom"
 },
 {
@@ -200,7 +200,7 @@
   "description": {
     "en": "This section will display the VI Characteristics of a solar cell."
   },
-   "audio": "#",
+   "audio": "/walkthrough-audios/Graph.wav",
   "placement": "top"
 },{
   "id": 18,
@@ -211,7 +211,7 @@
   "description": {
     "en": "This is the fill factor calculation section in which you enter the required values to calculate the fill factor of a solar cell."
   },
-   "audio": "/walkthrough-audios/Theoretical Verification.wav",
+   "audio": "/walkthrough-audios/Fill Factor Calculation.wav",
   "placement": "top"
 },{
   "id": 19,

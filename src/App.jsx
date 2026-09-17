@@ -887,21 +887,29 @@ const App = () => {
     guideHighlights[Number(activeInstructionId)] ?? []
   )
   const activeInstructionStep = (
-    experimentCase === 1
-        || (experimentCase === 2 && !case1ConnectionsRemoved)
-        ? 'case1'
-        : experimentCase === 2
-          || (experimentCase === 3 && !case2ConnectionsRemoved)
-          ? 'case2'
-          : experimentCase === 3
-            ? 'case3'
+    !shortCircuitReadingAdded
+      ? !connectionsVerified
+        ? 'connections'
+        : !circuitSwitchOn
+          ? 'power-switch'
+          : !bulbSwitchOn
+            ? 'bulb-switch'
+            : 'short-circuit-reading'
+      : !loadReadingsComplete
+        ? 'load-readings'
+        : !ammeterConnectionsRemoved
+          ? 'remove-ammeter'
+          : !openCircuitVoltageAdded
+            ? 'open-circuit-reading'
             : !calculationDone
-              ? 'step3'
+              ? 'plot'
               : !verificationSucceeded
-                ? 'step4'
-                : !reportPrinted
-                  ? 'step5'
-                  : 'step6'
+                ? 'calculate'
+                : !reportGenerated
+                  ? 'report'
+                  : !reportPrinted
+                    ? 'print'
+                    : 'reset'
   )
 
   return (

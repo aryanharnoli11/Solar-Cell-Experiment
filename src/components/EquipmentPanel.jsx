@@ -55,6 +55,9 @@ const EquipmentPanel = ({
         className="equipment-panel__solar-bulb-target"
         id="solar-bulb-controls"
       />
+      <span className="component-label bulb-label">Bulb</span>
+      <span className="component-label bulb-switch-label">Bulb Switch</span>
+      <span className="component-label solar-panel-label">Solar Panel</span>
       <img
         alt={bulbSwitchOn ? 'Bulb switched on' : 'Bulb switched off'}
         className="equipment-panel__bulb-image"

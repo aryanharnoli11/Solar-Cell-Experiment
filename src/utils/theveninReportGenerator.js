@@ -2,17 +2,17 @@ import { amperesToMilliamperes } from './current.js'
 
 // Edit these values to change the fixed text shown in the generated report.
 const REPORT_CONTENT = {
-  documentTitle: 'Maximum Power Transfer Simulation Report',
+  documentTitle: 'Solar Cell Simulation Report',
   reportHeading: 'Virtual Labs Simulation Report',
   labName: 'AI-Enhanced Basic Electrical Science Lab',
-  experimentTitle: 'To Verify the Maximum Power Transfer Theorem',
-  aim: 'To study and verify the Maximum Power Transfer Theorem by varying the load resistance and comparing the measured load power with the theoretical maximum power.',
-  simulationSummary: 'The Thevenin resistance and voltage were measured first. The load resistance was then varied through the specified values, and the corresponding load current and power were recorded. A power-versus-load-resistance graph was plotted and the theoretical maximum power was calculated using Pmax = Vth² / (4 × Rth).',
+  experimentTitle: 'To Study The VI Characteristics and Fill Factor of a Solar Cell.',
+  aim: 'To study the VI characteristics and fill factor of a Solar Cell.',
+  simulationSummary: 'The guided walkthrough familiarised the user with the simulation interface. The circuit was connected, and the connections were verified successfully. Short-circuit current (ISC) was measured using an ammeter. The load resistance was then varied one value at a time using the resistance slider, and the corresponding Voltage (V), load current (IL) and power (P) readings were recorded in the observation table for each resistance value. Then, the open-circuit voltage (VOC) was measured using a voltmeter. Thereafter, the VI characteristic was plotted. Finally, the Fill Factor was calculated using the measured readings.',
   apparatus: [
-    ['Power Supply: 15V DC', 'AC/DC Voltmeter: 0 - 50 V', 'AC/DC Ammeter: 0 - 20 mA', 'Digital Multimeter', 'RL: 0  - 1000 Ω'],
-    ['R₁: 466 Ω', 'R₂: 216 Ω', 'R₃: 470 Ω', 'Connecting Leads'],
+    ['Power Switch: 230 V, 50 Hz', 'AC/DC Voltmeter: 0 - 10 V', 'AC/DC Ammeter: 0 - 20 mA', , 'RL: 0  - 1000 Ω'],
+    ['Connecting Leads', 'Solar Panel: 2 W, 6 V', 'Light Bulb', 'Bulb Switch'],
   ],
-  conclusion: 'The Maximum Power Transfer Theorem has been verified successfully. It was observed that the maximum power was transferred to the load when the load resistance was equal to the source (Thevenin) equivalent resistance.',
+  conclusion: 'The V–I characteristic of the solar cell was plotted, and the fill factor was calculated to analyse the solar cells performance.',
   footer: '© 2026 Virtual Labs, IIT Roorkee',
 }
 
@@ -895,10 +895,10 @@ tr:nth-child(even) {
           </div>
 
           <div class="results-card">
-            <h3>Theoretical Verification</h3>
+            <h3>Theoretical Calculations</h3>
             <div class="calc-block">
               <div class="calc-row">
-                <span class="calc-label">Calculated Maximum Power (P<sub>L,max</sub>):</span>
+                <span class="calc-label">Fill Factor:</span>
                 <span class="calc-value">${formatReportReading(calculatedPmax)} mW</span>
               </div>
             </div>
