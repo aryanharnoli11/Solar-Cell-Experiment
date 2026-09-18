@@ -868,8 +868,8 @@ tr:nth-child(even) {
 }
 @media print {
   @page {
-    size: A4;
-    margin: 8mm;
+    size: A4 portrait;
+    margin: 6mm;
   }
   .print-btn,
   .download-btn,
@@ -880,87 +880,111 @@ tr:nth-child(even) {
     margin: 0;
     padding: 0;
     background: #ffffff;
-    font-size: 10.5px;
-    line-height: 1.25;
+    font-size: 10px;
+    line-height: 1.22;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
   .report-page {
+    display: grid;
     width: 100%;
     margin: 0;
     padding: 0;
     border: none;
     box-shadow: none;
     border-radius: 0;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr auto;
+    gap: 4px 6px;
     break-inside: avoid-page;
     page-break-inside: avoid;
   }
   .header-row {
-    grid-template-columns: 150px minmax(0, 1fr) 86px;
-    gap: 14px;
-    margin-bottom: 5px;
+    grid-column: 1 / -1;
+    grid-template-columns: 145px minmax(0, 1fr) 76px;
+    gap: 10px;
+    margin-bottom: 0;
   }
   .report-title-block {
-    padding-bottom: 6px;
+    padding-bottom: 4px;
   }
   .section {
-    padding: 7px 9px;
-    margin-bottom: 5px;
+    min-width: 0;
+    padding: 7px 8px;
+    margin-bottom: 0;
+    border-radius: 7px;
+  }
+  .report-overview {
+    grid-column: 1 / -1;
+  }
+  .report-summary {
+    grid-column: 1;
+  }
+  .report-results {
+    grid-column: 1;
   }
   .section > h2:first-child {
-    margin-bottom: 7px;
-    padding-bottom: 5px;
+    margin-bottom: 4px;
+    padding-bottom: 3px;
   }
   .report-overview-top {
-    margin-bottom: 5px;
+    margin-bottom: 2px;
   }
   .report-experiment-title {
-    margin-bottom: 7px;
+    margin-bottom: 3px;
+    font-size: 13px;
+    line-height: 1.15;
   }
   .info-grid {
-    gap: 8px;
-    margin-top: 6px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+    margin-top: 3px;
   }
   .info-card {
-    padding: 6px 8px;
+    padding: 4px 6px;
+    font-size: 9px;
+  }
+  .info-card strong {
+    font-size: 11px;
   }
   .summary-card {
-    padding: 6px 8px;
+    padding: 5px 6px;
     gap: 4px;
   }
   h1 {
     font-size: 19px;
   }
   h2 {
-    font-size: 14px;
+    font-size: 13px;
   }
   h3,
   .summary-sub-section h3 {
-    font-size: 11px;
+    font-size: 10px;
   }
   .summary-sub-section p,
   .summary-list,
   th,
   td {
-    font-size: 10px;
+    font-size: 9px;
   }
   .report-logo,
   .report-logo--virtual-labs,
   .report-logo--iit {
-    max-height: 54px;
+    max-height: 50px;
   }
   .summary-sub-section h3 {
-    margin-bottom: 3px;
+    margin-bottom: 2px;
+    padding-left: 5px;
   }
   .summary-sub-section p,
   .conclusion-text {
-    line-height: 1.34;
+    line-height: 1.2;
   }
   .summary-list li {
-    margin-bottom: 1px;
+    margin-bottom: 0;
   }
   .calc-formula {
-    padding: 4px 8px;
+    padding: 3px 5px;
   }
   .param-grid {
     grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -974,23 +998,59 @@ tr:nth-child(even) {
     font-size: 13px;
   }
   .results-stack {
-    gap: 8px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
   }
   .results-card {
-    padding: 9px 10px;
-    gap: 5px;
+    padding: 5px 6px;
+    gap: 3px;
+    border-radius: 7px;
+  }
+  .results-card--observations {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 3px 5px;
+  }
+  .results-card--observations > h3 {
+    grid-column: 1 / -1;
+  }
+  .results-card--observations > .table-shell {
+    grid-column: 1;
+  }
+  .results-card--observations > .report-vi-graph {
+    width: 86%;
+    grid-column: 1;
+    justify-self: center;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .report-vi-graph h3 {
+    margin-bottom: 3px;
+  }
+  .report-vi-graph__svg {
+    border-radius: 6px;
   }
   th,
   td {
-    padding: 6px 8px;
+    padding: 4px;
+  }
+  .results-card--observations th,
+  .results-card--observations td {
+    padding: 2px 4px;
+    font-size: 8px;
   }
   .calc-block {
-    padding: 7px 9px;
-    gap: 3px;
+    padding: 3px 5px;
+    gap: 2px;
   }
   .report-footer {
-    margin-top: 8px;
-    padding-top: 7px;
+    grid-column: 1 / -1;
+    margin-top: 0;
+    padding-top: 4px;
+    font-size: 9px;
   }
   .header-row,
   .results-card,
@@ -1060,7 +1120,7 @@ tr:nth-child(even) {
         </div>
       </div>
 
-      <div class="section">
+      <div class="section report-summary">
         <h2>Experiment Summary</h2>
         <div class="summary-card">
           <div class="summary-sub-section">
@@ -1086,7 +1146,7 @@ tr:nth-child(even) {
         </div>
       </div>
 
-      <div class="section">
+      <div class="section report-results">
         <h2>Results</h2>
 
         <div class="results-stack">

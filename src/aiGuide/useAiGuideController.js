@@ -896,7 +896,9 @@ export const useAiGuideController = ({
         const readingCount = Number(event.readingCount)
         const instructionId = readingCount === 1
           ? '45'
-          : null
+          : readingCount === 2
+            ? '49'
+            : null
 
         if (!instructionId) {
           return true
