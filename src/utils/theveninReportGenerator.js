@@ -7,7 +7,7 @@ const REPORT_CONTENT = {
   labName: 'AI-Enhanced Basic Electrical Science Lab',
   experimentTitle: 'To Study The VI Characteristics and Fill Factor of a Solar Cell.',
   aim: 'To study the VI characteristics and fill factor of a Solar Cell.',
-  simulationSummary: 'The guided walkthrough familiarised the user with the simulation interface. The circuit was connected, and the connections were verified successfully. Short-circuit current (ISC) was measured using an ammeter. The load resistance was then varied one value at a time using the resistance slider, and the corresponding Voltage (V), load current (IL) and power (P) readings were recorded in the observation table for each resistance value. Then, the open-circuit voltage (VOC) was measured using a voltmeter. Thereafter, the VI characteristic was plotted. Finally, the Fill Factor was calculated using the measured readings.',
+  simulationSummary: 'The guided walkthrough familiarised the user with the simulation interface. The circuit was connected, and the connections were verified successfully. Short-circuit current (ISC) was measured using an ammeter. The load resistance was then varied one value at a time using the resistance slider, and the corresponding Voltage (V), load current (IL) and power (P) readings were recorded in the observation table for each resistance value. Then, the open-circuit voltage (Voc) was measured using a voltmeter. Thereafter, the VI characteristic was plotted. Finally, the Fill Factor was calculated using the measured readings.',
   apparatus: [
     ['Power Switch: 230 V, 50 Hz', 'AC/DC Voltmeter: 0 - 10 V', 'AC/DC Ammeter: 0 - 20 mA', 'RL: 0  - 1000 Ω'],
     ['Connecting Leads', 'Solar Panel: 2 W, 6 V', 'Light Bulb', 'Bulb Switch'],
@@ -23,16 +23,26 @@ const escapeHtml = (value) => String(value)
   .replace(/"/g, '&quot;')
   .replace(/'/g, '&#39;')
 
+const REPORT_ELECTRICAL_SYMBOLS = {
+  il: ['I', 'L'],
+  isc: ['I', 'SC'],
+  rl: ['R', 'L'],
+  voc: ['V', 'OC'],
+}
+
+const formatReportText = (value) => escapeHtml(value).replace(
+  /\b(VOC|ISC|IL|RL)\b/gi,
+  (symbol) => {
+    const [base, subscript] = REPORT_ELECTRICAL_SYMBOLS[symbol.toLowerCase()]
+
+    return `${base}<sub>${subscript}</sub>`
+  },
+)
+
 const formatReportReading = (value) => {
   const numericValue = Number(value)
 
   return Number.isFinite(numericValue) ? numericValue.toFixed(2) : ''
-}
-
-const formatLoadResistance = (value) => {
-  const numericValue = Number(value)
-
-  return Number.isFinite(numericValue) ? numericValue.toFixed(0) : ''
 }
 
 const REPORT_GRAPH = {
@@ -158,7 +168,6 @@ const createReportGraph = (observations) => {
 
 export const generateTheveninReport = ({
   observations,
-  rth,
   vth,
   fillFactor,
   sessionStart,
@@ -190,17 +199,46 @@ export const generateTheveninReport = ({
   const durationMinutes = Math.floor(durationTotalSeconds / 60)
   const durationSeconds = String(durationTotalSeconds % 60).padStart(2, '0')
   const durationText = `${durationMinutes} min ${durationSeconds} sec`
+  const firstObservation = observations[0] ?? {}
+  const reportOpenCircuitVoltage = typeof firstObservation.vth === 'number'
+    ? firstObservation.vth
+    : vth
+  const shortCircuitObservation = observations.find((row) => (
+    row?.isShortCircuit === true
+    || (row?.rl === 0 && typeof row?.il === 'number')
+  ))
+  const reportShortCircuitCurrent = typeof firstObservation.isc === 'number'
+    ? firstObservation.isc
+    : shortCircuitObservation
+      ? amperesToMilliamperes(shortCircuitObservation.il)
+      : null
   const observationRows = observations
-    .map(
-      (row, index) => `
+    .map((row, index) => {
+      const voltage = typeof row?.voltage === 'number'
+        ? row.voltage
+        : typeof row?.il === 'number' && typeof row?.rl === 'number'
+          ? row.il * row.rl
+          : null
+      const current = typeof row?.current === 'number'
+        ? row.current
+        : typeof row?.il === 'number'
+          ? amperesToMilliamperes(row.il)
+          : null
+      const power = typeof row?.power === 'number'
+        ? row.power
+        : voltage !== null && current !== null
+          ? voltage * current
+          : null
+
+      return `
         <tr>
-          <td>${index + 1}</td>
-          <td>${formatLoadResistance(row.rl)}</td>
-          <td>${formatReportReading(amperesToMilliamperes(row.il))}</td>
-          <td>${formatReportReading((row.il ** 2) * row.rl * 1000)}</td>
+          <td>${escapeHtml(row?.id ?? index + 1)}</td>
+          <td>${formatReportReading(voltage)}</td>
+          <td>${formatReportReading(current)}</td>
+          <td>${formatReportReading(power)}</td>
         </tr>
-      `,
-    )
+      `
+    })
     .join('')
   const reportGraph = createReportGraph(observations)
 
@@ -1032,7 +1070,7 @@ tr:nth-child(even) {
 
           <div class="summary-sub-section">
             <h3>Simulation Summary</h3>
-            <p>${escapeHtml(REPORT_CONTENT.simulationSummary)}</p>
+            <p>${formatReportText(REPORT_CONTENT.simulationSummary)}</p>
           </div>
 
           <div class="summary-sub-section" style="margin-bottom: 0;">
@@ -1040,7 +1078,7 @@ tr:nth-child(even) {
             <div class="apparatus-grid">
               ${REPORT_CONTENT.apparatus.map((column) => `
                 <ul class="summary-list">
-                  ${column.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
+                  ${column.map((item) => `<li>${formatReportText(item)}</li>`).join('')}
                 </ul>
               `).join('')}
             </div>
@@ -1059,14 +1097,14 @@ tr:nth-child(even) {
               <table>
                 <thead>
                   <tr>
-                    <th colspan="2">R<sub>TH</sub> (&Omega;): ${formatReportReading(rth)}</th>
-                    <th colspan="2">V<sub>TH</sub> (V): ${formatReportReading(vth)}</th>
+                    <th colspan="2">V<sub>OC</sub> (V): ${formatReportReading(reportOpenCircuitVoltage)}</th>
+                    <th colspan="2">I<sub>SC</sub> (mA): ${formatReportReading(reportShortCircuitCurrent)}</th>
                   </tr>
                   <tr>
                     <th>S.No.</th>
-                    <th>R<sub>L</sub> (&Omega;)</th>
-                    <th>I<sub>L</sub> (mA)</th>
-                    <th>P<sub>L</sub> = I<sub>L</sub><sup>2</sup> &times; R<sub>L</sub> (mW)</th>
+                    <th>Voltage (V)</th>
+                    <th>Current (mA)</th>
+                    <th>P<sub>max</sub> (mW)</th>
                   </tr>
                 </thead>
                 <tbody>

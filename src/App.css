@@ -724,10 +724,12 @@
 .power-label {
   top: 116px;
   left: 46px;
+  z-index: 10;
   width: 42px;
   height: 16px;
   color: #fff8ed;
   font-size: 13px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95);
 }
 
 .bulb-label {
@@ -826,7 +828,7 @@
   z-index: 2;
   display: flex;
   width: 358px;
-  height: 220px;
+  height: 236px;
   align-items: flex-start;
   gap: 0;
 }
@@ -1000,7 +1002,7 @@
   position: relative;
   z-index: auto;
   width: 188px;
-  height: 220px;
+  height: 236px;
   flex: 0 0 188px;
   overflow: visible;
   --ammeter-image-scale: 1;
@@ -1064,6 +1066,26 @@
   left: 9.8px;
   width: 171.5px;
   height: 224.3px;
+}
+
+.meter-walkthrough-target {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.meter-walkthrough-target--voltmeter {
+  top: 10.5px;
+  left: 9.8px;
+  width: 167.5px;
+  height: 224.3px;
+}
+
+.meter-walkthrough-target--ammeter {
+  top: 10.1px;
+  left: 9.8px;
+  width: 171.5px;
+  height: 225.5px;
 }
 
 .ammeter--multimeter {
@@ -1264,6 +1286,16 @@
 .circuit-panel__load-node--lower {
   top: 262.25px;
   background: #111;
+}
+
+.circuit-panel__power-control-target {
+  position: absolute;
+  top: 108px;
+  left: 17px;
+  z-index: 3;
+  width: 100px;
+  height: 137px;
+  pointer-events: none;
 }
 
 .circuit-panel__switch-button {

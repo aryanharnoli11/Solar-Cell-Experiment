@@ -55,6 +55,7 @@ const ConnectionLab = ({
   case2ConnectionsRemoved,
   checkRequest,
   circuitSwitchOn,
+  connectionsVerified,
   experimentCase,
   highlightedTerminalIds = [],
   meterCurrentAmperes,
@@ -64,6 +65,7 @@ const ConnectionLab = ({
   onBulbSwitchToggle,
   onCheckConnections,
   onCircuitSwitchChange,
+  onCircuitSwitchRejected,
   onGuideEvent,
   observationIl,
   observationVth,
@@ -309,19 +311,13 @@ const ConnectionLab = ({
       return
     }
 
-    const result = validateTheveninConnections(
-      instanceRef.current,
-      experimentCaseRef.current,
-    )
-
-    if (!result.isCorrect) {
-      onCheckConnectionsRef.current?.(result)
+    if (!connectionsVerified) {
+      onCircuitSwitchRejected?.()
       return
     }
 
     lockJsPlumbCircuit(instanceRef.current, containerRef.current)
     setIsLocked(true)
-    onCheckConnectionsRef.current?.(result)
     onCircuitSwitchChange?.(true)
   }
 

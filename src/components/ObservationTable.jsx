@@ -41,7 +41,7 @@ const ObservationTable = ({ observations }) => {
               <th>S.No.</th>
               <th>Voltage (V)</th>
               <th>Current (mA)</th>
-              <th>P<sub>max</sub> (mA)</th>
+              <th>P<sub>max</sub> (mW)</th>
             </tr>
           </thead>
           <tbody>

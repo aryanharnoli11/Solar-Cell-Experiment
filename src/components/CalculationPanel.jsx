@@ -9,6 +9,8 @@ const INPUT_FIELDS = {
   voc: { label: 'Voc', min: 1, max: 10, unit: 'V' },
 }
 const DISPLAY_DECIMAL_PLACES = 2
+const MIN_ACCEPTED_FILL_FACTOR = 64
+const MAX_ACCEPTED_FILL_FACTOR = 66
 
 const preventMouseWheelAdjustment = (event) => {
   event.currentTarget.blur()
@@ -131,13 +133,32 @@ const CalculationPanel = ({
       calculatedFillFactor,
       DISPLAY_DECIMAL_PLACES,
     )
+    const roundedFillFactor = Number(fillFactorDisplay)
+    const fillFactorAccepted = (
+      roundedFillFactor >= MIN_ACCEPTED_FILL_FACTOR
+      && roundedFillFactor <= MAX_ACCEPTED_FILL_FACTOR
+    )
 
     setFillFactor(fillFactorDisplay)
-    setUserCalculatedFillFactor(fillFactorDisplay)
+
+    if (fillFactorAccepted) {
+      setUserCalculatedFillFactor(fillFactorDisplay)
+      setVerificationResult(
+        `✅ Verified Successfully: Fill factor calculated as ${fillFactorDisplay}%.`,
+      )
+      onGuideEvent?.({ isCorrect: true, type: 'VERIFICATION_RESULT' })
+      return
+    }
+
+    setUserCalculatedFillFactor('')
     setVerificationResult(
-      `✅ Verified Successfully: Fill factor calculated as ${fillFactorDisplay}%.`,
+      `Verification Failed: ${fillFactorDisplay}% is outside the accepted 64% to 66% range.`,
     )
-    onGuideEvent?.({ isCorrect: true, type: 'VERIFICATION_RESULT' })
+    onGuideEvent?.({
+      calculatedFillFactor: roundedFillFactor,
+      isCorrect: false,
+      type: 'VERIFICATION_RESULT',
+    })
   }
 
   return (
@@ -146,7 +167,7 @@ const CalculationPanel = ({
 
       <section className="analysis-card theoretical-calculation-panel" id="calculation-panel">
         <header className="analysis-card__heading">
-          <h2>THEORETICAL CALCULATION</h2>
+          <h2> FILL FACTOR CALCULATION</h2>
         </header>
 
         <div className="theoretical-calculation-panel__body">

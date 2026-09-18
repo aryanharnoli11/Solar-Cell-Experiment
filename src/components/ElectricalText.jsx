@@ -2,16 +2,18 @@ import { Fragment } from 'react'
 
 const SYMBOL_PARTS = {
   il: ['I', 'L'],
+  isc: ['I', 'SC'],
   r1: ['R', '1'],
   r2: ['R', '2'],
   r3: ['R', '3'],
   rl: ['R', 'L'],
   rth: ['R', 'TH'],
   vs: ['V', 'S'],
+  voc: ['V', 'OC'],
   vth: ['V', 'TH'],
 }
 
-const ELECTRICAL_SYMBOL_PATTERN = /\b(RTH|VTH|RL|VS|IL|R1|R2|R3)\b/gi
+const ELECTRICAL_SYMBOL_PATTERN = /\b(RTH|VTH|VOC|ISC|RL|VS|IL|R1|R2|R3)\b/gi
 
 const ElectricalText = ({ text }) => {
   if (typeof text !== 'string') {

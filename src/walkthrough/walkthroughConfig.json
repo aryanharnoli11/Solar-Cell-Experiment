@@ -123,7 +123,7 @@
   "placement": "right"
 },{
   "id": 11,
-  "target": "#circuit-switch-button",
+  "target": "#circuit-power-control",
   "title": {
     "en": "Power Switch"
   },
@@ -139,27 +139,27 @@
     "en": "Solar Panel"
   },
   "description": {
-    "en": "The bulb acts as the light source for the solar panel. Its light is directed onto the solar panel to generate electrical energy, providing the voltage and current required to study the solar cell V–I characteristics.\n\n**Rating:** 2 W, 6 V"
+    "en": "The bulb acts as the light source for the solar panel. Its light is directed onto the solar panel to generate electrical energy, providing the voltage and current required to study the solar cell V–I characteristics.\n\n**Rating:** 2 W, 6 V\n**Bulb:** 100 W"
   },
    "audio": "/walkthrough-audios/Solar Panel.wav",
   "placement": "right"
 },{
   "id": 13,
-  "target": "#voltmeter > .ammeter__image",
-  "spotlightPadding": 0,
+  "target": "#voltmeter-walkthrough-target",
+  "spotlightPadding": 2,
   "title": {
     "en": "AC/DC Voltmeter"
   },
   "description": {
-    "en": "This voltmeter measures the voltage across the solar cell. For the open-circuit condition, disconnect the ammeter and measure the open-circuit voltage (VOC). The measured voltage is also used to determine the maximum-power point and fill factor.\n\n**Rating:** 0 - 10 V"
+    "en": "This voltmeter measures the voltage across the solar cell. For the open-circuit condition, disconnect the ammeter and measure the open-circuit voltage (Voc). The measured voltage is also used to determine the maximum-power point and fill factor.\n\n**Rating:** 0 - 10 V"
   },
    "audio": "/walkthrough-audios/ACDC Voltmeter.wav",
   "placement": "bottom"
 },
 {
   "id": 14,
-  "target": "#ammeter-a1 > .ammeter__image",
-  "spotlightPadding": 0,
+  "target": "#ammeter-walkthrough-target",
+  "spotlightPadding": 2,
   "title": {
     "en": "AC/DC Ammeter"
   },

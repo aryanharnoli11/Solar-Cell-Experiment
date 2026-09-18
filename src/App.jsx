@@ -807,6 +807,16 @@ const App = () => {
     setStatus('Circuit button is OFF.')
   }, [circuitSwitchOn, notifyGuide])
 
+  const handleCircuitSwitchRejected = useCallback(() => {
+    setStatus('Click CHECK and verify the circuit connections before turning ON the power switch.')
+    void notifyGuide({
+      description: 'Click CHECK to verify the circuit connections before turning ON the power switch.',
+      target: '#check-button',
+      title: 'Check Connections First',
+      type: 'POWER_REJECTED',
+    })
+  }, [notifyGuide])
+
   const handleBulbSwitchToggle = useCallback(() => {
     if (!circuitSwitchOn) {
       setStatus('Switch ON the circuit button before operating the bulb switch.')
@@ -1007,6 +1017,7 @@ const App = () => {
                   case2ConnectionsRemoved={case2ConnectionsRemoved}
                   checkRequest={checkRequest}
                   circuitSwitchOn={circuitSwitchOn}
+                  connectionsVerified={connectionsVerified}
                   experimentCase={experimentCase}
                   highlightedTerminalIds={highlightedTerminalIds}
                   key={`connection-lab-${resetRequest}`}
@@ -1017,6 +1028,7 @@ const App = () => {
                   onBulbSwitchToggle={handleBulbSwitchToggle}
                   onCheckConnections={handleCheckConnections}
                   onCircuitSwitchChange={handleCircuitSwitchChange}
+                  onCircuitSwitchRejected={handleCircuitSwitchRejected}
                   onGuideEvent={notifyGuide}
                   observationIl={loadObservations.at(-1)?.il ?? null}
                   observationVth={observations[0]?.vth ?? null}

@@ -36,6 +36,11 @@ const Voltmeter = ({
         alt="Voltmeter"
         className="ammeter__image"
       />
+      <span
+        aria-hidden="true"
+        className="meter-walkthrough-target meter-walkthrough-target--voltmeter"
+        id="voltmeter-walkthrough-target"
+      />
 
       <span
         id="3-endpoint"

@@ -166,7 +166,7 @@
     },
     {
       "id": 33,
-      "text": "The fill factor could not be calculated. Check that all four values are entered and that Isc and Voc are greater than zero.",
+      "text": "The calculated fill factor must be close to 65 percent. Check the entered values and try again; results from 64 to 66 percent are accepted.",
       "audio": "/audios/Calculate button click, Incorrect calculations.wav"
     },
     {
@@ -186,8 +186,8 @@
     },
     {
       "id": 37,
-      "text": "Measurements and verification are complete. Click OK to generate and open the experiment report.",
-      "audio": "#"
+      "text": "Your report has been generated successfully. Click OK to view your report.",
+      "audio": "/audios/Generate Report.wav"
     },
     {
       "id": 38,
@@ -226,7 +226,7 @@
     },
     {
       "id": 45,
-      "text": "Reading added successfully. Repeat the same process until all eleven readings have been added.",
+      "text": "Now, click the Add button again to record the second reading. ",
       "audio": "/audios/2nd time RL clickvary.wav"
     },
     {
@@ -241,7 +241,7 @@
     },
     {
       "id": 48,
-      "text": "The bulb is ON and the meter readings are displayed. Click the ADD button to record the short-circuit current.",
+      "text": "Current is applied and the meter readings are displayed.",
       "audio": "/audios/After Bulb ON.wav"
     }
   ]

@@ -988,13 +988,6 @@ export const useAiGuideController = ({
       }
 
       case 'BULB_SWITCH_ON': {
-        showGuideAlert({
-          description: instructionsById.get('48')?.text,
-          target: '#add-reading-button',
-          title: 'Bulb Switch On',
-          type: 'success',
-        }, '48')
-
         return runInstructionSequence([{
           instructionId: '48',
           priority: AUDIO_PRIORITY.SUCCESS,
@@ -1172,7 +1165,7 @@ export const useAiGuideController = ({
           confirmLabel: 'OK',
           description: instructionsById.get('37')?.text,
           target: '#generate-report-button',
-          title: 'Generate Experiment Report',
+          title: 'Generate  Report',
           type: 'success',
         })
 
@@ -1189,7 +1182,7 @@ export const useAiGuideController = ({
           reportGenerated: true,
         }))
         showGuideAlert({
-          description: 'The experiment report was generated and opened in a new tab.',
+          description: 'Your report has been generated successfully. Click OK to view your report.',
           target: '#generate-report-button',
           title: 'Report Ready',
           type: 'success',

@@ -51,6 +51,11 @@ const Ammeter = ({
         alt={`${label} ammeter`}
         className="ammeter__image"
       />
+      <span
+        aria-hidden="true"
+        className="meter-walkthrough-target meter-walkthrough-target--ammeter"
+        id="ammeter-walkthrough-target"
+      />
 
       <span
         id={`${terminals.positive}-endpoint`}
