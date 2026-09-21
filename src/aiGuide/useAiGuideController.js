@@ -895,7 +895,7 @@ case 'RL_SET_TO_100': {
   showGuideAlert({
     description: instructionsById.get('45')?.text,
     target: '#resistance-controls',
-    title: 'Reading Added Successfully',
+    title: 'Rl Set',
     type: 'success',
   }, '45')
 
@@ -1015,15 +1015,9 @@ case 'RL_SET_TO_100': {
         }])
       }
 
-      case 'POWER_REJECTED': {
-        showGuideAlert({
-          description: event.description,
-          target: event.target ?? '#check-button',
-          title: event.title ?? 'Circuit Action Unavailable',
-          type: 'warning',
-        })
-        return false
-      }
+     case 'POWER_REJECTED': {
+  return false
+}
 
       case 'ADD_REJECTED':
       case 'REPORT_BLOCKED': {

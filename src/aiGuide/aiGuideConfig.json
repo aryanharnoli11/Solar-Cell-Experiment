@@ -166,12 +166,12 @@
     },
     {
       "id": 33,
-      "text": "The calculated fill factor must be close to 65 percent. Check the entered values and try again; results from 64 to 66 percent are accepted.",
+      "text": "Incorrect calculations. Please review your calculations and try again.",
       "audio": "/audios/Calculate button click, Incorrect calculations.wav"
     },
     {
       "id": 34,
-      "text": "The fill factor has been calculated successfully. Now click the Generate Report button.",
+      "text": " Calculations are correct. Now, click on the Generate Report button.",
       "audio": "/audios/Calculate button click, Correct calculations.wav"
     },
     {

@@ -57,23 +57,29 @@ const CalculationPanel = ({
     voc: false,
   })
 
-  const handleInputChange = (parameter, value) => {
-    const numericValue = Number(value)
-    const { min, max } = INPUT_FIELDS[parameter]
+const handleInputChange = (parameter, value) => {
+  const numericValue = Number(value)
+  const { min, max } = INPUT_FIELDS[parameter]
 
-    if (
-      value !== ''
-      && (!Number.isFinite(numericValue) || numericValue < min || numericValue > max)
-    ) {
-      return
-    }
-
-    setSolarInputs((current) => ({ ...current, [parameter]: value }))
-    setInvalidInputs((current) => ({ ...current, [parameter]: false }))
-    setFillFactor('')
-    setUserCalculatedFillFactor('')
-    setVerificationResult('')
+  // Allow empty input and maximum 2 digits after decimal
+  if (value !== '' && !/^\d*(\.\d{0,2})?$/.test(value)) {
+    return
   }
+
+  // Keep existing minimum and maximum limits
+  if (
+    value !== ''
+    && (!Number.isFinite(numericValue) || numericValue < min || numericValue > max)
+  ) {
+    return
+  }
+
+  setSolarInputs((current) => ({ ...current, [parameter]: value }))
+  setInvalidInputs((current) => ({ ...current, [parameter]: false }))
+  setFillFactor('')
+  setUserCalculatedFillFactor('')
+  setVerificationResult('')
+}
 
   const renderInput = (parameter) => {
     const field = INPUT_FIELDS[parameter]
@@ -180,7 +186,39 @@ const isIncorrectValue = (enteredValue, expectedValue) => (
   && Math.abs(enteredValue - expectedValue) > 0.01
 )
 
+const incorrectInputKeys = Object.keys(solarInputs).filter((parameter) => {
+  const enteredValue = Number(solarInputs[parameter])
 
+  const expectedValues = {
+    imp: expectedImp,
+    isc: expectedIsc,
+    vmp: expectedVmp,
+    voc: expectedVoc,
+  }
+
+  return isIncorrectValue(enteredValue, expectedValues[parameter])
+})
+
+if (incorrectInputKeys.length > 0) {
+  setInvalidInputs((current) => ({
+    ...current,
+    ...Object.fromEntries(
+      incorrectInputKeys.map((parameter) => [parameter, true]),
+    ),
+  }))
+
+  onGuideEvent?.({
+    alertType: 'warning',
+    description: incorrectInputKeys.length === 1
+      ? 'The entered value is incorrect. Please check the value and try again.'
+      : 'One or more entered values are incorrect. Please check the values and try again.',
+    target: '#calculation-panel',
+    title: 'Incorrect Value',
+    type: 'CALCULATION_INPUT_INVALID',
+  })
+
+  return
+}
     if (isc === 0 || voc === 0) {
       setInvalidInputs((current) => ({
         ...current,
