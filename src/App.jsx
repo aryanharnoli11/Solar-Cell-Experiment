@@ -993,19 +993,20 @@ const App = () => {
                 />
 
                 <ControlPanel
-                  locked={resistanceSliderDisabled}
-                  maxResistancePosition={resistanceMaxPosition}
-                  minResistancePosition={resistanceMinPosition}
-                  observations={observations}
-                  onGenerateReport={handleGenerateReport}
-                  onResistanceLocked={
-                    handleLockedResistanceInteraction
-                  }
-                  reportGenerated={reportGenerated}
-                  rl={rl}
-                  setRl={handleResistanceChange}
-                  theoremVerified={verificationSucceeded}
-                />
+  locked={resistanceSliderDisabled}
+  maxResistancePosition={resistanceMaxPosition}
+  minResistancePosition={resistanceMinPosition}
+  observations={observations}
+  onGenerateReport={handleGenerateReport}
+  onResistanceLocked={
+    handleLockedResistanceInteraction
+  }
+  onGuideEvent={notifyGuide}
+  reportGenerated={reportGenerated}
+  rl={rl}
+  setRl={handleResistanceChange}
+  theoremVerified={verificationSucceeded}
+/>
               </aside>
 
               <section className="right-panel">

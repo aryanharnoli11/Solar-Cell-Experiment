@@ -9,6 +9,7 @@ const ControlPanel = ({
   minResistancePosition,
   onGenerateReport,
   onResistanceLocked,
+  onGuideEvent,
   observations,
   reportGenerated,
   rl,
@@ -25,14 +26,19 @@ const ControlPanel = ({
       <div className="flex flex-col gap-[14.4px] px-[20.8px] pt-[30.8px]">
 
         <ResistanceSlider
-          disabled={locked}
-          label="RL"
-          maxPosition={maxResistancePosition}
-          minPosition={minResistancePosition}
-          onChange={setRl}
-          onDisabledInteraction={onResistanceLocked}
-          value={rl}
-        />
+  disabled={locked}
+  label="RL"
+  maxPosition={maxResistancePosition}
+  minPosition={minResistancePosition}
+  onChange={setRl}
+  onDisabledInteraction={onResistanceLocked}
+  onValueReached={() => {
+    onGuideEvent?.({
+      type: 'RL_SET_TO_100',
+    })
+  }}
+  value={rl}
+/>
 
       </div>
     </SectionCard>

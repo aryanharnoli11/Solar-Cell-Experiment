@@ -7,6 +7,7 @@ const ResistanceSlider = ({
   minPosition,
   onChange,
   onDisabledInteraction,
+  onValueReached,
   value,
 }) => {
   const config = RESISTANCE_SLIDER_CONFIG.load
@@ -88,8 +89,14 @@ const ResistanceSlider = ({
           max={sliderMax}
           min={sliderMin}
           onChange={(event) => {
-            onChange(getValueAtPosition(event.target.value))
-          }}
+  const newValue = getValueAtPosition(event.target.value)
+
+  onChange(newValue)
+
+  if (label === 'RL' && Number(newValue) === 100) {
+    onValueReached?.(100)
+  }
+}}
           step={sliderStep}
           type="range"
           value={sliderPosition}

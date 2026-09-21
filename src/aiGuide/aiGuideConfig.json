@@ -230,6 +230,11 @@
       "audio": "/audios/2nd time RL clickvary.wav"
     },
     {
+  "id": 49,
+  "text": "Reading added successfully. Repeat the same process until all eleven readings have been added.",
+  "audio": "/audios/3nd time RL clickvary.wav"
+},
+    {
       "id": 46,
       "text": "Record ISC before changing RL. After all load readings are recorded, RL remains locked.",
       "audio": "#"

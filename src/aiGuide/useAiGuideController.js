@@ -891,32 +891,51 @@ export const useAiGuideController = ({
           priority: AUDIO_PRIORITY.SUCCESS,
         }])
       }
+case 'RL_SET_TO_100': {
+  showGuideAlert({
+    description: instructionsById.get('45')?.text,
+    target: '#resistance-controls',
+    title: 'Reading Added Successfully',
+    type: 'success',
+  }, '45')
 
-      case 'LOAD_READING_ADDED': {
-        const readingCount = Number(event.readingCount)
-        const instructionId = readingCount === 1
-          ? '45'
-          : readingCount === 2
-            ? '49'
-            : null
+  return runInstructionSequence([{
+    instructionId: '45',
+    priority: AUDIO_PRIORITY.SUCCESS,
+  }])
+}
+ case 'LOAD_READING_ADDED': {
+  const currentCount = Number(stateRef.current.loadReadingCount ?? 0)
+  const nextCount = currentCount + 1
 
-        if (!instructionId) {
-          return true
-        }
+  updateState((current) => ({
+    ...current,
+    loadReadingCount: nextCount,
+  }))
 
-        showGuideAlert({
-          description: instructionsById.get(instructionId)?.text,
-          target: '#resistance-controls',
-          title: 'Reading Added Successfully',
-          type: 'success',
-        }, instructionId)
+  // FIRST ADD CLICK — RL = 100 Ω
+  // Show instruction 49.
+  if (nextCount === 1) {
+    showGuideAlert({
+      description: instructionsById.get('49')?.text,
+      target: '#resistance-controls',
+      title: 'Reading Added Successfully',
+      type: 'success',
+    }, '49')
 
-        return runInstructionSequence([{
-          instructionId,
-          priority: AUDIO_PRIORITY.SUCCESS,
-        }])
-      }
+    return runInstructionSequence([{
+      instructionId: '49',
+      priority: AUDIO_PRIORITY.SUCCESS,
+    }])
+  }
 
+  // 2nd to 10th readings — NO alert and NO audio
+  if (nextCount < 11) {
+    return true
+  }
+
+  return true
+}
       case 'CASE_CONNECTIONS_REMOVED': {
         const completedCase = Number(event.caseNumber)
 
