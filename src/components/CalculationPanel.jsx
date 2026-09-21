@@ -12,6 +12,26 @@ const DISPLAY_DECIMAL_PLACES = 2
 const MIN_ACCEPTED_FILL_FACTOR = 64
 const MAX_ACCEPTED_FILL_FACTOR = 66
 
+// const EXPECTED_VALUES = {
+//   imp: 4.8,
+//   isc: 4.42,
+//   vmp: 3.38,
+//   voc: 5.6,
+// }
+
+// const INPUT_TOLERANCE = 0.01
+const getCurrentInMilliamperes = (row) => {
+  if (Number.isFinite(Number(row?.current))) {
+    return Number(row.current)
+  }
+
+  if (Number.isFinite(Number(row?.il))) {
+    return Number(row.il) * 1000
+  }
+
+  return NaN
+}
+
 const preventMouseWheelAdjustment = (event) => {
   event.currentTarget.blur()
 }
@@ -111,6 +131,56 @@ const CalculationPanel = ({
     const isc = Number(solarInputs.isc)
     const voc = Number(solarInputs.voc)
 
+
+    const firstObservation = observations[0] ?? {}
+
+const shortCircuitObservation = observations.find((row) => (
+  row?.isShortCircuit === true
+  || (row?.rl === 0 && Number.isFinite(Number(row?.il)))
+))
+
+const maximumPowerObservation = observations.reduce((best, row) => {
+  const voltage = Number(row?.voltage)
+  const current = getCurrentInMilliamperes(row)
+
+  if (!Number.isFinite(voltage) || !Number.isFinite(current)) {
+    return best
+  }
+
+  const power = Number.isFinite(Number(row?.power))
+    ? Number(row.power)
+    : voltage * current
+
+  if (!Number.isFinite(power)) {
+    return best
+  }
+
+  if (!best || power > best.power) {
+    return {
+      current,
+      power,
+      voltage,
+    }
+  }
+
+  return best
+}, null)
+
+const expectedVmp = maximumPowerObservation?.voltage
+const expectedImp = maximumPowerObservation?.current
+
+const expectedIsc = Number.isFinite(Number(firstObservation?.isc))
+  ? Number(firstObservation.isc)
+  : getCurrentInMilliamperes(shortCircuitObservation)
+
+const expectedVoc = Number(firstObservation?.vth)
+
+const isIncorrectValue = (enteredValue, expectedValue) => (
+  Number.isFinite(expectedValue)
+  && Math.abs(enteredValue - expectedValue) > 0.01
+)
+
+
     if (isc === 0 || voc === 0) {
       setInvalidInputs((current) => ({
         ...current,
@@ -138,6 +208,7 @@ const CalculationPanel = ({
       roundedFillFactor >= MIN_ACCEPTED_FILL_FACTOR
       && roundedFillFactor <= MAX_ACCEPTED_FILL_FACTOR
     )
+   
 
     setFillFactor(fillFactorDisplay)
 

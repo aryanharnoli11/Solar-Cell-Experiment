@@ -10,7 +10,7 @@ const REPORT_CONTENT = {
   simulationSummary: 'The guided walkthrough familiarised the user with the simulation interface. The circuit was connected, and the connections were verified successfully. Short-circuit current (ISC) was measured using an ammeter. The load resistance was then varied one value at a time using the resistance slider, and the corresponding Voltage (V), load current (IL) and power (P) readings were recorded in the observation table for each resistance value. Then, the open-circuit voltage (Voc) was measured using a voltmeter. Thereafter, the VI characteristic was plotted. Finally, the Fill Factor was calculated using the measured readings.',
   apparatus: [
     ['Power Switch: 230 V, 50 Hz', 'AC/DC Voltmeter: 0 - 10 V', 'AC/DC Ammeter: 0 - 20 mA', 'RL: 0  - 1000 Ω'],
-    ['Connecting Leads', 'Solar Panel: 2 W, 6 V', 'Light Bulb', 'Bulb Switch'],
+    ['Connecting Leads', 'Solar Panel: 2 W, 6 V', 'Light Bulb: 100 W', 'Bulb Switch'],
   ],
   conclusion: 'The V–I characteristic of the solar cell was plotted, and the fill factor was calculated to analyse the solar cells performance.',
   footer: '© 2026 Virtual Labs, IIT Roorkee',
@@ -1284,7 +1284,7 @@ tr:nth-child(even) {
             renderHeight
           );
         }).then(function() {
-          pdf.save('thevenin-simulation-report.pdf');
+          pdf.save('Solar-cell-simulation-report.pdf');
         }).finally(function() {
           document.body.classList.remove('pdf-exporting');
         });
