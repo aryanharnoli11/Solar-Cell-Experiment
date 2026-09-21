@@ -231,8 +231,13 @@ const ActionButtons = ({
             <ol className="action-instructions-panel__steps">
               <li {...getInstructionProps('connections')}>
                 <strong>STEP 1:</strong>{' '}
-                Connect terminals 1-7, 2-8, 3-9, 4-10, 5-11 and 6-12.
+                Connect terminals 1-7, 2-8, 3-9, 4-10, 5-11 and 6-12 and click on the Check button to verify the connections.
               </li>
+
+              <p className="action-instructions-panel__guide-note">
+              <strong>Note:</strong> If a wire is connected incorrectly, click the corresponding label number to remove the connection.
+
+            </p>
 
               <li {...getInstructionProps('power-switch')}>
                 <strong>STEP 2:</strong>{' '}
@@ -256,7 +261,8 @@ const ActionButtons = ({
 
               <li {...getInstructionProps('remove-ammeter')}>
                 <strong>STEP 6:</strong>{' '}
-                After all 11 readings are complete, remove ammeter connections 5-11 and 6-12.
+                After completing all 11 readings, remove the ammeter connections 5–11 and 6–12.
+
               </li>
 
               <li {...getInstructionProps('open-circuit-reading')}>
@@ -281,7 +287,7 @@ const ActionButtons = ({
 
               <li {...getInstructionProps('print')}>
                 <strong>STEP 11:</strong>{' '}
-                Click on the PRINT button to print the experiment report.
+                Click on the PRINT button to print the simulation.
               </li>
 
               <li {...getInstructionProps('reset')}>
